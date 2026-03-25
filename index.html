@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM Pro - Pipeline & Deals</title>
+    <title>CRM Pro - Rapports & Exports</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/table-to-json@1.0.0/lib/jquery.tabletojson.min.js"></script>
+
     <style>
         :root {
             --primary: #2563eb; --sidebar: #111827; --bg: #f3f4f6;
@@ -34,31 +36,25 @@
         .view.active { display: block; animation: fadeIn 0.4s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* UI Elements */
+        /* Cartes & Tableaux */
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .btn { padding: 10px 18px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: white; }
-
-        /* Kanban Pipeline */
-        .kanban { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; }
-        .column { background: #e5e7eb; min-width: 280px; border-radius: 10px; flex-shrink: 0; display: flex; flex-direction: column; }
-        .col-header { padding: 15px; font-weight: 700; display: flex; justify-content: space-between; border-radius: 10px 10px 0 0; background: rgba(0,0,0,0.05); }
-        .list { padding: 10px; flex-grow: 1; min-height: 200px; }
-        .item { background: white; padding: 15px; border-radius: 8px; margin-bottom: 12px; cursor: grab; border-left: 5px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .item h4 { font-size: 0.9rem; margin-bottom: 5px; }
-        .item p { font-size: 0.75rem; color: #6b7280; font-weight: 600; }
-        .item .amount { color: var(--primary); font-weight: 700; margin-top: 8px; display: block; }
-
-        /* Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 450px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+        .btn-export { background: #475569; color: white; }
 
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8fafc; font-size: 0.85rem; color: #64748b; }
+
+        /* Kanban */
+        .kanban { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; }
+        .column { background: #e5e7eb; min-width: 280px; border-radius: 10px; flex-shrink: 0; }
+        .col-header { padding: 15px; font-weight: 700; background: rgba(0,0,0,0.05); border-radius: 10px 10px 0 0; }
+        .item { background: white; padding: 15px; border-radius: 8px; margin: 10px; cursor: grab; border-left: 5px solid var(--primary); }
+
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 400px; }
     </style>
 </head>
 <body>
@@ -70,52 +66,63 @@
             <li><a onclick="showView('contacts')" id="link-contacts"><i class="fas fa-address-book"></i> Contacts</a></li>
             <li><a onclick="showView('pipe')" id="link-pipe"><i class="fas fa-arrows-left-right-to-line"></i> Pipeline</a></li>
             <li><a onclick="showView('comm')" id="link-comm"><i class="fas fa-wallet"></i> Commissions</a></li>
+            <li><a onclick="showView('reports')" id="link-reports"><i class="fas fa-chart-pie"></i> Rapports</a></li>
         </ul>
     </nav>
 
     <main class="main">
         <header class="topbar">
             <h2 id="view-title">Dashboard</h2>
-            <div><strong>Admin Mode</strong> <i class="fas fa-user-shield"></i></div>
+            <div><strong>Mode Management</strong> <i class="fas fa-chart-line"></i></div>
         </header>
 
         <div class="container">
+            <section id="view-reports" class="view">
+                <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                    <h2>Analyses & Rapports</h2>
+                    <button class="btn btn-export" onclick="exportToCSV()"><i class="fas fa-file-csv"></i> Exporter en CSV</button>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="card">
+                        <h3>Répartition du Pipeline</h3>
+                        <canvas id="pipelineChart" width="400" height="250"></canvas>
+                    </div>
+                    <div class="card">
+                        <h3>Performance Commerciale</h3>
+                        <table id="report-table">
+                            <thead><tr><th>Mois</th><th>Objectif</th><th>Réalisé</th></tr></thead>
+                            <tbody>
+                                <tr><td>Mars 2026</td><td>10.0M</td><td id="rep-realised">0M</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
             <section id="view-dash" class="view active">
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-                    <div class="card"><h3>CA Total Gagné</h3><div id="stat-ca" style="font-size:1.8rem; font-weight:700; color:var(--success)">0 FCFA</div></div>
-                    <div class="card"><h3>Affaires Ouvertes</h3><div id="stat-deals" style="font-size:1.8rem; font-weight:700;">0</div></div>
-                    <div class="card"><h3>Base Contacts</h3><div id="stat-contacts" style="font-size:1.8rem; font-weight:700;">0</div></div>
+                    <div class="card"><h3>CA Gagné</h3><div id="stat-ca" style="font-size:1.8rem; font-weight:700; color:var(--success)">0 FCFA</div></div>
+                    <div class="card"><h3>Total Contacts</h3><div id="stat-contacts" style="font-size:1.8rem; font-weight:700;">0</div></div>
+                    <div class="card"><h3>Affaires</h3><div id="stat-deals" style="font-size:1.8rem; font-weight:700;">0</div></div>
                 </div>
             </section>
 
             <section id="view-contacts" class="view">
-                <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                    <h2>Répertoire Clients</h2>
-                    <button class="btn btn-primary" onclick="openContactModal()"><i class="fas fa-plus"></i> Nouveau Contact</button>
-                </div>
+                <button class="btn btn-primary" onclick="openModal('contactModal')" style="margin-bottom:15px;">+ Nouveau Contact</button>
                 <div class="card">
-                    <table>
-                        <thead><tr><th>Entreprise</th><th>Secteur</th><th>Type</th></tr></thead>
-                        <tbody id="contact-list"></tbody>
-                    </table>
+                    <table><thead><tr><th>Entreprise</th><th>Secteur</th></tr></thead><tbody id="contact-list"></tbody></table>
                 </div>
             </section>
 
             <section id="view-pipe" class="view">
-                <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                    <h2>Suivi des Opportunités</h2>
-                    <button class="btn btn-success" onclick="openDealModal()"><i class="fas fa-handshake"></i> Nouvelle Affaire</button>
-                </div>
+                <button class="btn btn-success" onclick="openDealModal()" style="margin-bottom:15px;">+ Nouvelle Affaire</button>
                 <div class="kanban" id="board"></div>
             </section>
 
             <section id="view-comm" class="view">
-                <h2>Commissions sur Ventes</h2>
-                <div class="card" style="margin-top:20px;">
-                    <table id="comm-table">
-                        <thead><tr><th>Affaire</th><th>Client</th><th>Vente</th><th>Com (5%)</th></tr></thead>
-                        <tbody id="comm-list"></tbody>
-                    </table>
+                <div class="card">
+                    <table id="comm-table"><thead><tr><th>Affaire</th><th>Client</th><th>Vente</th><th>Com</th></tr></thead><tbody id="comm-list"></tbody></table>
                 </div>
             </section>
         </div>
@@ -123,45 +130,28 @@
 
     <div class="modal" id="contactModal">
         <div class="modal-content">
-            <h3>Nouveau Client</h3><br>
-            <div class="form-group"><label>Nom Entreprise</label><input type="text" id="c-name"></div>
-            <div class="form-group"><label>Secteur</label><input type="text" id="c-sector"></div>
+            <h3>Nouveau Contact</h3><br>
+            <input type="text" id="c-name" placeholder="Nom Entreprise" style="width:100%; padding:10px; margin-bottom:10px;">
             <button class="btn btn-primary" onclick="saveContact()" style="width:100%">Enregistrer</button>
-            <button class="btn" onclick="closeModals()" style="width:100%; margin-top:10px; background:#eee">Annuler</button>
+            <button class="btn" onclick="closeModals()" style="width:100%; margin-top:5px;">Annuler</button>
         </div>
     </div>
 
     <div class="modal" id="dealModal">
         <div class="modal-content">
-            <h3>Nouvelle Opportunité</h3><br>
-            <div class="form-group"><label>Objet de l'affaire</label><input type="text" id="d-title" placeholder="Ex: Vente matériel"></div>
-            <div class="form-group">
-                <label>Client (Contact existant)</label>
-                <select id="d-client-select">
-                    </select>
-            </div>
-            <div class="form-group"><label>Montant Estimé (FCFA)</label><input type="number" id="d-amount"></div>
-            <button class="btn btn-success" onclick="saveDeal()" style="width:100%">Créer l'Affaire</button>
-            <button class="btn" onclick="closeModals()" style="width:100%; margin-top:10px; background:#eee">Annuler</button>
+            <h3>Nouvelle Affaire</h3><br>
+            <input type="text" id="d-title" placeholder="Objet" style="width:100%; padding:10px; margin-bottom:10px;">
+            <select id="d-client-select" style="width:100%; padding:10px; margin-bottom:10px;"></select>
+            <input type="number" id="d-amount" placeholder="Montant FCFA" style="width:100%; padding:10px; margin-bottom:10px;">
+            <button class="btn btn-success" onclick="saveDeal()" style="width:100%">Créer</button>
         </div>
     </div>
 
     <script>
-        // BASE DE DONNÉES TEMPORAIRE
-        let contacts = [
-            { id: 1, name: "CMA-CGM", sector: "Transport" },
-            { id: 2, name: "Orange CI", sector: "Télécom" }
-        ];
-
-        let deals = [
-            { id: 101, title: "Audit Annuel", client: "CMA-CGM", price: 2000000, stage: 'devis' }
-        ];
-
-        const stages = [
-            { id: 'prospection', label: 'Prospection' },
-            { id: 'devis', label: 'Devis envoyé' },
-            { id: 'gagne', label: 'Clos - Gagné' }
-        ];
+        // DONNÉES
+        let contacts = [{ name: "CMA-CGM" }, { name: "Orange CI" }];
+        let deals = [{ id: 101, title: "Audit IT", client: "CMA-CGM", price: 2000000, stage: 'devis' }];
+        let myChart = null;
 
         // NAVIGATION
         function showView(name) {
@@ -175,88 +165,96 @@
             if(name === 'pipe') renderBoard();
             if(name === 'dash') updateDash();
             if(name === 'comm') updateComm();
+            if(name === 'reports') initReports();
         }
 
         // GESTION MODALS
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-        function openContactModal() { document.getElementById('contactModal').style.display = 'flex'; }
-        
         function openDealModal() {
-            const select = document.getElementById('d-client-select');
-            select.innerHTML = contacts.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-            if(contacts.length === 0) return alert("Veuillez d'abord créer un contact !");
-            document.getElementById('dealModal').style.display = 'flex';
+            const s = document.getElementById('d-client-select');
+            s.innerHTML = contacts.map(c => `<option>${c.name}</option>`).join('');
+            openModal('dealModal');
         }
 
-        // SAUVEGARDE
-        function saveContact() {
-            const name = document.getElementById('c-name').value;
-            const sector = document.getElementById('c-sector').value;
-            if(!name) return alert("Nom obligatoire");
-            contacts.push({ id: Date.now(), name, sector });
-            closeModals();
-            renderContacts();
+        // SAVE
+        function saveContact() { 
+            contacts.push({ name: document.getElementById('c-name').value }); 
+            closeModals(); renderContacts(); 
         }
-
         function saveDeal() {
-            const title = document.getElementById('d-title').value;
-            const client = document.getElementById('d-client-select').value;
-            const price = parseFloat(document.getElementById('d-amount').value);
-            if(!title || !price) return alert("Champs vides");
-            
-            deals.push({ id: Date.now(), title, client, price, stage: 'prospection' });
-            closeModals();
-            renderBoard();
+            deals.push({ id: Date.now(), title: document.getElementById('d-title').value, client: document.getElementById('d-client-select').value, price: parseFloat(document.getElementById('d-amount').value), stage: 'prospection' });
+            closeModals(); renderBoard();
         }
 
         // RENDU
-        function renderContacts() {
-            document.getElementById('contact-list').innerHTML = contacts.map(c => `
-                <tr><td><strong>${c.name}</strong></td><td>${c.sector}</td><td>Client</td></tr>
-            `).join('');
-        }
-
+        function renderContacts() { document.getElementById('contact-list').innerHTML = contacts.map(c => `<tr><td>${c.name}</td><td>Secteur</td></tr>`).join(''); }
+        
         function renderBoard() {
-            const board = document.getElementById('board');
-            board.innerHTML = stages.map(s => `
-                <div class="column">
-                    <div class="col-header"><span>${s.label}</span> <span>${deals.filter(d => d.stage === s.id).length}</span></div>
-                    <div class="list" ondrop="drop(event, '${s.id}')" ondragover="allowDrop(event)">
-                        ${deals.filter(d => d.stage === s.id).map(d => `
-                            <div class="item" draggable="true" ondragstart="drag(event, ${d.id})">
-                                <h4>${d.title}</h4>
-                                <p><i class="fas fa-building"></i> ${d.client}</p>
-                                <span class="amount">${d.price.toLocaleString()} FCFA</span>
-                            </div>
-                        `).join('')}
-                    </div>
+            const stages = [{id:'prospection', l:'Prospection'}, {id:'devis', l:'Devis'}, {id:'gagne', l:'Gagné'}];
+            document.getElementById('board').innerHTML = stages.map(s => `
+                <div class="column" ondrop="drop(event, '${s.id}')" ondragover="allowDrop(event)">
+                    <div class="col-header">${s.l} (${deals.filter(d => d.stage === s.id).length})</div>
+                    ${deals.filter(d => d.stage === s.id).map(d => `<div class="item" draggable="true" ondragstart="drag(event, ${d.id})">${d.title}<br><b>${d.price.toLocaleString()}</b></div>`).join('')}
                 </div>
             `).join('');
         }
 
-        // DRAG & DROP
-        function allowDrop(ev) { ev.preventDefault(); }
         function drag(ev, id) { ev.dataTransfer.setData("text", id); }
+        function allowDrop(ev) { ev.preventDefault(); }
         function drop(ev, stageId) {
             ev.preventDefault();
-            const id = ev.dataTransfer.getData("text");
-            const deal = deals.find(d => d.id == id);
-            deal.stage = stageId;
+            deals.find(d => d.id == ev.dataTransfer.getData("text")).stage = stageId;
             renderBoard();
+        }
+
+        // RAPPORTS & EXPORT
+        function initReports() {
+            const caGagne = deals.filter(d => d.stage === 'gagne').reduce((s,d) => s + d.price, 0);
+            document.getElementById('rep-realised').innerText = (caGagne / 1000000).toFixed(1) + "M";
+
+            const ctx = document.getElementById('pipelineChart').getContext('2d');
+            if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Prospection', 'Devis', 'Gagné'],
+                    datasets: [{
+                        data: [
+                            deals.filter(d => d.stage === 'prospection').length,
+                            deals.filter(d => d.stage === 'devis').length,
+                            deals.filter(d => d.stage === 'gagne').length
+                        ],
+                        backgroundColor: ['#94a3b8', '#f59e0b', '#10b981']
+                    }]
+                }
+            });
+        }
+
+        function exportToCSV() {
+            let csv = "Affaire,Client,Montant,Etape\n";
+            deals.forEach(d => { csv += `${d.title},${d.client},${d.price},${d.stage}\n`; });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'crm_report.csv');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
         function updateDash() {
             const ca = deals.filter(d => d.stage === 'gagne').reduce((s, d) => s + d.price, 0);
             document.getElementById('stat-ca').innerText = ca.toLocaleString() + " FCFA";
-            document.getElementById('stat-deals').innerText = deals.filter(d => d.stage !== 'gagne').length;
             document.getElementById('stat-contacts').innerText = contacts.length;
+            document.getElementById('stat-deals').innerText = deals.length;
         }
 
         function updateComm() {
             const wins = deals.filter(d => d.stage === 'gagne');
-            document.getElementById('comm-list').innerHTML = wins.map(d => `
-                <tr><td>${d.title}</td><td>${d.client}</td><td>${d.price.toLocaleString()}</td><td><strong>${(d.price * 0.05).toLocaleString()}</strong></td></tr>
-            `).join('');
+            document.getElementById('comm-list').innerHTML = wins.map(d => `<tr><td>${d.title}</td><td>${d.client}</td><td>${d.price.toLocaleString()}</td><td>${(d.price * 0.05).toLocaleString()}</td></tr>`).join('');
         }
 
         // Init
