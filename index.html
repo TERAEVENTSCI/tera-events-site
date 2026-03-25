@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM Commercial Pro</title>
+    <title>CRM Commercial & Commissions</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -41,6 +41,11 @@
         .card-kpi h3 { font-size: 0.8rem; text-transform: uppercase; color: #6b7280; margin-bottom: 10px; }
         .card-kpi .num { font-size: 1.6rem; font-weight: 700; }
 
+        /* Tableaux */
+        .comm-table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; margin-top: 20px; }
+        .comm-table th, .comm-table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        .comm-table th { background: #f8fafc; font-weight: 600; color: #64748b; }
+
         /* Kanban (Pipeline) */
         .kanban { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; }
         .column { background: #e5e7eb; min-width: 300px; border-radius: 10px; display: flex; flex-direction: column; max-height: 75vh; }
@@ -48,7 +53,6 @@
         .list { padding: 10px; flex-grow: 1; min-height: 100px; overflow-y: auto; }
         .item { background: white; padding: 15px; border-radius: 8px; margin-bottom: 12px; cursor: grab; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 5px solid var(--primary); }
         .item h4 { font-size: 0.9rem; margin-bottom: 5px; }
-        .item p { font-size: 0.8rem; color: #6b7280; }
         .item .price { margin-top: 10px; font-weight: 700; color: var(--primary); }
     </style>
 </head>
@@ -58,8 +62,8 @@
         <div class="sidebar-header"><i class="fas fa-rocket"></i> SALES CRM</div>
         <ul class="nav-links">
             <li><a onclick="showView('dash')" id="link-dash" class="active"><i class="fas fa-th-large"></i> Dashboard</a></li>
-            <li><a onclick="showView('pipe')" id="link-pipe"><i class="fas fa- arrows-left-right-to-line"></i> Pipeline</a></li>
-            <li><a onclick="showView('comm')"><i class="fas fa-wallet"></i> Commissions</a></li>
+            <li><a onclick="showView('pipe')" id="link-pipe"><i class="fas fa-arrows-left-right-to-line"></i> Pipeline</a></li>
+            <li><a onclick="showView('comm')" id="link-comm"><i class="fas fa-wallet"></i> Commissions</a></li>
             <li><a onclick="showView('settings')"><i class="fas fa-user-gear"></i> Paramètres</a></li>
         </ul>
     </nav>
@@ -67,19 +71,19 @@
     <main class="main">
         <header class="topbar">
             <h2 id="view-title">Dashboard</h2>
-            <div><strong>Admin</strong> <i class="fas fa-circle-user"></i></div>
+            <div><strong>Jean Commercial</strong> <i class="fas fa-circle-user"></i></div>
         </header>
 
         <div class="container">
             <section id="view-dash" class="view active">
                 <div class="grid-kpi">
                     <div class="card-kpi"><h3>CA Gagné</h3><div class="num" id="stat-ca">0 FCFA</div></div>
-                    <div class="card-kpi"><h3>Pipe Pondéré</h3><div class="num" id="stat-pipe">0 FCFA</div></div>
-                    <div class="card-kpi"><h3>Affaires</h3><div class="num" id="stat-count">0</div></div>
+                    <div class="card-kpi"><h3>Commission Totale</h3><div class="num" id="stat-comm" style="color: var(--success);">0 FCFA</div></div>
+                    <div class="card-kpi"><h3>Objectif (10M)</h3><div class="num" id="stat-obj">0%</div></div>
                 </div>
-                <div style="background: white; padding: 20px; border-radius: 12px;">
-                    <h3>Dernières activités</h3>
-                    <p style="color: gray; margin-top: 10px;">Le suivi en temps réel est activé.</p>
+                <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                    <h3>Résumé de performance</h3>
+                    <p id="perf-msg" style="margin-top:10px; color: #666;">Calculez vos gains en déplaçant vos affaires dans le Pipeline.</p>
                 </div>
             </section>
 
@@ -89,17 +93,33 @@
 
             <section id="view-comm" class="view">
                 <h2>Suivi des Commissions</h2>
-                <p>Calcul en cours selon les paliers de performance...</p>
+                <div style="background: var(--primary); color: white; padding: 20px; border-radius: 10px; margin-top: 15px;">
+                    <p>Règle actuelle : <strong>5%</strong> de commission sur le CA HT. <br>Bonus : <strong>+2%</strong> si le CA dépasse 5 000 000 FCFA.</p>
+                </div>
+                <table class="comm-table">
+                    <thead>
+                        <tr>
+                            <th>Affaire</th>
+                            <th>Client</th>
+                            <th>Montant Vente</th>
+                            <th>Taux</th>
+                            <th>Commission</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comm-list">
+                        </tbody>
+                </table>
             </section>
         </div>
     </main>
 
     <script>
-        // DONNÉES DE TEST (Simulées)
+        // DONNÉES GLOBALES
         let deals = [
             { id: 1, title: "Projet Web SAA", client: "Société X", price: 2500000, stage: 'prospection' },
             { id: 2, title: "Audit Réseau", client: "Hôpital Central", price: 1800000, stage: 'devis' },
-            { id: 3, title: "Vente Matériel", client: "Ecole Y", price: 5000000, stage: 'gagne' }
+            { id: 3, title: "Vente Matériel", client: "Ecole Y", price: 4000000, stage: 'gagne' },
+            { id: 4, title: "Licences Logiciels", client: "Cabinet Z", price: 1500000, stage: 'gagne' }
         ];
 
         const stages = [
@@ -114,24 +134,49 @@
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
             document.getElementById('view-' + viewName).classList.add('active');
-            document.getElementById('link-' + (viewName === 'dash' ? 'dash' : (viewName === 'pipe' ? 'pipe' : '')) )?.classList.add('active');
+            document.getElementById('link-' + viewName).classList.add('active');
+            document.getElementById('view-title').innerText = viewName.toUpperCase();
             
             if(viewName === 'pipe') renderBoard();
-            if(viewName === 'dash') updateStats();
+            if(viewName === 'dash' || viewName === 'comm') updateCalculations();
         }
 
-        // MISE À JOUR STATS
-        function updateStats() {
-            const totalGagne = deals.filter(d => d.stage === 'gagne').reduce((sum, d) => sum + d.price, 0);
-            document.getElementById('stat-ca').innerText = totalGagne.toLocaleString() + " FCFA";
-            document.getElementById('stat-count').innerText = deals.length;
+        // LOGIQUE DE CALCUL (Section 3.6)
+        function updateCalculations() {
+            const wins = deals.filter(d => d.stage === 'gagne');
+            const totalCA = wins.reduce((sum, d) => sum + d.price, 0);
+            
+            // Règle : 5% de base, 7% si CA > 5M
+            let tauxBase = 0.05;
+            if (totalCA > 5000000) tauxBase = 0.07;
+
+            const totalComm = totalCA * tauxBase;
+
+            // Update Dashboard
+            document.getElementById('stat-ca').innerText = totalCA.toLocaleString() + " FCFA";
+            document.getElementById('stat-comm').innerText = totalComm.toLocaleString() + " FCFA";
+            const percent = Math.min(100, (totalCA / 10000000) * 100);
+            document.getElementById('stat-obj').innerText = percent.toFixed(0) + "%";
+
+            // Update Table Commissions
+            const list = document.getElementById('comm-list');
+            list.innerHTML = wins.map(d => `
+                <tr>
+                    <td>${d.title}</td>
+                    <td>${d.client}</td>
+                    <td>${d.price.toLocaleString()} FCFA</td>
+                    <td>${(tauxBase * 100).toFixed(0)}%</td>
+                    <td style="font-weight:700; color:var(--success)">${(d.price * tauxBase).toLocaleString()} FCFA</td>
+                </tr>
+            `).join('');
+            
+            if(wins.length === 0) list.innerHTML = "<tr><td colspan='5' style='text-align:center'>Aucune vente gagnée pour le moment.</td></tr>";
         }
 
-        // RENDU DU PIPELINE KANBAN
+        // KANBAN RENDER
         function renderBoard() {
             const board = document.getElementById('board');
             board.innerHTML = '';
-
             stages.forEach(s => {
                 const stageDeals = deals.filter(d => d.stage === s.id);
                 const col = document.createElement('div');
@@ -152,7 +197,6 @@
             });
         }
 
-        // GESTION DU GLISSER-DÉPOSER
         function allowDrop(ev) { ev.preventDefault(); }
         function drag(ev, id) { ev.dataTransfer.setData("text", id); }
         function drop(ev, stageId) {
@@ -161,9 +205,11 @@
             const deal = deals.find(d => d.id == id);
             deal.stage = stageId;
             renderBoard();
+            updateCalculations();
         }
 
-        updateStats(); // Init au départ
+        // Init
+        updateCalculations();
     </script>
 </body>
 </html>
