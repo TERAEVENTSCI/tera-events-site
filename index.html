@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM Pro Multi-Utilisateurs</title>
+    <title>CRM Pro - Management & Rapports</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    
     <style>
         :root {
             --primary: #2563eb; --sidebar: #111827; --bg: #f3f4f6;
@@ -18,109 +18,84 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { display: flex; height: 100vh; background: var(--bg); color: var(--text); overflow: hidden; }
 
-        /* --- PAGE DE LOGIN --- */
-        #login-page { position: fixed; inset: 0; background: var(--sidebar); z-index: 9999; display: flex; justify-content: center; align-items: center; color: white; }
-        .login-box { background: var(--white); padding: 40px; border-radius: 12px; width: 350px; color: var(--text); text-align: center; }
-        .login-box input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; }
+        /* Login Simple */
+        #login-page { position: fixed; inset: 0; background: var(--sidebar); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .login-box { background: white; padding: 30px; border-radius: 10px; width: 320px; text-align: center; }
+        .login-box input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
 
-        /* --- LAYOUT --- */
-        .sidebar { width: 260px; background: var(--sidebar); color: white; display: flex; flex-direction: column; transition: 0.3s; }
-        .sidebar-header { padding: 25px; font-size: 1.2rem; font-weight: 700; border-bottom: 1px solid #374151; color: var(--success); }
-        .nav-links { list-style: none; padding: 20px 0; flex-grow: 1; }
-        .nav-links a { display: flex; align-items: center; padding: 12px 25px; color: #9ca3af; text-decoration: none; cursor: pointer; transition: 0.3s; }
-        .nav-links a:hover, .nav-links a.active { background: var(--primary); color: white; }
-        .nav-links i { margin-right: 15px; width: 20px; }
+        /* Navigation */
+        .sidebar { width: 250px; background: var(--sidebar); color: white; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 20px; font-weight: 700; color: var(--success); border-bottom: 1px solid #333; }
+        .nav-links { list-style: none; padding: 10px 0; flex-grow: 1; }
+        .nav-links a { display: flex; align-items: center; padding: 12px 20px; color: #9ca3af; text-decoration: none; cursor: pointer; }
+        .nav-links a.active { background: var(--primary); color: white; }
+        .nav-links i { margin-right: 12px; width: 20px; }
 
         .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .topbar { height: 60px; background: white; display: flex; align-items: center; padding: 0 30px; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .container { padding: 30px; overflow-y: auto; flex-grow: 1; }
+        .topbar { height: 60px; background: white; display: flex; align-items: center; padding: 0 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .container { padding: 25px; overflow-y: auto; flex-grow: 1; }
 
         .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .view.active { display: block; }
 
-        /* --- UI ELEMENTS --- */
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .btn { padding: 10px 18px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+        /* UI */
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .btn { padding: 8px 15px; border-radius: 5px; border: none; cursor: pointer; font-weight: 600; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: white; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .btn-export { background: #64748b; color: white; }
+
+        table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-        th { background: #f8fafc; color: #64748b; }
 
-        .kanban { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 15px; }
-        .column { background: #e5e7eb; min-width: 280px; border-radius: 10px; flex-shrink: 0; }
-        .col-header { padding: 15px; font-weight: 700; background: rgba(0,0,0,0.05); border-radius: 10px 10px 0 0; }
-        .item { background: white; padding: 15px; border-radius: 8px; margin: 10px; cursor: grab; border-left: 5px solid var(--primary); }
-        .badge-user { font-size: 0.7rem; background: #eee; padding: 2px 6px; border-radius: 4px; color: #666; margin-top: 5px; display: inline-block; }
-
-        /* Modal */
+        .kanban { display: flex; gap: 15px; overflow-x: auto; }
+        .column { background: #e5e7eb; min-width: 260px; border-radius: 8px; flex-shrink: 0; }
+        .item { background: white; padding: 12px; border-radius: 6px; margin: 10px; cursor: grab; border-left: 4px solid var(--primary); }
+        
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 450px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+        .modal-content { background: white; padding: 25px; border-radius: 10px; width: 400px; }
     </style>
 </head>
 <body>
 
     <div id="login-page">
         <div class="login-box">
-            <h2 id="login-logo">SALES CRM</h2>
-            <p style="margin-bottom:20px; color:#666;">Accès Sécurisé</p>
-            <input type="text" id="user-email" placeholder="Email (admin@test.com)">
-            <input type="password" id="user-pw" placeholder="Mot de passe">
-            <button class="btn btn-primary" onclick="login()" style="width:100%; justify-content:center;">Connexion</button>
+            <h3>ACCÈS CRM</h3><br>
+            <input type="text" id="login-mail" placeholder="Nom ou Email">
+            <button class="btn btn-primary" style="width:100%" onclick="login()">Se connecter</button>
         </div>
     </div>
 
     <nav class="sidebar">
-        <div class="sidebar-header" id="company-name-side">ENTREPRISE CRM</div>
+        <div class="sidebar-header" id="brand-name">GLOBAL SALES CRM</div>
         <ul class="nav-links">
-            <li><a onclick="showView('dash')" id="link-dash" class="active"><i class="fas fa-th-large"></i> Dashboard</a></li>
+            <li><a onclick="showView('dash')" id="link-dash" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
             <li><a onclick="showView('users')" id="link-users"><i class="fas fa-user-tie"></i> Commerciaux</a></li>
-            <li><a onclick="showView('contacts')" id="link-contacts"><i class="fas fa-address-book"></i> Contacts</a></li>
-            <li><a onclick="showView('pipe')" id="link-pipe"><i class="fas fa-arrows-left-right-to-line"></i> Pipeline</a></li>
-            <li><a onclick="showView('comm')" id="link-comm"><i class="fas fa-wallet"></i> Commissions</a></li>
+            <li><a onclick="showView('pipe')" id="link-pipe"><i class="fas fa-stream"></i> Pipeline</a></li>
+            <li><a onclick="showView('reports')" id="link-reports"><i class="fas fa-file-invoice-dollar"></i> Rapports</a></li>
             <li><a onclick="showView('settings')" id="link-settings"><i class="fas fa-cog"></i> Paramètres</a></li>
         </ul>
-        <div style="padding: 20px; border-top: 1px solid #374151;">
-            <button onclick="location.reload()" style="background:none; border:none; color:#ef4444; cursor:pointer;"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
-        </div>
     </nav>
 
     <main class="main">
-        <header class="topbar">
-            <h2 id="view-title">Dashboard</h2>
-            <div id="user-profile"><strong>Chargement...</strong></div>
-        </header>
-
+        <header class="topbar"><h2 id="view-title">Dashboard</h2></header>
         <div class="container">
-            <section id="view-users" class="view">
-                <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                    <h2>Équipe Commerciale</h2>
-                    <button class="btn btn-primary" onclick="openModal('userModal')">+ Ajouter un Commercial</button>
-                </div>
-                <div class="card">
-                    <table id="user-table">
-                        <thead><tr><th>Nom</th><th>Email</th><th>Rôle</th><th>Performance</th></tr></thead>
-                        <tbody id="user-list"></tbody>
-                    </table>
-                </div>
-            </section>
-
+            
             <section id="view-dash" class="view active">
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-                    <div class="card"><h3>CA Global Gagné</h3><div id="stat-ca" style="font-size:1.8rem; font-weight:700; color:var(--success)">0 FCFA</div></div>
-                    <div class="card"><h3>Affaires Ouvertes</h3><div id="stat-deals" style="font-size:1.8rem; font-weight:700;">0</div></div>
-                    <div class="card"><h3>Effectif Équipe</h3><div id="stat-team" style="font-size:1.8rem; font-weight:700;">0</div></div>
+                <div class="grid">
+                    <div class="card"><h4>CA Global</h4><h2 id="st-ca" style="color:var(--success)">0 FCFA</h2></div>
+                    <div class="card"><h4>Affaires en cours</h4><h2 id="st-deals">0</h2></div>
+                    <div class="card"><h4>Commerciaux</h4><h2 id="st-team">0</h2></div>
                 </div>
             </section>
 
-            <section id="view-contacts" class="view">
-                <button class="btn btn-primary" onclick="openModal('contactModal')" style="margin-bottom:15px;">+ Nouveau Contact</button>
-                <div class="card"><table><thead><tr><th>Entreprise</th><th>Secteur</th></tr></thead><tbody id="contact-list"></tbody></table></div>
+            <section id="view-users" class="view">
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                    <h3>Gestion de l'Équipe</h3>
+                    <button class="btn btn-primary" onclick="openModal('userModal')">+ Ajouter</button>
+                </div>
+                <div class="card"><table><thead><tr><th>Nom</th><th>Email</th><th>CA Généré</th></tr></thead><tbody id="user-list"></tbody></table></div>
             </section>
 
             <section id="view-pipe" class="view">
@@ -128,155 +103,101 @@
                 <div class="kanban" id="board"></div>
             </section>
 
-            <section id="view-comm" class="view">
-                <div class="card"><table id="comm-table"><thead><tr><th>Affaire</th><th>Commercial</th><th>Vente HT</th><th>Com</th></tr></thead><tbody id="comm-list"></tbody></table></div>
+            <section id="view-reports" class="view">
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                    <h3>Analyses de Performance</h3>
+                    <button class="btn btn-export" onclick="exportData()"><i class="fas fa-download"></i> Export Excel (CSV)</button>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <h4>Répartition du Pipeline</h4>
+                        <canvas id="pipeChart" style="max-height: 250px;"></canvas>
+                    </div>
+                    <div class="card">
+                        <h4>Classement Ventes</h4>
+                        <table id="leaderboard"><thead><tr><th>Rang</th><th>Commercial</th><th>CA Gagné</th></tr></thead><tbody id="leader-list"></tbody></table>
+                    </div>
+                </div>
             </section>
 
             <section id="view-settings" class="view">
-                <h2>Configuration CRM</h2>
-                <div class="card" style="margin-top:20px; max-width:500px;">
-                    <div class="form-group"><label>Nom de l'entreprise</label><input type="text" id="set-company" value="Ma Société"></div>
-                    <div class="form-group"><label>Taux de commission (%)</label><input type="number" id="set-rate" value="5"></div>
-                    <button class="btn btn-primary" onclick="saveSettings()">Mettre à jour</button>
+                <div class="card" style="max-width:400px;">
+                    <h3>Paramètres Entreprise</h3><br>
+                    <label>Nom de la Société</label>
+                    <input type="text" id="set-name" value="Global Sales CRM" style="width:100%; padding:8px; margin:10px 0;">
+                    <button class="btn btn-primary" onclick="saveSettings()">Enregistrer</button>
                 </div>
             </section>
+
         </div>
     </main>
 
-    <div class="modal" id="userModal"><div class="modal-content"><h3>Nouveau Commercial</h3><br>
-        <div class="form-group"><label>Nom complet</label><input type="text" id="u-name"></div>
-        <div class="form-group"><label>Email</label><input type="email" id="u-email"></div>
-        <button class="btn btn-primary" onclick="saveUser()" style="width:100%">Créer le profil</button>
-        <button class="btn" onclick="closeModals()" style="width:100%; margin-top:5px;">Annuler</button>
+    <div class="modal" id="userModal"><div class="modal-content">
+        <h4>Nouveau Commercial</h4><br>
+        <input type="text" id="u-name" placeholder="Nom complet" style="width:100%; padding:8px; margin-bottom:10px;">
+        <input type="email" id="u-mail" placeholder="Email" style="width:100%; padding:8px; margin-bottom:10px;">
+        <button class="btn btn-primary" onclick="saveUser()">Créer</button>
+        <button class="btn" onclick="closeModals()">Fermer</button>
     </div></div>
 
-    <div class="modal" id="contactModal"><div class="modal-content"><h3>Nouveau Contact</h3><br>
-        <div class="form-group"><label>Nom Entreprise</label><input type="text" id="c-name"></div>
-        <button class="btn btn-primary" onclick="saveContact()" style="width:100%">Enregistrer</button>
-    </div></div>
-
-    <div class="modal" id="dealModal"><div class="modal-content"><h3>Nouvelle Opportunité</h3><br>
-        <div class="form-group"><label>Objet</label><input type="text" id="d-title"></div>
-        <div class="form-group"><label>Client</label><select id="d-client-select"></select></div>
-        <div class="form-group"><label>Attribuer à (Commercial)</label><select id="d-user-select"></select></div>
-        <div class="form-group"><label>Montant HT</label><input type="number" id="d-amount"></div>
-        <button class="btn btn-success" onclick="saveDeal()" style="width:100%">Créer</button>
+    <div class="modal" id="dealModal"><div class="modal-content">
+        <h4>Nouvelle Affaire</h4><br>
+        <input type="text" id="d-title" placeholder="Objet" style="width:100%; padding:8px; margin-bottom:10px;">
+        <select id="d-user" style="width:100%; padding:8px; margin-bottom:10px;"></select>
+        <input type="number" id="d-amount" placeholder="Montant FCFA" style="width:100%; padding:8px; margin-bottom:10px;">
+        <button class="btn btn-success" onclick="saveDeal()">Ajouter au Pipeline</button>
     </div></div>
 
     <script>
-        // DONNÉES CENTRALISÉES
-        let config = { company: "Global Sales", rate: 5 };
-        let salesTeam = [
-            { id: 1, name: "Admin", email: "admin@test.com", role: "Admin" },
-            { id: 2, name: "Moussa S.", email: "moussa@test.com", role: "Commercial" }
-        ];
-        let contacts = [{ name: "CMA-CGM" }];
-        let deals = [{ id: 101, title: "Audit IT", client: "CMA-CGM", user: "Moussa S.", price: 2000000, stage: 'devis' }];
+        // DONNÉES
+        let team = [{name: "Moussa Diop", mail: "moussa@test.com"}, {name: "Fatou K.", mail: "fatou@test.com"}];
+        let deals = [{id:1, title:"Audit ERP", user:"Moussa Diop", price:5000000, stage:'devis'}];
+        let myChart = null;
 
-        // AUTHENTIFICATION SIMPLIFIÉE
-        function login() {
-            const email = document.getElementById('user-email').value;
-            if(email) {
-                document.getElementById('login-page').style.display = 'none';
-                document.getElementById('user-profile').innerHTML = `<strong>${email}</strong>`;
-                showView('dash');
-            }
-        }
+        function login() { document.getElementById('login-page').style.display='none'; showView('dash'); }
+        function openModal(id) { document.getElementById(id).style.display='flex'; }
+        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); }
 
-        // NAVIGATION
-        function showView(name) {
+        function showView(id) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-            document.getElementById('view-' + name).classList.add('active');
-            document.getElementById('link-' + name).classList.add('active');
-            document.getElementById('view-title').innerText = name.toUpperCase();
-            
-            if(name === 'users') renderUsers();
-            if(name === 'contacts') renderContacts();
-            if(name === 'pipe') renderBoard();
-            if(name === 'dash') updateDash();
-            if(name === 'comm') updateComm();
+            document.getElementById('view-'+id).classList.add('active');
+            document.getElementById('link-'+id).classList.add('active');
+            document.getElementById('view-title').innerText = id.toUpperCase();
+            if(id === 'users') renderUsers();
+            if(id === 'pipe') renderBoard();
+            if(id === 'reports') renderReports();
+            if(id === 'dash') updateDash();
         }
 
-        // GESTION MODALS
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-        
         function openDealModal() {
-            document.getElementById('d-client-select').innerHTML = contacts.map(c => `<option>${c.name}</option>`).join('');
-            document.getElementById('d-user-select').innerHTML = salesTeam.map(u => `<option>${u.name}</option>`).join('');
+            document.getElementById('d-user').innerHTML = team.map(t => `<option>${t.name}</option>`).join('');
             openModal('dealModal');
         }
 
-        // ACTIONS SAUVEGARDE
-        function saveUser() {
-            salesTeam.push({ id: Date.now(), name: document.getElementById('u-name').value, email: document.getElementById('u-email').value, role: 'Commercial' });
-            closeModals(); renderUsers();
-        }
-        function saveContact() { 
-            contacts.push({ name: document.getElementById('c-name').value }); 
-            closeModals(); renderContacts(); 
-        }
+        function saveUser() { team.push({name: document.getElementById('u-name').value, mail: document.getElementById('u-mail').value}); closeModals(); renderUsers(); }
+        
         function saveDeal() {
-            deals.push({ id: Date.now(), title: document.getElementById('d-title').value, client: document.getElementById('d-client-select').value, user: document.getElementById('d-user-select').value, price: parseFloat(document.getElementById('d-amount').value), stage: 'prospection' });
+            deals.push({id: Date.now(), title: document.getElementById('d-title').value, user: document.getElementById('d-user').value, price: parseFloat(document.getElementById('d-amount').value), stage: 'prospection'});
             closeModals(); renderBoard();
         }
+
         function saveSettings() {
-            config.company = document.getElementById('set-company').value;
-            config.rate = parseFloat(document.getElementById('set-rate').value);
-            document.getElementById('company-name-side').innerText = config.company;
-            alert("Paramètres enregistrés !");
+            const val = document.getElementById('set-name').value;
+            document.getElementById('brand-name').innerText = val;
+            alert("Nom mis à jour !");
         }
 
-        // RENDUS DYNAMIQUES
         function renderUsers() {
-            document.getElementById('user-list').innerHTML = salesTeam.map(u => {
-                const userCA = deals.filter(d => d.user === u.name && d.stage === 'gagne').reduce((s,d) => s+d.price, 0);
-                return `<tr><td>${u.name}</td><td>${u.email}</td><td>${u.role}</td><td><b>${userCA.toLocaleString()} FCFA</b></td></tr>`;
+            document.getElementById('user-list').innerHTML = team.map(u => {
+                const ca = deals.filter(d => d.user === u.name && d.stage === 'gagne').reduce((s,d) => s+d.price, 0);
+                return `<tr><td>${u.name}</td><td>${u.mail}</td><td><b>${ca.toLocaleString()} FCFA</b></td></tr>`;
             }).join('');
         }
 
-        function renderContacts() { document.getElementById('contact-list').innerHTML = contacts.map(c => `<tr><td>${c.name}</td><td>Secteur Gné</td></tr>`).join(''); }
-        
         function renderBoard() {
-            const stages = [{id:'prospection', l:'Prospection'}, {id:'devis', l:'Devis'}, {id:'gagne', l:'Gagné'}];
+            const stages = [{id:'prospection', l:'Prospection'}, {id:'devis', l:'Devis'}, {id:'gagne', l:'Clos - Gagné'}];
             document.getElementById('board').innerHTML = stages.map(s => `
                 <div class="column" ondrop="drop(event, '${s.id}')" ondragover="allowDrop(event)">
-                    <div class="col-header">${s.l}</div>
-                    ${deals.filter(d => d.stage === s.id).map(d => `
-                        <div class="item" draggable="true" ondragstart="drag(event, ${d.id})">
-                            <h4>${d.title}</h4>
-                            <p>${d.client}</p>
-                            <span class="badge-user">${d.user}</span><br>
-                            <b>${d.price.toLocaleString()} FCFA</b>
-                        </div>
-                    `).join('')}
-                </div>
-            `).join('');
-        }
-
-        // DRAG & DROP
-        function drag(ev, id) { ev.dataTransfer.setData("text", id); }
-        function allowDrop(ev) { ev.preventDefault(); }
-        function drop(ev, stageId) {
-            ev.preventDefault();
-            deals.find(d => d.id == ev.dataTransfer.getData("text")).stage = stageId;
-            renderBoard();
-        }
-
-        function updateDash() {
-            const ca = deals.filter(d => d.stage === 'gagne').reduce((s, d) => s + d.price, 0);
-            document.getElementById('stat-ca').innerText = ca.toLocaleString() + " FCFA";
-            document.getElementById('stat-team').innerText = salesTeam.length;
-            document.getElementById('stat-deals').innerText = deals.length;
-        }
-
-        function updateComm() {
-            const wins = deals.filter(d => d.stage === 'gagne');
-            document.getElementById('comm-list').innerHTML = wins.map(d => `
-                <tr><td>${d.title}</td><td>${d.user}</td><td>${d.price.toLocaleString()}</td><td><b>${(d.price * (config.rate/100)).toLocaleString()}</b></td></tr>
-            `).join('');
-        }
-    </script>
-</body>
-</html>
+                    <div style="padding:15px; font-weight:700; background:#ddd; border-radius:8px 8px 0 0">${s.l}</div>
+                    ${deals.
