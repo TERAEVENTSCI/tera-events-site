@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM Cloud Expert - Management & Finance</title>
+    <title>CRM Enterprise BI - Reporting Avancé</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -18,91 +18,81 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { display: flex; height: 100vh; background: var(--bg); color: var(--text); overflow: hidden; }
 
-        /* LOGIN */
-        #login-screen { position: fixed; inset: 0; background: var(--sidebar); z-index: 10000; display: flex; justify-content: center; align-items: center; }
-        .login-card { background: white; padding: 40px; border-radius: 20px; width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-
         /* SIDEBAR */
-        .sidebar { width: 280px; background: var(--sidebar); color: white; display: flex; flex-direction: column; transition: 0.3s; }
-        .sidebar-brand { padding: 30px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #1e293b; }
-        .sidebar-brand img { height: 35px; border-radius: 4px; }
-        .nav-links { list-style: none; padding: 20px 0; flex-grow: 1; }
-        .nav-links a { display: flex; align-items: center; padding: 14px 25px; color: #94a3b8; text-decoration: none; cursor: pointer; font-size: 0.95rem; }
-        .nav-links a:hover, .nav-links a.active { background: #1e293b; color: white; border-right: 4px solid var(--primary); }
-        .nav-links i { margin-right: 15px; font-size: 1.1rem; }
+        .sidebar { width: 260px; background: var(--sidebar); color: white; display: flex; flex-direction: column; }
+        .sidebar-brand { padding: 25px; border-bottom: 1px solid #1e293b; display: flex; align-items: center; gap: 10px; }
+        .sidebar-brand img { height: 35px; border-radius: 4px; background: white; }
+        .nav-links { list-style: none; padding: 15px 0; flex-grow: 1; }
+        .nav-links a { display: flex; align-items: center; padding: 12px 25px; color: #94a3b8; text-decoration: none; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+        .nav-links a.active { background: #1e293b; color: white; border-right: 4px solid var(--primary); }
+        .nav-links i { margin-right: 12px; width: 18px; }
 
-        /* MAIN CONTENT */
+        /* MAIN */
         .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .topbar { height: 70px; background: white; display: flex; align-items: center; padding: 0 30px; justify-content: space-between; border-bottom: 1px solid var(--border); }
-        .container { padding: 30px; overflow-y: auto; flex-grow: 1; }
+        .topbar { height: 65px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 30px; justify-content: space-between; }
+        .container { padding: 25px; overflow-y: auto; flex-grow: 1; }
 
-        .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        /* UI ELEMENTS */
+        .card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .grid-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+        .stat-val { font-size: 1.4rem; font-weight: 700; display: block; margin-top: 5px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 0.7rem; text-transform: uppercase; font-weight: 700; }
+        td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
 
-        /* CARDS & STATS */
-        .grid-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
-        .card { background: white; padding: 24px; border-radius: 16px; border: 1px solid var(--border); position: relative; }
-        .card h4 { font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
-        .card .val { font-size: 1.5rem; font-weight: 700; margin-top: 10px; display: block; }
-
-        /* TABLES */
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 12px; background: #f1f5f9; color: #475569; font-size: 0.8rem; font-weight: 600; }
-        td { padding: 15px 12px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-        .editable:hover { background: #fffbeb; cursor: pointer; border-radius: 4px; }
-
-        /* KANBAN */
-        .kanban { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; height: 100%; }
-        .column { background: #f1f5f9; min-width: 320px; border-radius: 16px; display: flex; flex-direction: column; max-height: 100%; }
-        .col-header { padding: 20px; font-weight: 700; display: flex; justify-content: space-between; }
-        .items-container { overflow-y: auto; padding: 0 10px 10px 10px; flex-grow: 1; }
-        .deal-item { background: white; padding: 16px; border-radius: 12px; margin-bottom: 12px; cursor: grab; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-
-        /* BUTTONS & FORMS */
-        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn { padding: 10px 18px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: white; }
-        .btn-outline { background: transparent; border: 1px solid var(--border); }
-        input, select { padding: 10px; border-radius: 8px; border: 1px solid var(--border); width: 100%; }
+        
+        /* KANBAN */
+        .kanban { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 10px; }
+        .column { background: #f1f5f9; min-width: 300px; border-radius: 12px; padding: 10px; }
+        .deal-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: grab; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 11000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
-        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 450px; }
+        /* MODAL */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 450px; }
+
+        #login-screen { position: fixed; inset: 0; background: var(--sidebar); z-index: 10000; display: flex; justify-content: center; align-items: center; }
+        
+        /* TAGS */
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .badge-success { background: #dcfce7; color: #166534; }
+        .badge-warning { background: #fef9c3; color: #854d0e; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
-        <div class="login-card">
-            <h2 id="brand-login" style="margin-bottom:20px; text-align:center;">BIENVENUE</h2>
-            <input type="text" id="log-mail" placeholder="Email (admin@crm.com)" style="margin-bottom:10px;">
-            <input type="password" id="log-pass" placeholder="Mot de passe (admin123)" style="margin-bottom:20px;">
-            <button class="btn btn-primary" style="width:100%" onclick="auth()">Se connecter</button>
+        <div class="card" style="width:350px; text-align:center; padding:40px;">
+            <h2 style="margin-bottom:20px;">BIENVENUE</h2>
+            <input type="text" id="log-u" placeholder="Admin Email" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+            <input type="password" id="log-p" placeholder="Mot de passe" style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #ddd; border-radius:8px;">
+            <button class="btn btn-primary" style="width:100%" onclick="login()">Se connecter</button>
         </div>
     </div>
 
     <nav class="sidebar">
         <div class="sidebar-brand">
-            <img src="https://cdn-icons-png.flaticon.com/512/3061/3061341.png" id="brand-logo">
-            <span id="brand-name" style="font-weight:700;">PRO CRM</span>
+            <img src="https://cdn-icons-png.flaticon.com/512/3061/3061341.png">
+            <span id="side-name" style="font-weight:700;">CORP CRM</span>
         </div>
         <ul class="nav-links">
-            <li><a onclick="showView('dash')" id="l-dash" class="active"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
-            <li><a onclick="showView('pipe')" id="l-pipe"><i class="fas fa-exchange-alt"></i> Pipeline Ventes</a></li>
-            <li><a onclick="showView('team')" id="l-team"><i class="fas fa-users"></i> Équipe & Coms</a></li>
-            <li><a onclick="showView('settings')" id="l-settings"><i class="fas fa-cog"></i> Paramètres</a></li>
+            <li><a onclick="showView('dash')" id="l-dash" class="active"><i class="fas fa-home"></i> Vue Mensuelle</a></li>
+            <li><a onclick="showView('pipe')" id="l-pipe"><i class="fas fa-stream"></i> Pipeline</a></li>
+            <li><a onclick="showView('reports')" id="l-reports"><i class="fas fa-chart-line"></i> Rapports & BI</a></li>
+            <li><a onclick="showView('team')" id="l-team"><i class="fas fa-user-shield"></i> Équipe & Rôles</a></li>
+            <li><a onclick="showView('settings')" id="l-settings"><i class="fas fa-cog"></i> Configuration</a></li>
         </ul>
-        <div style="padding:20px; border-top:1px solid #1e293b;">
-            <button onclick="location.reload()" style="color:var(--danger); background:none; border:none; cursor:pointer;">Déconnexion</button>
-        </div>
     </nav>
 
     <main class="main-content">
         <header class="topbar">
             <h3 id="view-title">Dashboard</h3>
-            <div style="display:flex; align-items:center; gap:15px;">
-                <span id="current-date" style="font-weight:600; color:var(--primary);"></span>
-                <button class="btn btn-success" onclick="openModal('dealModal')">+ Affaire</button>
+            <div style="display:flex; gap:15px; align-items:center;">
+                <select id="period-filter" style="padding:8px; border-radius:6px; border:1px solid #ddd;" onchange="updateUI()"></select>
+                <button class="btn btn-success" onclick="openModal('dealModal')">+ Nouvelle Affaire</button>
             </div>
         </header>
 
@@ -110,16 +100,16 @@
             
             <section id="view-dash" class="view active">
                 <div class="grid-stats">
-                    <div class="card"><h4>Gains Aujourd'hui</h4><span class="val" id="st-day-ca" style="color:var(--success)">0 FCFA</span></div>
-                    <div class="card"><h4>Commissions Jour</h4><span class="val" id="st-day-comm" style="color:var(--danger)">0 FCFA</span></div>
-                    <div class="card"><h4>Total Commissions Versées</h4><span class="val" id="st-total-paid">0 FCFA</span></div>
-                    <div class="card"><h4>Restant à Verser</h4><span class="val" id="st-total-due" style="color:var(--warning)">0 FCFA</span></div>
+                    <div class="card"><h4>CA du Mois</h4><span class="stat-val" id="st-month-ca" style="color:var(--success)">0 FCFA</span></div>
+                    <div class="card"><h4>Commissions Dues</h4><span class="stat-val" id="st-month-comm" style="color:var(--danger)">0 FCFA</span></div>
+                    <div class="card"><h4>Affaires Gagnées</h4><span class="stat-val" id="st-month-deals">0</span></div>
+                    <div class="card"><h4>Aujourd'hui (J)</h4><span class="stat-val" id="st-today-ca" style="color:var(--primary)">0 FCFA</span></div>
                 </div>
                 <div class="card">
-                    <h3>Performance des Commerciaux (Aujourd'hui)</h3><br>
-                    <table id="daily-table">
-                        <thead><tr><th>Commercial</th><th>Ventes du jour</th><th>Commissions</th></tr></thead>
-                        <tbody id="daily-list"></tbody>
+                    <h3>Classement Commercial du Mois</h3><br>
+                    <table id="perf-table">
+                        <thead><tr><th>Rang</th><th>Nom</th><th>Affaires</th><th>CA Réalisé</th><th>Com. à verser</th></tr></thead>
+                        <tbody id="perf-list"></tbody>
                     </table>
                 </div>
             </section>
@@ -128,15 +118,54 @@
                 <div class="kanban" id="board"></div>
             </section>
 
+            <section id="view-reports" class="view">
+                <div class="card" style="border-left: 5px solid var(--primary);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3>⚡ Activité Commerciale : Jour J</h3>
+                        <span id="date-today-label" class="badge badge-success"></span>
+                    </div>
+                    <table id="today-summary-table">
+                        <thead><tr><th>Commercial</th><th>Ventes J</th><th>Com. J</th><th>Statut</th></tr></thead>
+                        <tbody id="today-summary-list"></tbody>
+                    </table>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:20px;">
+                    <div class="card">
+                        <h4>📈 Analyse de Performance (Mensuelle)</h4><br>
+                        <canvas id="monthlyChart" style="max-height:250px;"></canvas>
+                    </div>
+                    <div class="card">
+                        <h4>🏆 Top Performance Annuelle</h4><br>
+                        <div id="annual-leaderboard"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📅 Résumé Annuel 2026 (Consolidé)</h3><br>
+                    <table id="annual-summary-table">
+                        <thead>
+                            <tr style="background:#0f172a; color:white;">
+                                <th>Commercial</th>
+                                <th>Total Ventes (Année)</th>
+                                <th>Moyenne Mensuelle</th>
+                                <th>Total Commissions</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="annual-summary-list"></tbody>
+                    </table>
+                </div>
+            </section>
+
             <section id="view-team" class="view">
                 <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                    <h3>Gestion de l'Équipe & Rémunération</h3>
-                    <button class="btn btn-primary" onclick="openModal('userModal')">+ Ajouter Commercial</button>
+                    <h3>Gestion des Utilisateurs</h3>
+                    <button class="btn btn-primary" onclick="openModal('userModal')">+ Ajouter un utilisateur</button>
                 </div>
                 <div class="card">
-                    <p style="font-size:0.8rem; color:gray; margin-bottom:15px;">* Cliquez sur un taux ou un nom pour le modifier.</p>
-                    <table>
-                        <thead><tr><th>Commercial</th><th>Taux (%)</th><th>Ventes Totales</th><th>Commissions Dues</th><th>Actions</th></tr></thead>
+                    <table id="team-table">
+                        <thead><tr><th>Nom</th><th>Rôle</th><th>Email</th><th>Taux Com (%)</th><th>Actions</th></tr></thead>
                         <tbody id="team-list"></tbody>
                     </table>
                 </div>
@@ -144,58 +173,73 @@
 
             <section id="view-settings" class="view">
                 <div class="card" style="max-width:500px;">
-                    <h3>Identité Visuelle</h3><br>
-                    <label>Nom de l'entreprise</label><input type="text" id="set-name" style="margin:10px 0 20px 0;">
-                    <label>URL du Logo</label><input type="text" id="set-logo" style="margin:10px 0 20px 0;">
+                    <h3>Branding & Identité</h3><br>
+                    <label>Nom de la Société</label>
+                    <input type="text" id="set-name" style="width:100%; padding:10px; margin:10px 0 20px 0; border:1px solid #ddd; border-radius:8px;">
                     <button class="btn btn-primary" onclick="saveSettings()">Mettre à jour</button>
                 </div>
             </section>
+
         </div>
     </main>
 
     <div class="modal" id="dealModal"><div class="modal-content">
         <h3>Nouvelle Affaire</h3><br>
-        <input type="text" id="d-title" placeholder="Client / Objet" style="margin-bottom:10px;">
-        <select id="d-user" style="margin-bottom:10px;"></select>
-        <input type="number" id="d-amount" placeholder="Montant (FCFA)" style="margin-bottom:15px;">
-        <button class="btn btn-primary" style="width:100%" onclick="saveDeal()">Ajouter</button>
-        <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeModals()">Annuler</button>
+        <input type="text" id="d-title" placeholder="Client / Objet" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+        <select id="d-user" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;"></select>
+        <input type="number" id="d-amount" placeholder="Montant (FCFA)" style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #ddd; border-radius:8px;">
+        <button class="btn btn-success" style="width:100%" onclick="saveDeal()">Ajouter au Pipeline</button>
+        <button class="btn" style="width:100%; margin-top:5px;" onclick="closeModals()">Annuler</button>
     </div></div>
 
     <div class="modal" id="userModal"><div class="modal-content">
-        <h3>Nouveau Profil</h3><br>
-        <input type="text" id="u-name" placeholder="Nom complet" style="margin-bottom:10px;">
-        <input type="number" id="u-rate" placeholder="Taux Commission (%)" style="margin-bottom:15px;">
-        <button class="btn btn-primary" style="width:100%" onclick="saveUser()">Créer</button>
+        <h3>Créer un Utilisateur</h3><br>
+        <input type="text" id="u-name" placeholder="Nom complet" style="width:100%; padding:10px; margin-bottom:10px;">
+        <input type="text" id="u-mail" placeholder="Email" style="width:100%; padding:10px; margin-bottom:10px;">
+        <select id="u-role" style="width:100%; padding:10px; margin-bottom:10px;">
+            <option value="Commercial">Commercial</option>
+            <option value="Admin">Admin</option>
+        </select>
+        <input type="number" id="u-rate" placeholder="Taux Commission (%)" style="width:100%; padding:10px; margin-bottom:20px;">
+        <button class="btn btn-primary" style="width:100%" onclick="saveUser()">Enregistrer</button>
+        <button class="btn" style="width:100%; margin-top:5px;" onclick="closeModals()">Annuler</button>
     </div></div>
 
     <script>
-        // DATA STRUCTURE
-        let appConfig = { name: "AFRIQUE SALES PRO", logo: "https://cdn-icons-png.flaticon.com/512/3061/3061341.png", totalPaid: 0 };
-        let team = [
-            { id: 1, name: "Moussa S.", rate: 10, email: "moussa@test.com" },
-            { id: 2, name: "Awa K.", rate: 8, email: "awa@test.com" }
-        ];
-        let deals = [
-            { id: 101, title: "Contrat Orange CI", user: "Moussa S.", price: 10000000, stage: 'gagne', date: new Date().toISOString() }
-        ];
+        // --- DATA STATE ---
+        let state = {
+            config: { name: "AFRIQUE SALES CORP", totalPaid: 0 },
+            users: [
+                { id: 1, name: "Admin Principal", email: "admin@corp.com", role: "Admin", rate: 0 },
+                { id: 2, name: "Jean Vendeur", email: "jean@corp.com", role: "Commercial", rate: 10 },
+                { id: 3, name: "Awa Koné", email: "awa@corp.com", role: "Commercial", rate: 12 }
+            ],
+            deals: [
+                { id: 101, title: "SODEFOR Côte d'Ivoire", user: "Jean Vendeur", price: 5000000, stage: 'gagne', date: '2026-03-26' },
+                { id: 102, title: "Banque Atlantique", user: "Awa Koné", price: 12000000, stage: 'gagne', date: '2026-03-25' },
+                { id: 103, title: "Projet BTP", user: "Jean Vendeur", price: 3000000, stage: 'gagne', date: '2026-02-15' }
+            ]
+        };
+        let myChart = null;
 
-        // AUTH & INIT
-        function auth() {
-            document.getElementById('login-screen').style.display = 'none';
-            initApp();
-        }
+        function login() { document.getElementById('login-screen').style.display='none'; init(); }
 
-        function initApp() {
-            document.getElementById('brand-name').innerText = appConfig.name;
-            document.getElementById('brand-logo').src = appConfig.logo;
-            document.getElementById('set-name').value = appConfig.name;
-            document.getElementById('set-logo').value = appConfig.logo;
-            document.getElementById('current-date').innerText = new Date().toLocaleDateString('fr-FR');
+        function init() {
+            const select = document.getElementById('period-filter');
+            const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+            const currentM = new Date().getMonth();
+            months.forEach((m, i) => {
+                let opt = document.createElement('option');
+                opt.value = (i+1 < 10 ? '0'+(i+1) : (i+1));
+                opt.text = m + " 2026";
+                if(i === currentM) opt.selected = true;
+                select.appendChild(opt);
+            });
+            document.getElementById('side-name').innerText = state.config.name;
+            document.getElementById('date-today-label').innerText = new Date().toLocaleDateString('fr-FR');
             updateUI();
         }
 
-        // NAVIGATION
         function showView(id) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
@@ -205,123 +249,177 @@
             updateUI();
         }
 
-        // ACTIONS
         function openModal(id) {
-            if(id === 'dealModal') document.getElementById('d-user').innerHTML = team.map(u => `<option>${u.name}</option>`).join('');
+            if(id === 'dealModal') document.getElementById('d-user').innerHTML = state.users.map(u => `<option>${u.name}</option>`).join('');
             document.getElementById(id).style.display = 'flex';
         }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
 
         function saveUser() {
-            team.push({ id: Date.now(), name: document.getElementById('u-name').value, rate: parseFloat(document.getElementById('u-rate').value) });
+            state.users.push({
+                id: Date.now(),
+                name: document.getElementById('u-name').value,
+                email: document.getElementById('u-mail').value,
+                role: document.getElementById('u-role').value,
+                rate: parseFloat(document.getElementById('u-rate').value) || 0
+            });
             closeModals(); updateUI();
         }
 
         function saveDeal() {
-            deals.push({ id: Date.now(), title: document.getElementById('d-title').value, user: document.getElementById('d-user').value, price: parseFloat(document.getElementById('d-amount').value), stage: 'prospection', date: new Date().toISOString() });
+            state.deals.push({
+                id: Date.now(),
+                title: document.getElementById('d-title').value,
+                user: document.getElementById('d-user').value,
+                price: parseFloat(document.getElementById('d-amount').value),
+                stage: 'prospection',
+                date: new Date().toISOString().split('T')[0]
+            });
             closeModals(); updateUI();
         }
 
-        function editUser(id, field, value) {
-            let u = team.find(x => x.id == id);
-            if(field === 'rate') u.rate = parseFloat(value);
-            if(field === 'name') {
-                let oldName = u.name;
-                u.name = value;
-                deals.forEach(d => { if(d.user === oldName) d.user = value; });
-            }
-            updateUI();
-        }
+        function updateUI() {
+            const m = document.getElementById('period-filter').value;
+            const filterDate = `2026-${m}`;
+            const todayDate = new Date().toISOString().split('T')[0];
 
-        function payCommission(userName) {
-            let totalDue = deals.filter(d => d.user === userName && d.stage === 'gagne').reduce((s, d) => {
-                let rate = team.find(u => u.name === userName).rate;
-                return s + (d.price * rate / 100);
+            // --- FILTRAGE DES DONNÉES ---
+            const monthDeals = state.deals.filter(d => d.date.includes(filterDate) && d.stage === 'gagne');
+            const todayDeals = state.deals.filter(d => d.date === todayDate && d.stage === 'gagne');
+
+            // --- DASHBOARD MENSUEL ---
+            const caM = monthDeals.reduce((s,d) => s+d.price, 0);
+            const comM = monthDeals.reduce((s,d) => {
+                let u = state.users.find(x => x.name === d.user);
+                return s + (d.price * (u?u.rate:0)/100);
             }, 0);
-            appConfig.totalPaid += totalDue;
-            // Optionnel: On pourrait filtrer les deals pour marquer comme "payé"
-            alert(`Paiement de ${totalDue.toLocaleString()} FCFA enregistré pour ${userName}`);
-            updateUI();
+            document.getElementById('st-month-ca').innerText = caM.toLocaleString() + " FCFA";
+            document.getElementById('st-month-comm').innerText = comM.toLocaleString() + " FCFA";
+            document.getElementById('st-month-deals').innerText = monthDeals.length;
+            document.getElementById('st-today-ca').innerText = todayDeals.reduce((s,d)=>s+d.price, 0).toLocaleString() + " FCFA";
+
+            // --- LISTE PERFORMANCE (MOIS) ---
+            document.getElementById('perf-list').innerHTML = state.users
+                .filter(u => u.role === 'Commercial')
+                .map((u, i) => {
+                    const uDeals = monthDeals.filter(d => d.user === u.name);
+                    const uCa = uDeals.reduce((s,d) => s+d.price, 0);
+                    const uCom = uCa * u.rate / 100;
+                    return `<tr><td>#${i+1}</td><td>${u.name}</td><td>${uDeals.length}</td><td>${uCa.toLocaleString()} FCFA</td><td style="color:var(--danger)">${uCom.toLocaleString()} FCFA</td></tr>`;
+                }).join('');
+
+            // --- RAPPORT : JOUR J ---
+            document.getElementById('today-summary-list').innerHTML = state.users
+                .filter(u => u.role === 'Commercial')
+                .map(u => {
+                    const uToday = todayDeals.filter(d => d.user === u.name);
+                    const caJ = uToday.reduce((s,d) => s+d.price, 0);
+                    const comJ = caJ * u.rate / 100;
+                    return `<tr><td>${u.name}</td><td>${caJ.toLocaleString()} FCFA</td><td>${comJ.toLocaleString()} FCFA</td><td>${caJ > 0 ? '<span class="badge badge-success">Actif</span>' : '<span class="badge badge-warning">En attente</span>'}</td></tr>`;
+                }).join('');
+
+            // --- RÉSUMÉ ANNUEL 2026 ---
+            document.getElementById('annual-summary-list').innerHTML = state.users
+                .filter(u => u.role === 'Commercial')
+                .map(u => {
+                    const uYearDeals = state.deals.filter(d => d.user === u.name && d.stage === 'gagne' && d.date.includes('2026'));
+                    const totalY = uYearDeals.reduce((s,d) => s+d.price, 0);
+                    const totalComY = totalY * u.rate / 100;
+                    return `
+                        <tr>
+                            <td><b>${u.name}</b></td>
+                            <td style="color:var(--success); font-weight:700;">${totalY.toLocaleString()} FCFA</td>
+                            <td>${(totalY / 12).toLocaleString()} FCFA/mois</td>
+                            <td style="color:var(--danger); font-weight:700;">${totalComY.toLocaleString()} FCFA</td>
+                            <td><progress value="${totalY}" max="100000000" style="width:100px;"></progress></td>
+                        </tr>
+                    `;
+                }).join('');
+
+            // --- TOP LEADERBOARD (ANNUEL) ---
+            const leaders = [...state.users]
+                .filter(u => u.role === 'Commercial')
+                .sort((a,b) => {
+                    const caA = state.deals.filter(d => d.user === a.name && d.stage === 'gagne').reduce((s,d)=>s+d.price,0);
+                    const caB = state.deals.filter(d => d.user === b.name && d.stage === 'gagne').reduce((s,d)=>s+d.price,0);
+                    return caB - caA;
+                });
+            document.getElementById('annual-leaderboard').innerHTML = leaders.map((u,i) => `
+                <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee;">
+                    <span><b>${i+1}.</b> ${u.name}</span>
+                    <span class="badge badge-success">${(state.deals.filter(d=>d.user===u.name && d.stage==='gagne').reduce((s,d)=>s+d.price,0)).toLocaleString()} FCFA</span>
+                </div>
+            `).join('');
+
+            // --- PIPELINE KANBAN ---
+            const stages = [{id:'prospection', l:'Prospection'}, {id:'devis', l:'Négociation'}, {id:'gagne', l:'Clos - Gagné'}];
+            document.getElementById('board').innerHTML = stages.map(s => `
+                <div class="column" ondrop="drop(event, '${s.id}')" ondragover="allowDrop(event)">
+                    <h4 style="margin-bottom:15px;">${s.l} (${state.deals.filter(d => d.stage === s.id).length})</h4>
+                    ${state.deals.filter(d => d.stage === s.id).map(d => `
+                        <div class="deal-card" draggable="true" ondragstart="drag(event, ${d.id})">
+                            <b>${d.title}</b><br><small>${d.user}</small><br>
+                            <span style="color:var(--primary); font-weight:700;">${d.price.toLocaleString()} FCFA</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+
+            // --- TEAM LIST ---
+            document.getElementById('team-list').innerHTML = state.users.map(u => `
+                <tr>
+                    <td>${u.name}</td><td>${u.role}</td><td>${u.email}</td>
+                    <td><input type="number" value="${u.rate}" onchange="updateRate(${u.id}, this.value)" style="width:60px; padding:5px;"> %</td>
+                    <td><button class="btn" style="color:var(--danger)" onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+
+            renderChart();
         }
 
+        // --- CHARTING ---
+        function renderChart() {
+            const ctx = document.getElementById('monthlyChart').getContext('2d');
+            if(myChart) myChart.destroy();
+            
+            // Calculer CA par mois pour l'année
+            const labels = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin"];
+            const caData = labels.map((m, i) => {
+                const monthStr = (i+1 < 10 ? '0'+(i+1) : (i+1));
+                return state.deals.filter(d => d.date.includes(`2026-${monthStr}`) && d.stage === 'gagne').reduce((s,d)=>s+d.price, 0);
+            });
+
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Ventes Mensuelles 2026',
+                        data: caData,
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        function updateRate(id, val) { state.users.find(u => u.id == id).rate = parseFloat(val); updateUI(); }
+        function deleteUser(id) { state.users = state.users.filter(u => u.id != id); updateUI(); }
         function saveSettings() {
-            appConfig.name = document.getElementById('set-name').value;
-            appConfig.logo = document.getElementById('set-logo').value;
-            initApp();
+            state.config.name = document.getElementById('set-name').value;
+            document.getElementById('side-name').innerText = state.config.name;
+            alert("Société mise à jour !");
         }
-
-        // DRAG & DROP
         function drag(ev, id) { ev.dataTransfer.setData("text", id); }
         function allowDrop(ev) { ev.preventDefault(); }
         function drop(ev, stageId) {
             ev.preventDefault();
             const id = ev.dataTransfer.getData("text");
-            deals.find(d => d.id == id).stage = stageId;
+            state.deals.find(d => d.id == id).stage = stageId;
             updateUI();
-        }
-
-        // RENDERING ENGINE
-        function updateUI() {
-            const today = new Date().toISOString().split('T')[0];
-            
-            // Stats Dashboard
-            const dealsToday = deals.filter(d => d.date.startsWith(today) && d.stage === 'gagne');
-            const caToday = dealsToday.reduce((s,d) => s + d.price, 0);
-            const commToday = dealsToday.reduce((s,d) => {
-                let rate = team.find(u => u.name === d.user).rate;
-                return s + (d.price * rate / 100);
-            }, 0);
-
-            document.getElementById('st-day-ca').innerText = caToday.toLocaleString() + " FCFA";
-            document.getElementById('st-day-comm').innerText = commToday.toLocaleString() + " FCFA";
-            document.getElementById('st-total-paid').innerText = appConfig.totalPaid.toLocaleString() + " FCFA";
-
-            // Total Restant à verser (Toutes périodes)
-            const allCommDue = deals.filter(d => d.stage === 'gagne').reduce((s,d) => {
-                let u = team.find(x => x.name === d.user);
-                return s + (d.price * (u ? u.rate : 0) / 100);
-            }, 0) - appConfig.totalPaid;
-            document.getElementById('st-total-due').innerText = Math.max(0, allCommDue).toLocaleString() + " FCFA";
-
-            // Liste quotidienne
-            document.getElementById('daily-list').innerHTML = team.map(u => {
-                let dToday = deals.filter(d => d.user === u.name && d.date.startsWith(today) && d.stage === 'gagne');
-                let v = dToday.reduce((s,d) => s+d.price, 0);
-                let c = v * u.rate / 100;
-                return `<tr><td>${u.name}</td><td>${v.toLocaleString()} FCFA</td><td style="color:var(--danger)">${c.toLocaleString()} FCFA</td></tr>`;
-            }).join('');
-
-            // Pipeline
-            const stages = [{id:'prospection', l:'Prospection'}, {id:'devis', l:'Devis/Négociation'}, {id:'gagne', l:'Gagné'}];
-            document.getElementById('board').innerHTML = stages.map(s => `
-                <div class="column" ondrop="drop(event, '${s.id}')" ondragover="allowDrop(event)">
-                    <div class="col-header">${s.l} <span>${deals.filter(d => d.stage === s.id).length}</span></div>
-                    <div class="items-container">
-                        ${deals.filter(d => d.stage === s.id).map(d => `
-                            <div class="deal-item" draggable="true" ondragstart="drag(event, ${d.id})">
-                                <div style="font-size:0.85rem; font-weight:700;">${d.title}</div>
-                                <div style="font-size:0.75rem; color:gray; margin:5px 0;">${d.user}</div>
-                                <div style="color:var(--primary); font-weight:700;">${d.price.toLocaleString()} FCFA</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
-
-            // Team & Comms
-            document.getElementById('team-list').innerHTML = team.map(u => {
-                let totalVentes = deals.filter(d => d.user === u.name && d.stage === 'gagne').reduce((s,d) => s+d.price, 0);
-                let commDue = totalVentes * u.rate / 100;
-                return `
-                    <tr>
-                        <td class="editable" onclick="let n=prompt('Nom:', '${u.name}'); if(n) editUser(${u.id}, 'name', n)">${u.name}</td>
-                        <td class="editable" onclick="let r=prompt('Taux:', '${u.rate}'); if(r) editUser(${u.id}, 'rate', r)">${u.rate} %</td>
-                        <td>${totalVentes.toLocaleString()} FCFA</td>
-                        <td style="color:var(--danger); font-weight:700;">${commDue.toLocaleString()} FCFA</td>
-                        <td><button class="btn btn-outline" style="font-size:0.7rem;" onclick="payCommission('${u.name}')">Solder la Com</button></td>
-                    </tr>
-                `;
-            }).join('');
         }
     </script>
 </body>
