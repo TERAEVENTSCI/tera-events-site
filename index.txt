@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Enterprise BI - Expert Version</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary: #4f46e5; --sidebar: #0f172a; --bg: #f8fafc;
+            --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
+            --white: #ffffff; --text: #1e293b; --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { display: flex; height: 100vh; background: var(--bg); color: var(--text); overflow: hidden; }
+
+        /* SIDEBAR */
+        .sidebar { width: 260px; background: var(--sidebar); color: white; display: flex; flex-direction: column; flex-shrink: 0; transition: 0.3s; }
+        .sidebar-brand { padding: 25px; border-bottom: 1px solid #1e293b; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; }
+        .nav-links { list-style: none; padding: 15px 0; flex-grow: 1; }
+        .nav-links a { display: flex; align-items: center; padding: 12px 25px; color: #94a3b8; text-decoration: none; cursor: pointer; font-size: 0.9rem; }
+        .nav-links a.active { background: #1e293b; color: white; border-right: 4px solid var(--primary); }
+        .nav-links i { margin-right: 12px; width: 18px; }
+
+        /* MAIN CONTENT */
+        .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .topbar { height: 65px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 30px; justify-content: space-between; }
+        .container { padding: 25px; overflow-y: auto; flex-grow: 1; }
+
+        .view { display: none; }
+        .view.active { display: block; animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* CARDS */
+        .card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .grid-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+        .stat-val { font-size: 1.4rem; font-weight: 700; display: block; margin-top: 5px; }
+        
+        /* TABLES */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 0.7rem; text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
+
+        /* KANBAN */
+        .kanban { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 15px; }
+        .column { background: #f1f5f9; min-width: 300px; border-radius: 12px; padding: 15px; min-height: 400px; }
+        .deal-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: pointer; }
+        .deal-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; opacity: 0; transition: 0.3s; }
+        .deal-card:hover .deal-actions { opacity: 1; }
+
+        .btn { padding: 10px 18px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 0.8rem; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-ghost { background: #f1f5f9; color: var(--text); }
+
+        /* LOGIN */
+        #login-screen { position: fixed; inset: 0; background: var(--sidebar); z-index: 10000; display: flex; justify-content: center; align-items: center; }
+        .login-box { background: white; padding: 40px; border-radius: 15px; width: 400px; }
+
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 450px; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h2 style="text-align:center; margin-bottom:30px;">🔐 Authentification</h2>
+            <label>Email Admin</label>
+            <input type="text" id="adm-user" value="admin@corp.com">
+            <label>Mot de passe</label>
+            <input type="password" id="adm-pass" value="1234">
+            <button class="btn btn-primary" style="width:100%" onclick="handleLogin()">Se connecter</button>
+            <p id="login-err" style="color:red; font-size:0.8rem; margin-top:10px; display:none;">Identifiants incorrects.</p>
+        </div>
+    </div>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-rocket" style="color:var(--primary)"></i>
+            <span>EXPERT CRM</span>
+        </div>
+        <ul class="nav-links">
+            <li><a onclick="showView('dash')" id="l-dash" class="active"><i class="fas fa-th-large"></i> Dashboard</a></li>
+            <li><a onclick="showView('pipe')" id="l-pipe"><i class="fas fa-funnel-dollar"></i> Pipeline</a></li>
+            <li><a onclick="showView('reports')" id="l-reports"><i class="fas fa-chart-bar"></i> Rapports BI</a></li>
+            <li><a onclick="showView('team')" id="l-team"><i class="fas fa-user-shield"></i> Administration</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="topbar">
+            <h3 id="view-title">Dashboard</h3>
+            <div style="display:flex; gap:15px;">
+                <select id="period-filter" style="padding:8px; border-radius:6px;" onchange="updateAll()"></select>
+                <button class="btn btn-primary" onclick="openDealModal()">+ Nouvelle Affaire</button>
+            </div>
+        </header>
+
+        <div class="container">
+            <section id="view-dash" class="view active">
+                <div class="grid-stats">
+                    <div class="card"><h4>Ventes (Mois)</h4><span class="stat-val" id="dash-ca" style="color:var(--success)">0</span></div>
+                    <div class="card"><h4>Commissions (Mois)</h4><span class="stat-val" id="dash-com" style="color:var(--danger)">0</span></div>
+                    <div class="card"><h4>Objectif atteint</h4><span class="stat-val" id="dash-kpi">0%</span></div>
+                    <div class="card"><h4>Aujourd'hui</h4><span class="stat-val" id="dash-today">0</span></div>
+                </div>
+                <div class="card">
+                    <h3>Performance par Commercial (Mois sélectionné)</h3><br>
+                    <table>
+                        <thead><tr><th>Nom</th><th>Affaires Gagnées</th><th>Chiffre d'Affaires</th><th>Commissions</th></tr></thead>
+                        <tbody id="dash-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="view-pipe" class="view">
+                <div class="kanban" id="kanban-board"></div>
+            </section>
+
+            <section id="view-reports" class="view">
+                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:20px;">
+                    <div class="card">
+                        <h4>Évolution Mensuelle 2026</h4><br>
+                        <canvas id="mainChart" height="300"></canvas>
+                    </div>
+                    <div class="card">
+                        <h4>Récapitulatif Annuel</h4><br>
+                        <div id="annual-stats"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-team" class="view">
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                        <h3>Gestion des Comptes & Taux</h3>
+                        <button class="btn btn-primary" onclick="openModal('userModal')">Ajouter Admin/Commercial</button>
+                    </div>
+                    <table id="user-table">
+                        <thead><tr><th>Nom</th><th>Rôle</th><th>Taux Com %</th><th>Actions</th></tr></thead>
+                        <tbody id="user-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="modal" id="dealModal"><div class="modal-content">
+        <h3 id="deal-modal-title">Affaire</h3><br>
+        <input type="hidden" id="edit-id">
+        <label>Nom du Client / Projet</label>
+        <input type="text" id="d-title">
+        <label>Commercial en charge</label>
+        <select id="d-user"></select>
+        <label>Montant (FCFA)</label>
+        <input type="number" id="d-amount">
+        <label>Date de l'opération</label>
+        <input type="date" id="d-date">
+        <button class="btn btn-primary" style="width:100%" onclick="saveDeal()">Enregistrer</button>
+        <button class="btn btn-ghost" style="width:100%; margin-top:5px;" onclick="closeModals()">Annuler</button>
+    </div></div>
+
+    <div class="modal" id="userModal"><div class="modal-content">
+        <h3>Nouvel Utilisateur</h3><br>
+        <input type="text" id="u-name" placeholder="Nom">
+        <select id="u-role"><option value="Commercial">Commercial</option><option value="Admin">Admin</option></select>
+        <input type="number" id="u-rate" placeholder="Taux %">
+        <button class="btn btn-primary" style="width:100%" onclick="saveUser()">Créer le compte</button>
+    </div></div>
+
+    <script>
+        // --- BASE DE DONNÉES LOCALE ---
+        let state = {
+            config: { target: 30000000 },
+            admins: [{ user: "admin@corp.com", pass: "1234" }],
+            users: [
+                { id: 1, name: "Jean Vendeur", role: "Commercial", rate: 10 },
+                { id: 2, name: "Awa Koné", role: "Commercial", rate: 12 }
+            ],
+            deals: [
+                { id: 101, title: "SODEFOR", user: "Jean Vendeur", price: 5000000, stage: 'gagne', date: '2026-03-20' },
+                { id: 102, title: "Banque Atlantique", user: "Awa Koné", price: 12000000, stage: 'devis', date: '2026-03-25' }
+            ]
+        };
+
+        let currentChart = null;
+
+        // --- AUTHENTIFICATION ---
+        function handleLogin() {
+            const u = document.getElementById('adm-user').value;
+            const p = document.getElementById('adm-pass').value;
+            if(state.admins.some(a => a.user === u && a.pass === p)) {
+                document.getElementById('login-screen').style.display = 'none';
+                initApp();
+            } else {
+                document.getElementById('login-err').style.display = 'block';
+            }
+        }
+
+        // --- NAVIGATION ---
+        function showView(id) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            document.getElementById('view-'+id).classList.add('active');
+            document.getElementById('l-'+id).classList.add('active');
+            updateAll();
+        }
+
+        // --- INITIALISATION ---
+        function initApp() {
+            const sel = document.getElementById('period-filter');
+            const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+            const now = new Date();
+            months.forEach((m, i) => {
+                let opt = document.createElement('option');
+                opt.value = (i+1).toString().padStart(2, '0');
+                opt.text = m + " 2026";
+                if(i === now.getMonth()) opt.selected = true;
+                sel.appendChild(opt);
+            });
+            updateAll();
+        }
+
+        // --- CORE CALCULATIONS & UI UPDATE ---
+        function updateAll() {
+            const m = document.getElementById('period-filter').value;
+            const periodStr = `2026-${m}`;
+            const today = new Date().toISOString().split('T')[0];
+
+            // Filtrage précis
+            const mDeals = state.deals.filter(d => d.date.startsWith(periodStr) && d.stage === 'gagne');
+            const todayCA = state.deals.filter(d => d.date === today && d.stage === 'gagne').reduce((s,d)=>s+d.price, 0);
+
+            // Dashboard Stats
+            const totalCA = mDeals.reduce((s,d) => s + d.price, 0);
+            const totalCom = mDeals.reduce((s,d) => {
+                const u = state.users.find(x => x.name === d.user);
+                return s + (d.price * (u ? u.rate : 0) / 100);
+            }, 0);
+
+            document.getElementById('dash-ca').innerText = totalCA.toLocaleString() + " FCFA";
+            document.getElementById('dash-com').innerText = totalCom.toLocaleString() + " FCFA";
+            document.getElementById('dash-today').innerText = todayCA.toLocaleString() + " FCFA";
+            document.getElementById('dash-kpi').innerText = Math.round((totalCA / state.config.target)*100) + "%";
+
+            // Tableau Dashboard
+            let dashHTML = "";
+            state.users.filter(u => u.role === 'Commercial').forEach(u => {
+                const uDeals = mDeals.filter(d => d.user === u.name);
+                const uCA = uDeals.reduce((s,d) => s + d.price, 0);
+                dashHTML += `<tr><td>${u.name}</td><td>${uDeals.length}</td><td>${uCA.toLocaleString()} FCFA</td><td>${(uCA*u.rate/100).toLocaleString()} FCFA</td></tr>`;
+            });
+            document.getElementById('dash-table-body').innerHTML = dashHTML;
+
+            // Pipeline
+            renderKanban();
+            // Admin Table
+            renderAdminTable();
+            // Chart
+            if(document.getElementById('view-reports').classList.contains('active')) renderBI();
+        }
+
+        // --- GESTION PIPELINE (CRUD) ---
+        function renderKanban() {
+            const stages = [{id:'prospection', t:'Prospection'}, {id:'devis', t:'Négociation'}, {id:'gagne', t:'Gagné'}];
+            document.getElementById('kanban-board').innerHTML = stages.map(s => `
+                <div class="column">
+                    <h4 style="margin-bottom:15px; display:flex; justify-content:space-between;">
+                        ${s.t} <span>${state.deals.filter(d=>d.stage===s.id).length}</span>
+                    </h4>
+                    ${state.deals.filter(d => d.stage === s.id).map(d => `
+                        <div class="deal-card">
+                            <div class="deal-actions">
+                                <i class="fas fa-edit" onclick="editDeal(${d.id})" style="color:var(--primary)"></i>
+                                <i class="fas fa-trash" onclick="deleteDeal(${d.id})" style="color:var(--danger)"></i>
+                            </div>
+                            <div style="font-weight:700;">${d.title}</div>
+                            <div style="font-size:0.75rem; color:gray;">${d.user} | ${d.date}</div>
+                            <div style="margin-top:8px; font-weight:700; color:var(--primary);">${d.price.toLocaleString()} FCFA</div>
+                            <div style="margin-top:10px;">
+                                ${s.id !== 'gagne' ? `<button class="btn btn-ghost" style="padding:4px 8px; font-size:0.6rem;" onclick="moveDeal(${d.id}, 'gagne')">Gagner</button>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+        }
+
+        function deleteDeal(id) {
+            if(confirm("Supprimer cette affaire ?")) {
+                state.deals = state.deals.filter(d => d.id !== id);
+                updateAll();
+            }
+        }
+
+        function editDeal(id) {
+            const d = state.deals.find(x => x.id === id);
+            document.getElementById('edit-id').value = d.id;
+            document.getElementById('d-title').value = d.title;
+            document.getElementById('d-amount').value = d.price;
+            document.getElementById('d-date').value = d.date;
+            openDealModal();
+        }
+
+        function saveDeal() {
+            const id = document.getElementById('edit-id').value;
+            const data = {
+                id: id ? parseInt(id) : Date.now(),
+                title: document.getElementById('d-title').value,
+                user: document.getElementById('d-user').value,
+                price: parseFloat(document.getElementById('d-amount').value),
+                date: document.getElementById('d-date').value,
+                stage: id ? state.deals.find(x=>x.id==id).stage : 'prospection'
+            };
+
+            if(id) {
+                const idx = state.deals.findIndex(x => x.id == id);
+                state.deals[idx] = data;
+            } else {
+                state.deals.push(data);
+            }
+            closeModals();
+            updateAll();
+        }
+
+        function moveDeal(id, stage) {
+            state.deals.find(d => d.id === id).stage = stage;
+            updateAll();
+        }
+
+        // --- GESTION ADMIN / UTILISATEURS ---
+        function renderAdminTable() {
+            document.getElementById('user-table-body').innerHTML = state.users.map(u => `
+                <tr>
+                    <td>${u.name}</td><td>${u.role}</td><td>${u.rate}%</td>
+                    <td><button onclick="deleteUser(${u.id})" class="btn btn-danger" style="padding:5px 10px;"><i class="fas fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+        }
+
+        function saveUser() {
+            state.users.push({
+                id: Date.now(),
+                name: document.getElementById('u-name').value,
+                role: document.getElementById('u-role').value,
+                rate: parseFloat(document.getElementById('u-rate').value) || 0
+            });
+            closeModals();
+            updateAll();
+        }
+
+        function deleteUser(id) {
+            state.users = state.users.filter(u => u.id !== id);
+            updateAll();
+        }
+
+        // --- CHARTS & BI ---
+        function renderBI() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            if(currentChart) currentChart.destroy();
+
+            const months = ["01","02","03","04","05","06","07","08","09","10","11","12"];
+            const caValues = months.map(m => {
+                return state.deals.filter(d => d.date.startsWith(`2026-${m}`) && d.stage === 'gagne').reduce((s,d)=>s+d.price, 0);
+            });
+
+            currentChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"],
+                    datasets: [{ label: 'CA Gagné 2026', data: caValues, backgroundColor: '#4f46e5' }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        // --- HELPERS ---
+        function openDealModal() {
+            document.getElementById('d-user').innerHTML = state.users.map(u => `<option>${u.name}</option>`).join('');
+            document.getElementById('dealModal').style.display = 'flex';
+        }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModals() { 
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+            document.getElementById('edit-id').value = ""; 
+        }
+    </script>
+</body>
+</html>
