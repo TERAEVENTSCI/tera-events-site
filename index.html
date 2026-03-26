@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM Enterprise BI - Direction Commerciale</title>
+    <title>CRM Enterprise - Dynamique Totale</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -23,46 +23,46 @@
         .sidebar-brand { padding: 25px; border-bottom: 1px solid #1e293b; display: flex; align-items: center; gap: 10px; }
         .sidebar-brand img { height: 35px; border-radius: 4px; background: white; }
         .nav-links { list-style: none; padding: 15px 0; flex-grow: 1; }
-        .nav-links li { cursor: pointer; }
-        .nav-links a { display: flex; align-items: center; padding: 12px 25px; color: #94a3b8; text-decoration: none; transition: 0.2s; font-size: 0.9rem; }
+        .nav-links a { display: flex; align-items: center; padding: 12px 25px; color: #94a3b8; text-decoration: none; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
         .nav-links a.active { background: #1e293b; color: white; border-right: 4px solid var(--primary); }
         .nav-links i { margin-right: 12px; width: 18px; }
 
-        /* MAIN */
-        .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; width: 100%; }
+        /* MAIN CONTENT */
+        .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         .topbar { height: 65px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 30px; justify-content: space-between; }
-        .container { padding: 25px; overflow-y: auto; flex-grow: 1; width: 100%; }
+        .container { padding: 25px; overflow-y: auto; flex-grow: 1; }
 
-        .view { display: none; width: 100%; }
+        .view { display: none; }
         .view.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* CARDS */
+        /* CARDS & STATS */
         .card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .grid-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
         .stat-val { font-size: 1.4rem; font-weight: 700; display: block; margin-top: 5px; }
         
+        /* KPI PROGRESS */
+        .kpi-wrapper { background: #e2e8f0; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
+        .kpi-fill { height: 100%; width: 0%; transition: 0.5s ease; }
+
+        /* TABLES */
         table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 0.7rem; text-transform: uppercase; font-weight: 700; }
+        th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 0.7rem; text-transform: uppercase; }
         td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
 
-        .btn { padding: 10px 18px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+        /* KANBAN */
+        .kanban { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 15px; }
+        .column { background: #f1f5f9; min-width: 300px; border-radius: 12px; padding: 15px; }
+        .deal-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: grab; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+        .btn { padding: 10px 18px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: white; }
-
-        /* KPI GAUGES */
-        .kpi-container { height: 12px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin: 10px 0; }
-        .kpi-fill { height: 100%; transition: 0.5s ease; }
-
-        /* KANBAN */
-        .kanban { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 15px; height: 100%; }
-        .column { background: #f1f5f9; min-width: 320px; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; }
-        .deal-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: grab; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 30px; border-radius: 15px; width: 450px; }
         input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; }
-        
+
         #login-screen { position: fixed; inset: 0; background: var(--sidebar); z-index: 10000; display: flex; justify-content: center; align-items: center; }
     </style>
 </head>
@@ -70,15 +70,15 @@
 
     <div id="login-screen">
         <div class="card" style="width:350px; text-align:center; padding:40px;">
-            <h2 style="margin-bottom:20px;">ACCÈS DIRECTION</h2>
-            <button class="btn btn-primary" style="width:100%" onclick="login()">Se connecter au Dashboard</button>
+            <h2 style="margin-bottom:20px;">DASHBOARD DIRECTION</h2>
+            <button class="btn btn-primary" style="width:100%" onclick="document.getElementById('login-screen').style.display='none'; init();">Entrer</button>
         </div>
     </div>
 
     <nav class="sidebar">
-        <div class="sidebar-brand"><img src="https://cdn-icons-png.flaticon.com/512/3061/3061341.png"><span id="side-name">CORP CRM</span></div>
+        <div class="sidebar-brand"><img src="https://cdn-icons-png.flaticon.com/512/3061/3061341.png"><span>CORP CRM</span></div>
         <ul class="nav-links">
-            <li><a onclick="showView('dash')" id="l-dash" class="active"><i class="fas fa-chart-line"></i> Performance Mensuelle</a></li>
+            <li><a onclick="showView('dash')" id="l-dash" class="active"><i class="fas fa-chart-line"></i> Dashboard Mensuel</a></li>
             <li><a onclick="showView('pipe')" id="l-pipe"><i class="fas fa-exchange-alt"></i> Pipeline Ventes</a></li>
             <li><a onclick="showView('reports')" id="l-reports"><i class="fas fa-file-invoice-dollar"></i> Rapports & BI</a></li>
             <li><a onclick="showView('team')" id="l-team"><i class="fas fa-users-cog"></i> Équipe & Rôles</a></li>
@@ -88,33 +88,33 @@
 
     <main class="main-content">
         <header class="topbar">
-            <h3 id="view-title">Dashboard</h3>
+            <h3 id="view-title">Performance Mensuelle</h3>
             <div style="display:flex; gap:15px; align-items:center;">
-                <select id="period-filter" style="padding:8px; border-radius:6px; border:1px solid #ddd;" onchange="updateUI()"></select>
+                <select id="period-filter" style="padding:8px; border-radius:6px;" onchange="updateUI()"></select>
                 <button class="btn btn-success" onclick="openModal('dealModal')">+ Affaire</button>
             </div>
         </header>
 
         <div class="container">
             <section id="view-dash" class="view active">
-                <div class="card" style="background: linear-gradient(to right, #4f46e5, #818cf8); color: white;">
-                    <h4>Progression Objectif Mensuel</h4>
-                    <div style="display:flex; justify-content:space-between; margin-top:10px;">
-                        <span id="st-obj-val">0 / 0 FCFA</span>
-                        <span id="st-obj-percent" style="font-weight:bold;">0%</span>
+                <div class="card" style="background: linear-gradient(135deg, #4f46e5, #818cf8); color:white;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h4>Progression Objectif du Mois</h4>
+                        <span id="target-percent" style="font-weight:800; font-size:1.2rem;">0%</span>
                     </div>
-                    <div class="kpi-container"><div id="kpi-bar" class="kpi-fill" style="background: white;"></div></div>
+                    <div class="kpi-wrapper"><div id="kpi-bar" class="kpi-fill" style="background:white;"></div></div>
+                    <p id="target-text" style="font-size:0.85rem; opacity:0.9;">0 / 0 FCFA réalisé</p>
                 </div>
                 <div class="grid-stats">
-                    <div class="card"><h4>CA du Mois</h4><span class="stat-val" id="st-month-ca" style="color:var(--success)">0 FCFA</span></div>
-                    <div class="card"><h4>Commissions Dues</h4><span class="stat-val" id="st-month-comm" style="color:var(--danger)">0 FCFA</span></div>
-                    <div class="card"><h4>Affaires Gagnées</h4><span class="stat-val" id="st-month-deals">0</span></div>
-                    <div class="card"><h4>CA Aujourd'hui (J)</h4><span class="stat-val" id="st-today-ca" style="color:var(--primary)">0 FCFA</span></div>
+                    <div class="card"><h4>Ventes du Mois</h4><span class="stat-val" id="st-month-ca" style="color:var(--success)">0</span></div>
+                    <div class="card"><h4>Commissions</h4><span class="stat-val" id="st-month-comm" style="color:var(--danger)">0</span></div>
+                    <div class="card"><h4>Affaires Closes</h4><span class="stat-val" id="st-month-deals">0</span></div>
+                    <div class="card"><h4>Ventes Jour J</h4><span class="stat-val" id="st-today-ca" style="color:var(--primary)">0</span></div>
                 </div>
                 <div class="card">
-                    <h3>Performance par Commercial</h3><br>
+                    <h3>Performance Commerciale Mensuelle</h3><br>
                     <table>
-                        <thead><tr><th>Commercial</th><th>CA Réalisé</th><th>Commissions</th></tr></thead>
+                        <thead><tr><th>Nom</th><th>CA Réalisé</th><th>Commissions Dues</th></tr></thead>
                         <tbody id="perf-list"></tbody>
                     </table>
                 </div>
@@ -126,30 +126,35 @@
 
             <section id="view-reports" class="view">
                 <div class="card">
-                    <h3>⚡ Activité au Jour J (Aujourd'hui)</h3>
+                    <h3>⚡ Activité Aujourd'hui (Jour J)</h3>
                     <table id="today-table">
-                        <thead><tr><th>Nom</th><th>CA du Jour</th><th>Com. du Jour</th></tr></thead>
-                        <tbody id="today-summary-list"></tbody>
+                        <thead><tr><th>Commercial</th><th>Ventes J</th><th>Commissions J</th></tr></thead>
+                        <tbody id="today-list"></tbody>
                     </table>
                 </div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                    <div class="card"><h4>Tendance Annuelle</h4><br><canvas id="monthlyChart" style="max-height:250px;"></canvas></div>
-                    <div class="card"><h4>Bilan Commissions 2026</h4><br>
-                        <p>Total Dû : <b id="hist-due" style="color:var(--danger)">0</b> FCFA</p>
-                        <p>Total Versé : <b id="hist-paid" style="color:var(--success)">0</b> FCFA</p>
-                        <button class="btn btn-primary" style="margin-top:20px;" onclick="alert('Module de paiement activé')">Solder une période</button>
+                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:20px;">
+                    <div class="card">
+                        <h4>📈 Évolution du CA 2026 (Mois par Mois)</h4><br>
+                        <canvas id="evolutionChart" style="max-height:280px;"></canvas>
+                    </div>
+                    <div class="card">
+                        <h4>💰 Bilan Commissions</h4><br>
+                        <p>Total Historique : <br><b id="hist-total" style="font-size:1.2rem;">0</b> FCFA</p><br>
+                        <p>Total Versé : <br><b id="hist-paid" style="color:var(--success); font-size:1.2rem;">0</b> FCFA</p><br>
+                        <hr><br>
+                        <p>Reste à payer : <br><b id="hist-due" style="color:var(--danger); font-size:1.4rem;">0</b> FCFA</p>
                     </div>
                 </div>
             </section>
 
             <section id="view-team" class="view">
                 <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                    <h3>Gestion d'Équipe</h3>
-                    <button class="btn btn-primary" onclick="openModal('userModal')">+ Utilisateur</button>
+                    <h3>Utilisateurs & Droits</h3>
+                    <button class="btn btn-primary" onclick="openModal('userModal')">+ Nouveau</button>
                 </div>
                 <div class="card">
                     <table id="team-table">
-                        <thead><tr><th>Nom</th><th>Rôle</th><th>Taux (%)</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>Nom</th><th>Rôle</th><th>Taux Com</th><th>Actions</th></tr></thead>
                         <tbody id="team-list"></tbody>
                     </table>
                 </div>
@@ -157,13 +162,12 @@
 
             <section id="view-settings" class="view">
                 <div class="card" style="max-width:500px;">
-                    <h3>🎯 Paramétrage des Objectifs</h3><br>
-                    <label>Objectif de CA Mensuel (FCFA)</label>
-                    <input type="number" id="set-target" onchange="saveTarget(this.value)">
-                    <p style="font-size:0.8rem; color:gray; margin-top:5px;">Cet objectif s'appliquera au mois en cours sur le Dashboard.</p>
-                    <br>
-                    <label>Nom de la Société</label>
-                    <input type="text" id="set-name" onchange="state.config.name=this.value; updateUI();">
+                    <h3>🎯 Objectifs de Direction</h3><br>
+                    <label>Définir l'Objectif Mensuel (FCFA)</label>
+                    <input type="number" id="set-target" onchange="state.config.monthlyTarget = this.value; updateUI();">
+                    <br><br>
+                    <label>Nom de l'Organisation</label>
+                    <input type="text" id="set-name" onchange="state.config.name = this.value; updateUI();">
                 </div>
             </section>
         </div>
@@ -171,161 +175,170 @@
 
     <div class="modal" id="dealModal"><div class="modal-content">
         <h3>Nouvelle Affaire</h3><br>
-        <input type="text" id="d-title" placeholder="Client / Objet">
+        <input type="text" id="d-title" placeholder="Client">
         <select id="d-user"></select>
         <input type="number" id="d-amount" placeholder="Montant">
-        <button class="btn btn-success" style="width:100%" onclick="saveDeal()">Ajouter</button>
-        <button class="btn" style="width:100%" onclick="closeModals()">Annuler</button>
+        <input type="date" id="d-date">
+        <button class="btn btn-success" style="width:100%" onclick="saveDeal()">Enregistrer</button>
+        <button class="btn" style="width:100%" onclick="closeModals()">Fermer</button>
     </div></div>
 
     <div class="modal" id="userModal"><div class="modal-content">
         <h3>Nouvel Utilisateur</h3><br>
-        <input type="text" id="u-name" placeholder="Nom complet">
+        <input type="text" id="u-name" placeholder="Nom">
         <select id="u-role"><option value="Commercial">Commercial</option><option value="Admin">Admin</option></select>
-        <input type="number" id="u-rate" placeholder="Taux Commission %">
+        <input type="number" id="u-rate" placeholder="Taux %">
         <button class="btn btn-primary" style="width:100%" onclick="saveUser()">Créer</button>
-        <button class="btn" style="width:100%" onclick="closeModals()">Annuler</button>
     </div></div>
 
     <script>
+        // --- DATA ---
         let state = {
-            config: { name: "AFRIQUE SALES CORP", monthlyTarget: 50000000, totalPaid: 0 },
+            config: { name: "AFRIQUE SALES CORP", monthlyTarget: 20000000, totalPaid: 0 },
             users: [
                 { id: 1, name: "Jean Vendeur", role: "Commercial", rate: 10 },
                 { id: 2, name: "Awa Koné", role: "Commercial", rate: 12 }
             ],
             deals: [
-                { id: 101, title: "SODEFOR", user: "Jean Vendeur", price: 5000000, stage: 'gagne', date: '2026-03-26' }
+                { id: 101, title: "SODEFOR", user: "Jean Vendeur", price: 5000000, stage: 'gagne', date: '2026-03-26' },
+                { id: 102, title: "Banque Atlantique", user: "Awa Koné", price: 8000000, stage: 'gagne', date: '2026-02-10' }
             ]
         };
         let myChart = null;
 
-        function login() { document.getElementById('login-screen').style.display='none'; init(); }
+        // --- NAVIGATION ---
+        function showView(id) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            document.getElementById('view-' + id).classList.add('active');
+            document.getElementById('l-' + id).classList.add('active');
+            document.getElementById('view-title').innerText = document.getElementById('l-' + id).innerText;
+            if(id === 'reports') setTimeout(renderChart, 100);
+        }
 
+        // --- INITIALISATION ---
         function init() {
             const select = document.getElementById('period-filter');
             const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-            const currentM = new Date().getMonth();
+            const curM = new Date().getMonth();
             months.forEach((m, i) => {
                 let opt = document.createElement('option');
                 opt.value = (i+1 < 10 ? '0'+(i+1) : (i+1));
                 opt.text = m + " 2026";
-                if(i === currentM) opt.selected = true;
+                if(i === curM) opt.selected = true;
                 select.appendChild(opt);
             });
             document.getElementById('set-target').value = state.config.monthlyTarget;
+            document.getElementById('set-name').value = state.config.name;
             updateUI();
         }
 
-        // --- NAVIGATION CORRIGÉE ---
-        function showView(id) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+        function updateUI() {
+            const m = document.getElementById('period-filter').value;
+            const filterMonth = `2026-${m}`;
+            const today = new Date().toISOString().split('T')[0];
+
+            // 1. FILTRAGE DYNAMIQUE MOIS
+            const monthDeals = state.deals.filter(d => d.date.includes(filterMonth) && d.stage === 'gagne');
+            const todayDeals = state.deals.filter(d => d.date === today && d.stage === 'gagne');
+
+            // 2. CALCULS KPI
+            const caM = monthDeals.reduce((s,d) => s + d.price, 0);
+            const target = state.config.monthlyTarget;
+            const percent = Math.min(100, (caM / target) * 100);
             
-            document.getElementById('view-' + id).classList.add('active');
-            document.getElementById('l-' + id).classList.add('active');
-            document.getElementById('view-title').innerText = id.toUpperCase();
-            
-            // Re-render chart if switching to reports
-            if(id === 'reports') setTimeout(renderChart, 100);
+            document.getElementById('target-percent').innerText = Math.round(percent) + "%";
+            document.getElementById('kpi-bar').style.width = percent + "%";
+            document.getElementById('target-text').innerText = `${caM.toLocaleString()} / ${parseInt(target).toLocaleString()} FCFA réalisé`;
+            document.getElementById('st-month-ca').innerText = caM.toLocaleString() + " FCFA";
+            document.getElementById('st-month-deals').innerText = monthDeals.length;
+            document.getElementById('st-today-ca').innerText = todayDeals.reduce((s,d)=>s+d.price,0).toLocaleString() + " FCFA";
+
+            // 3. PERFORMANCE COMMERCIAUX (DYNAMIQUE MOIS)
+            document.getElementById('perf-list').innerHTML = state.users.filter(u=>u.role==='Commercial').map(u => {
+                const uCa = monthDeals.filter(d=>d.user===u.name).reduce((s,d)=>s+d.price,0);
+                const uCom = uCa * u.rate / 100;
+                return `<tr><td>${u.name}</td><td>${uCa.toLocaleString()} FCFA</td><td>${uCom.toLocaleString()} FCFA</td></tr>`;
+            }).join('');
+
+            // 4. RAPPORT JOUR J (REPORTS VIEW)
+            document.getElementById('today-list').innerHTML = state.users.filter(u=>u.role==='Commercial').map(u => {
+                const uCaJ = todayDeals.filter(d=>d.user===u.name).reduce((s,d)=>s+d.price,0);
+                return `<tr><td>${u.name}</td><td>${uCaJ.toLocaleString()} FCFA</td><td>${(uCaJ*u.rate/100).toLocaleString()} FCFA</td></tr>`;
+            }).join('');
+
+            // 5. BILAN FINANCIER GLOBAL
+            const totalHistCom = state.deals.filter(d=>d.stage==='gagne').reduce((s,d)=>{
+                let u = state.users.find(x=>x.name===d.user);
+                return s + (d.price * (u?u.rate:0)/100);
+            }, 0);
+            document.getElementById('hist-total').innerText = totalHistCom.toLocaleString();
+            document.getElementById('hist-due').innerText = (totalHistCom - state.config.totalPaid).toLocaleString();
+
+            // 6. KANBAN & TEAM
+            renderKanban();
+            renderTeam();
         }
 
+        function renderChart() {
+            const ctx = document.getElementById('evolutionChart').getContext('2d');
+            if(myChart) myChart.destroy();
+            
+            // CALCUL DYNAMIQUE DU CA PAR MOIS POUR L'ANNÉE ENTIÈRE
+            const monthLabels = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"];
+            const caByMonth = monthLabels.map((_, i) => {
+                const mStr = (i+1 < 10 ? '0'+(i+1) : (i+1));
+                return state.deals.filter(d => d.date.includes(`2026-${mStr}`) && d.stage === 'gagne').reduce((s,d)=>s+d.price, 0);
+            });
+
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: monthLabels,
+                    datasets: [{ label: 'CA Mensuel (FCFA)', data: caByMonth, backgroundColor: '#4f46e5', borderRadius: 5 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        function renderKanban() {
+            const stages = [{id:'prospection', l:'Prospection'}, {id:'devis', l:'Négociation'}, {id:'gagne', l:'Gagné'}];
+            document.getElementById('board').innerHTML = stages.map(s => `
+                <div class="column" ondrop="drop(event, '${s.id}')" ondragover="allowDrop(event)">
+                    <h4 style="margin-bottom:15px; color:#64748b;">${s.l}</h4>
+                    ${state.deals.filter(d => d.stage === s.id).map(d => `
+                        <div class="deal-card" draggable="true" ondragstart="drag(event, ${d.id})">
+                            <div style="font-weight:700;">${d.title}</div>
+                            <div style="font-size:0.75rem; color:gray;">${d.user}</div>
+                            <div style="color:var(--primary); font-weight:700; margin-top:5px;">${d.price.toLocaleString()} FCFA</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+        }
+
+        function renderTeam() {
+            document.getElementById('team-list').innerHTML = state.users.map(u => `
+                <tr><td>${u.name}</td><td>${u.role}</td><td>${u.rate}%</td>
+                <td><button onclick="deleteUser(${u.id})" style="color:red; background:none; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button></td></tr>
+            `).join('');
+        }
+
+        // --- ACTIONS ---
         function openModal(id) {
             if(id === 'dealModal') document.getElementById('d-user').innerHTML = state.users.map(u => `<option>${u.name}</option>`).join('');
             document.getElementById(id).style.display = 'flex';
         }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-
-        function saveTarget(val) { state.config.monthlyTarget = parseFloat(val); updateUI(); }
-
         function saveUser() {
             state.users.push({ id: Date.now(), name: document.getElementById('u-name').value, role: document.getElementById('u-role').value, rate: parseFloat(document.getElementById('u-rate').value) || 0 });
             closeModals(); updateUI();
         }
-
         function saveDeal() {
-            state.deals.push({ id: Date.now(), title: document.getElementById('d-title').value, user: document.getElementById('d-user').value, price: parseFloat(document.getElementById('d-amount').value), stage: 'prospection', date: new Date().toISOString().split('T')[0] });
+            state.deals.push({ id: Date.now(), title: document.getElementById('d-title').value, user: document.getElementById('d-user').value, price: parseFloat(document.getElementById('d-amount').value), stage: 'prospection', date: document.getElementById('d-date').value || new Date().toISOString().split('T')[0] });
             closeModals(); updateUI();
         }
-
-        function updateUI() {
-            document.getElementById('side-name').innerText = state.config.name;
-            const m = document.getElementById('period-filter').value;
-            const filterDate = `2026-${m}`;
-            const today = new Date().toISOString().split('T')[0];
-
-            const monthDeals = state.deals.filter(d => d.date.includes(filterDate) && d.stage === 'gagne');
-            const todayDeals = state.deals.filter(d => d.date === today && d.stage === 'gagne');
-
-            // --- KPI OBJECTIF ---
-            const caM = monthDeals.reduce((s,d) => s+d.price, 0);
-            const target = state.config.monthlyTarget;
-            const percent = Math.min(100, (caM / target) * 100);
-            document.getElementById('st-obj-val').innerText = `${caM.toLocaleString()} / ${target.toLocaleString()} FCFA`;
-            document.getElementById('st-obj-percent').innerText = Math.round(percent) + "%";
-            document.getElementById('kpi-bar').style.width = percent + "%";
-            document.getElementById('kpi-bar').style.background = percent > 90 ? '#10b981' : (percent > 50 ? '#f59e0b' : '#ef4444');
-
-            // --- STATS ---
-            const comM = monthDeals.reduce((s,d) => {
-                let u = state.users.find(x => x.name === d.user);
-                return s + (d.price * (u?u.rate:0)/100);
-            }, 0);
-            document.getElementById('st-month-ca').innerText = caM.toLocaleString() + " FCFA";
-            document.getElementById('st-month-comm').innerText = comM.toLocaleString() + " FCFA";
-            document.getElementById('st-month-deals').innerText = monthDeals.length;
-            document.getElementById('st-today-ca').innerText = todayDeals.reduce((s,d)=>s+d.price, 0).toLocaleString() + " FCFA";
-
-            // --- LISTES ---
-            document.getElementById('perf-list').innerHTML = state.users.filter(u=>u.role==='Commercial').map(u => {
-                const uCa = monthDeals.filter(d=>d.user===u.name).reduce((s,d)=>s+d.price,0);
-                return `<tr><td>${u.name}</td><td>${uCa.toLocaleString()} FCFA</td><td>${(uCa*u.rate/100).toLocaleString()} FCFA</td></tr>`;
-            }).join('');
-
-            document.getElementById('today-summary-list').innerHTML = state.users.filter(u=>u.role==='Commercial').map(u => {
-                const uCaJ = todayDeals.filter(d=>d.user===u.name).reduce((s,d)=>s+d.price,0);
-                return `<tr><td>${u.name}</td><td>${uCaJ.toLocaleString()} FCFA</td><td>${(uCaJ*u.rate/100).toLocaleString()} FCFA</td></tr>`;
-            }).join('');
-
-            document.getElementById('team-list').innerHTML = state.users.map(u => `
-                <tr><td>${u.name}</td><td>${u.role}</td><td>${u.rate}%</td>
-                <td><button onclick="state.users=state.users.filter(x=>x.id!==${u.id});updateUI();" style="color:red; background:none; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button></td></tr>
-            `).join('');
-
-            // --- PIPELINE KANBAN ---
-            const stages = [{id:'prospection', l:'Prospection'}, {id:'devis', l:'Négociation'}, {id:'gagne', l:'Clos - Gagné'}];
-            document.getElementById('board').innerHTML = stages.map(s => `
-                <div class="column" ondrop="drop(event, '${s.id}')" ondragover="allowDrop(event)">
-                    <h4 style="margin-bottom:15px;">${s.l}</h4>
-                    ${state.deals.filter(d => d.stage === s.id).map(d => `
-                        <div class="deal-card" draggable="true" ondragstart="drag(event, ${d.id})">
-                            <b>${d.title}</b><br><small>${d.user}</small><br>
-                            <span style="color:var(--primary); font-weight:700;">${d.price.toLocaleString()} FCFA</span>
-                        </div>
-                    `).join('')}
-                </div>
-            `).join('');
-
-            // --- RAPPORT FINANCIER ---
-            const totalCom = state.deals.filter(d=>d.stage==='gagne').reduce((s,d)=>{
-                let u = state.users.find(x=>x.name===d.user);
-                return s + (d.price * (u?u.rate:0)/100);
-            }, 0);
-            document.getElementById('hist-due').innerText = (totalCom - state.config.totalPaid).toLocaleString();
-            document.getElementById('hist-paid').innerText = state.config.totalPaid.toLocaleString();
-        }
-
-        function renderChart() {
-            const ctx = document.getElementById('monthlyChart').getContext('2d');
-            if(myChart) myChart.destroy();
-            const caData = [20, 45, 30, 0, 0, 0]; // Simulé pour l'exemple
-            myChart = new Chart(ctx, {
-                type: 'line',
-                data: { labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin"], datasets: [{ label: 'CA Mensuel (Millions)', data: caData, borderColor: '#4f46e5', tension: 0.4 }] },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
-
+        function deleteUser(id) { state.users = state.users.filter(u => u.id !== id); updateUI(); }
         function drag(ev, id) { ev.dataTransfer.setData("text", id); }
         function allowDrop(ev) { ev.preventDefault(); }
         function drop(ev, stageId) {
