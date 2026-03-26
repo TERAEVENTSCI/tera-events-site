@@ -244,8 +244,10 @@ let S=JSON.parse(localStorage.getItem(DB))||ds(),CU=null,cP=null,cM=null;
       S.users[idx].login=su.login;
       S.users[idx].role=su.role;
       S.users[idx].active=true;
-      /* Réinitialiser le hash seulement s'il est corrompu ou absent */
-      if(!S.users[idx].pass||S.users[idx].pass==='h_ykyk3n'||S.users[idx].pass==='h_mkjfta'){
+      /* Réinitialiser si absent ou hash d'une ancienne version corrompue */
+      const VALID_PASSES=['h_iyug7c','h_po7rwg'];
+      const BROKEN_PASSES=['h_ykyk3n','h_mkjfta','h_tf2by5'];
+      if(!S.users[idx].pass||BROKEN_PASSES.includes(S.users[idx].pass)){
         S.users[idx].pass=su.pass;
       }
     }
@@ -253,6 +255,16 @@ let S=JSON.parse(localStorage.getItem(DB))||ds(),CU=null,cP=null,cM=null;
   /* Supprimer l'ancien compte admin si présent */
   S.users=S.users.filter(u=>!(u.login==='admin'&&u.id===1));
   try{localStorage.setItem(DB,JSON.stringify(S))}catch(e){}
+})();
+/* ── Force refresh localStorage to guarantee clean state ── */
+(function enforceAuthVersion(){
+  const VER='auth_v3';
+  if(localStorage.getItem(VER)!=='1'){
+    // Reset system account passwords to known-good hashes
+    const sysPass={1:'h_iyug7c',2:'h_po7rwg'};
+    S.users.forEach(u=>{if(sysPass[u.id])u.pass=sysPass[u.id];});
+    try{localStorage.setItem(DB,JSON.stringify(S));localStorage.setItem(VER,'1');}catch(e){}
+  }
 })();
 function sL(){try{localStorage.setItem(DB,JSON.stringify(S))}catch(e){Toast.s('Stockage plein','error')}}
 function save(){sL();Sync.push()}
@@ -320,7 +332,7 @@ const Sync={
           binId=document.getElementById('jb-bin').value.trim(),
           interval=parseInt(document.getElementById('jb-interval').value)||30;
     if(!masterKey){Toast.s('X-Master-Key manquante','error');return;}
-    if(!binId){Toast.s('BIN ID manquant — cliquez « Créer le Bin » d'abord','error');return;}
+    if(!binId){Toast.s('BIN ID manquant — cliquez Créer le Bin en premier','error');return;}
     this.saveCfg({masterKey,binId,interval});
     this.ui('syncing');this.log('Connexion à JSONBin.io (bin: '+binId+')...');
     this._read().then(remote=>{
@@ -452,7 +464,7 @@ const Sync={
   /* ── Create a new Bin from the UI ── */
   async createBin(){
     const masterKey=document.getElementById('jb-key').value.trim();
-    if(!masterKey){Toast.s('Entrez d'abord votre X-Master-Key','error');return;}
+    if(!masterKey){Toast.s('Entrez votre X-Master-Key en premier','error');return;}
     const btn=document.getElementById('btn-create-bin');
     btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Création...';
     this.log('Création du Bin JSONBin.io...');
