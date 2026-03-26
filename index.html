@@ -183,15 +183,22 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
 <div id="tab-sync" class="admin-panel" style="display:none">
 <div class="sync-setup-card" id="sync-card"><i class="fas fa-cloud" style="font-size:2.5rem;color:var(--text-muted);margin-bottom:.75rem"></i><h3 id="sync-title">Synchronisation non configurée</h3><p style="font-size:.85rem;color:var(--text-secondary)" id="sync-desc">Configurez JSONBin.io pour synchroniser les données entre les utilisateurs en temps réel.</p></div>
 
-<div class="card"><div class="card-header"><h3><i class="fas fa-book" style="color:var(--primary);margin-right:.4rem"></i> Guide de configuration (3 étapes)</h3></div>
+<div class="card"><div class="card-header"><h3><i class="fas fa-book" style="color:var(--primary);margin-right:.4rem"></i> Guide de configuration</h3></div>
 <div class="sync-step"><div class="step-num">1</div><div class="step-text"><h4>Créer un compte JSONBin.io (gratuit)</h4><p>Allez sur <strong>jsonbin.io</strong> → Sign Up → connectez-vous à votre tableau de bord</p></div></div>
 <div class="sync-step"><div class="step-num">2</div><div class="step-text"><h4>Récupérer votre X-Master-Key</h4><p>Menu → API Keys → copiez votre <strong>X-Master-Key</strong> (commence par <code>$2a$...</code>)</p></div></div>
-<div class="sync-step"><div class="step-num">3</div><div class="step-text"><h4>Créer un Bin & copier son ID</h4><p>Bins → Create Bin → collez <code>{}</code> → Save → copiez le <strong>BIN ID</strong> dans l'URL (ex: <code>64f3a...</code>)</p></div></div></div>
+<div class="sync-step"><div class="step-num">3</div><div class="step-text"><h4>Créer le Bin automatiquement</h4><p>Collez votre X-Master-Key ci-dessous puis cliquez <strong>"Créer le Bin"</strong> — le BIN ID sera rempli automatiquement. Partagez ensuite ce BIN ID avec Eric.</p></div></div></div>
 
 <div class="card"><div class="card-header"><h3><i class="fas fa-key" style="color:var(--warning);margin-right:.4rem"></i> Configuration JSONBin.io</h3></div>
-<div class="form-group"><label>X-Master-Key</label><input type="password" class="form-control" id="jb-key" placeholder="$2a$10$XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"></div>
-<div class="form-group"><label>BIN ID</label><input type="text" class="form-control" id="jb-bin" placeholder="64f3a1b2e3d4c5f6a7b8c9d0"></div>
-<div class="form-group"><label>Intervalle de polling (secondes)</label><select class="form-control" id="jb-interval" style="width:auto"><option value="15">15 s</option><option value="30" selected>30 s</option><option value="60">60 s</option><option value="120">2 min</option></select></div>
+<div class="form-group"><label>X-Master-Key</label><div style="display:flex;gap:.5rem"><input type="password" class="form-control" id="jb-key" placeholder="$2a$10$XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"><button class="btn btn-outline" type="button" onclick="document.getElementById('jb-key').type=document.getElementById('jb-key').type==='password'?'text':'password'" style="flex-shrink:0;padding:.55rem .8rem"><i class="fas fa-eye"></i></button></div></div>
+<div class="form-group">
+  <label>BIN ID</label>
+  <div style="display:flex;gap:.5rem;align-items:center">
+    <input type="text" class="form-control" id="jb-bin" placeholder="Cliquez « Créer le Bin » ou collez un ID existant">
+    <button class="btn btn-outline" type="button" id="btn-create-bin" onclick="Sync.createBin()" style="flex-shrink:0;white-space:nowrap"><i class="fas fa-magic"></i> Créer le Bin</button>
+  </div>
+  <p style="font-size:.75rem;color:var(--text-muted);margin-top:.35rem"><i class="fas fa-info-circle"></i> Créez le Bin une seule fois (depuis le compte Super Admin) puis partagez le BIN ID avec Eric.</p>
+</div>
+<div class="form-group"><label>Intervalle de polling</label><select class="form-control" id="jb-interval" style="width:auto"><option value="15">15 s</option><option value="30" selected>30 s</option><option value="60">60 s</option><option value="120">2 min</option></select></div>
 <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem">
   <button class="btn btn-primary" onclick="Sync.connect()"><i class="fas fa-plug"></i> Connecter</button>
   <button class="btn btn-outline" onclick="Sync.disconnect()"><i class="fas fa-unlink"></i> Déconnecter</button>
@@ -298,21 +305,38 @@ const Sync={
     const masterKey=document.getElementById('jb-key').value.trim(),
           binId=document.getElementById('jb-bin').value.trim(),
           interval=parseInt(document.getElementById('jb-interval').value)||30;
-    if(!masterKey||!binId){Toast.s('Remplissez X-Master-Key et BIN ID','error');return;}
+    if(!masterKey){Toast.s('X-Master-Key manquante','error');return;}
+    if(!binId){Toast.s('BIN ID manquant — cliquez « Créer le Bin » d'abord','error');return;}
     this.saveCfg({masterKey,binId,interval});
-    this.ui('syncing');this.log('Connexion à JSONBin.io...');
-    /* Test de connexion : lecture du bin */
+    this.ui('syncing');this.log('Connexion à JSONBin.io (bin: '+binId+')...');
     this._read().then(remote=>{
       if(remote===null){
-        /* Bin vide ou non accessible → on écrit les données locales pour initialiser */
-        this.log('Bin vide — initialisation avec les données locales...','info');
-        return this._write().then(()=>{this.on=true;this.ui('online');this.log('✓ Bin initialisé et connecté','success');this._startPolling(interval);});
+        /* Bin accessible mais vide → on initialise */
+        this.log('Bin vide — envoi des données locales...','info');
+        return this._write().then(()=>{
+          this.on=true;this.ui('online');
+          this.log('✓ Bin initialisé et connecté','success');
+          Toast.s('Sync activée');
+          this._startPolling(interval);
+        });
       }
-      /* Bin accessible → merge et démarrage */
+      /* Bin avec données → merge */
       this._merge(remote);
-      this.on=true;this.ui('online');this.log('✓ Connecté — données synchronisées','success');
+      this.on=true;this.ui('online');
+      this.log('✓ Connecté — données récupérées','success');
+      Toast.s('Sync activée');
+      App.refreshAll();
       this._startPolling(interval);
-    }).catch(e=>{this.log('Erreur connexion : '+e.message,'error');Toast.s('Connexion JSONBin échouée','error');this.ui('offline');});
+    }).catch(e=>{
+      this.log('Erreur : '+e.message,'error');
+      if(e.message.includes('401')||e.message.includes('403'))
+        Toast.s('X-Master-Key invalide ou accès refusé','error');
+      else if(e.message.includes('404'))
+        Toast.s('BIN ID introuvable — vérifiez l'ID','error');
+      else
+        Toast.s('Connexion échouée : '+e.message,'error');
+      this.ui('offline');
+    });
   },
 
   /* ── Disconnect ── */
@@ -409,6 +433,50 @@ const Sync={
     if(!this.on){Toast.s('Non connecté','error');return;}
     if(!confirm('Envoyer toutes les données locales vers JSONBin ?'))return;
     this.push();Toast.s('Envoi en cours...','info');
+  },
+
+  /* ── Create a new Bin from the UI ── */
+  async createBin(){
+    const masterKey=document.getElementById('jb-key').value.trim();
+    if(!masterKey){Toast.s('Entrez d'abord votre X-Master-Key','error');return;}
+    const btn=document.getElementById('btn-create-bin');
+    btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Création...';
+    this.log('Création du Bin JSONBin.io...');
+    try{
+      const payload={settings:S.settings,stages:S.stages,users:S.users,contacts:[],deals:[],audit:[],commissions:{},_syncMeta:{createdAt:new Date().toISOString(),createdBy:CU?CU.name:'Admin'}};
+      const r=await fetch('https://api.jsonbin.io/v3/b',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'X-Master-Key':masterKey,
+          'X-Bin-Name':'CRM-'+S.settings.company.replace(/\s+/g,'-')+'-'+Date.now().toString(36),
+          'X-Private':'true'
+        },
+        body:JSON.stringify(payload)
+      });
+      if(!r.ok){
+        const err=await r.json().catch(()=>({}));
+        throw new Error((err.message||'HTTP '+r.status));
+      }
+      const j=await r.json();
+      const binId=j.metadata&&j.metadata.id?j.metadata.id:(j.metadata?.id||j.id||null);
+      if(!binId)throw new Error('BIN ID introuvable dans la réponse');
+      document.getElementById('jb-bin').value=binId;
+      /* Flash green */
+      document.getElementById('jb-bin').style.borderColor='var(--success)';
+      setTimeout(()=>document.getElementById('jb-bin').style.borderColor='',2000);
+      this.log('✓ Bin créé — ID : '+binId,'success');
+      Toast.s('Bin créé ! Vous pouvez maintenant connecter.');
+      /* Auto-save config with new binId */
+      const interval=parseInt(document.getElementById('jb-interval').value)||30;
+      this.saveCfg({masterKey,binId,interval});
+      this._lastHash=this._hash(payload);
+    }catch(e){
+      this.log('Erreur création Bin : '+e.message,'error');
+      Toast.s('Échec : '+e.message,'error');
+    }finally{
+      btn.disabled=false;btn.innerHTML='<i class="fas fa-magic"></i> Créer le Bin';
+    }
   },
 
   /* ── Auto-reconnect on load ── */
