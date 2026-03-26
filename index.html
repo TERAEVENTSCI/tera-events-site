@@ -8,1624 +8,371 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <style>
-:root {
-  --sidebar-w: 260px;
-  --topbar-h: 60px;
-  --primary: #2563eb;
-  --primary-light: #3b82f6;
-  --primary-bg: rgba(37,99,235,0.08);
-  --accent: #0ea5e9;
-  --bg: #f1f5f9;
-  --bg-card: #ffffff;
-  --sidebar-bg: #0c1222;
-  --sidebar-hover: #162033;
-  --sidebar-active: #1e3a5f;
-  --text: #0f172a;
-  --text-secondary: #64748b;
-  --text-muted: #94a3b8;
-  --border: #e2e8f0;
-  --border-light: #f1f5f9;
-  --success: #059669;
-  --success-light: #d1fae5;
-  --warning: #d97706;
-  --warning-light: #fef3c7;
-  --danger: #dc2626;
-  --danger-light: #fee2e2;
-  --info: #7c3aed;
-  --info-light: #ede9fe;
-  --radius: 10px;
-  --radius-lg: 14px;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.05);
-  --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex}
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:9px}
-
-/* ═══ LOGIN ═══ */
-#login-screen{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,#0c1222 0%,#162033 40%,#1e3a5f 100%);overflow:hidden}
-#login-screen::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;
-  background:radial-gradient(circle,rgba(37,99,235,0.12),transparent 70%);top:-120px;right:-80px}
-#login-screen::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;
-  background:radial-gradient(circle,rgba(14,165,233,0.08),transparent 70%);bottom:-100px;left:-60px}
-.login-box{position:relative;z-index:1;background:rgba(255,255,255,0.97);border-radius:20px;padding:3rem 2.5rem;
-  width:420px;box-shadow:0 25px 50px rgba(0,0,0,0.25);animation:slideUp .5s ease}
+:root{--sidebar-w:260px;--topbar-h:60px;--primary:#2563eb;--primary-light:#3b82f6;--primary-bg:rgba(37,99,235,0.08);--bg:#f1f5f9;--bg-card:#fff;--sidebar-bg:#0c1222;--sidebar-hover:#162033;--sidebar-active:#1e3a5f;--text:#0f172a;--text-secondary:#64748b;--text-muted:#94a3b8;--border:#e2e8f0;--border-light:#f1f5f9;--success:#059669;--success-light:#d1fae5;--warning:#d97706;--warning-light:#fef3c7;--danger:#dc2626;--danger-light:#fee2e2;--info:#7c3aed;--info-light:#ede9fe;--radius:10px;--radius-lg:14px;--shadow-sm:0 1px 2px rgba(0,0,0,.04);--shadow-md:0 4px 6px -1px rgba(0,0,0,.07);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08);--tr:0.2s cubic-bezier(.4,0,.2,1)}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:9px}
+#login-screen{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0c1222,#162033 40%,#1e3a5f)}
+#login-screen::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.12),transparent 70%);top:-120px;right:-80px}
+.login-box{position:relative;z-index:1;background:rgba(255,255,255,.97);border-radius:20px;padding:3rem 2.5rem;width:420px;box-shadow:0 25px 50px rgba(0,0,0,.25);animation:slideUp .5s ease}
 @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-.login-box h2{font-size:1.5rem;font-weight:800;margin-bottom:.25rem;color:var(--text)}
-.login-box .sub{color:var(--text-secondary);font-size:.85rem;margin-bottom:2rem}
-.login-box label{font-size:.78rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:.4rem}
-.login-box input{width:100%;padding:.8rem 1rem;border:1.5px solid var(--border);border-radius:var(--radius);
-  font-size:.9rem;margin-bottom:1.25rem;transition:var(--transition);font-family:inherit}
-.login-box input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-bg)}
+.login-box h2{font-size:1.5rem;font-weight:800;text-align:center}.login-box .sub{color:var(--text-secondary);font-size:.85rem;text-align:center;margin-bottom:2rem}
 .login-error{color:var(--danger);font-size:.8rem;margin-bottom:1rem;display:none;padding:.6rem;background:var(--danger-light);border-radius:var(--radius)}
-
-/* ═══ SIDEBAR ═══ */
-.sidebar{width:var(--sidebar-w);background:var(--sidebar-bg);display:flex;flex-direction:column;flex-shrink:0;border-right:1px solid rgba(255,255,255,0.06)}
-.sidebar-brand{padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:.75rem}
-.sidebar-brand .logo-circle{width:36px;height:36px;border-radius:10px;background:var(--primary);display:flex;align-items:center;
-  justify-content:center;font-weight:800;color:#fff;font-size:.9rem;flex-shrink:0}
-.sidebar-brand .brand-text{font-weight:700;color:#fff;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sidebar-brand .brand-sub{font-size:.65rem;color:var(--text-muted);font-weight:400}
+.sidebar{width:var(--sidebar-w);background:var(--sidebar-bg);display:flex;flex-direction:column;flex-shrink:0}
+.sidebar-brand{padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:.75rem}
+.logo-circle{width:36px;height:36px;border-radius:10px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:.9rem;flex-shrink:0}
+.brand-text{font-weight:700;color:#fff;font-size:.9rem}.brand-sub{font-size:.65rem;color:var(--text-muted)}
 .nav-section{padding:.75rem 1.5rem .35rem;font-size:.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px}
 .nav-links{list-style:none;flex-grow:1;overflow-y:auto;padding:.25rem 0}
-.nav-links li a{display:flex;align-items:center;gap:.75rem;padding:.7rem 1.5rem;color:#94a3b8;text-decoration:none;
-  font-size:.85rem;font-weight:500;cursor:pointer;transition:var(--transition);border-left:3px solid transparent;margin:1px 0}
+.nav-links li a{display:flex;align-items:center;gap:.75rem;padding:.7rem 1.5rem;color:#94a3b8;text-decoration:none;font-size:.85rem;font-weight:500;cursor:pointer;transition:var(--tr);border-left:3px solid transparent}
 .nav-links li a:hover{background:var(--sidebar-hover);color:#e2e8f0}
 .nav-links li a.active{background:var(--sidebar-active);color:#fff;border-left-color:var(--primary)}
-.nav-links li a i{width:18px;text-align:center;font-size:.85rem}
-.sidebar-footer{padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,0.06)}
-.user-pill{display:flex;align-items:center;gap:.6rem;padding:.6rem;border-radius:var(--radius);cursor:pointer;transition:var(--transition)}
+.nav-links li a i{width:18px;text-align:center}
+.sidebar-footer{padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,.06)}
+.user-pill{display:flex;align-items:center;gap:.6rem;padding:.6rem;border-radius:var(--radius);cursor:pointer;transition:var(--tr)}
 .user-pill:hover{background:var(--sidebar-hover)}
-.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;
-  color:#fff;font-weight:700;font-size:.75rem;flex-shrink:0}
-.user-pill .uname{color:#e2e8f0;font-size:.8rem;font-weight:600}
-.user-pill .urole{color:var(--text-muted);font-size:.65rem}
-
-/* ═══ MAIN ═══ */
+.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.75rem;flex-shrink:0}
+.uname{color:#e2e8f0;font-size:.8rem;font-weight:600}.urole{color:var(--text-muted);font-size:.65rem}
+.sync-badge{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .7rem;border-radius:99px;font-size:.7rem;font-weight:700}
+.sync-badge.online{background:#d1fae5;color:#065f46}.sync-badge.offline{background:#fee2e2;color:#991b1b}.sync-badge.syncing{background:#dbeafe;color:#1e40af}
+.sync-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sync-badge.online .sync-dot{background:#059669;animation:pulseDot 2s infinite}.sync-badge.offline .sync-dot{background:#dc2626}.sync-badge.syncing .sync-dot{background:#2563eb;animation:spinDot .8s linear infinite}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.4}}@keyframes spinDot{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+.presence-avatar{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;color:#fff;border:2px solid var(--sidebar-bg);margin-right:-6px;position:relative}
+.presence-avatar .online-dot{position:absolute;bottom:-1px;right:-1px;width:8px;height:8px;border-radius:50%;background:#059669;border:2px solid var(--sidebar-bg)}
 .main{flex-grow:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-.topbar{height:var(--topbar-h);background:var(--bg-card);border-bottom:1px solid var(--border);display:flex;align-items:center;
-  padding:0 2rem;justify-content:space-between;flex-shrink:0}
-.topbar h1{font-size:1.1rem;font-weight:700}
-.topbar-actions{display:flex;gap:.75rem;align-items:center}
+.topbar{height:var(--topbar-h);background:var(--bg-card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;justify-content:space-between;flex-shrink:0}
+.topbar h1{font-size:1.1rem;font-weight:700}.topbar-actions{display:flex;gap:.75rem;align-items:center}
 .container{padding:1.75rem 2rem;overflow-y:auto;flex-grow:1}
-
-/* ═══ VIEWS ═══ */
-.view{display:none;animation:fadeIn .25s ease}
-.view.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-
-/* ═══ CARDS ═══ */
+.view{display:none;animation:fadeIn .25s ease}.view.active{display:block}@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem;box-shadow:var(--shadow-sm)}
-.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem}
-.card-header h3{font-size:1rem;font-weight:700}
-.card-header .card-actions{display:flex;gap:.5rem}
-
-/* ═══ KPI GRID ═══ */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1.5rem}
-.kpi-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;box-shadow:var(--shadow-sm);
-  position:relative;overflow:hidden;transition:var(--transition)}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:.5rem}.card-header h3{font-size:1rem;font-weight:700}
+.card-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
+.kpi-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;box-shadow:var(--shadow-sm);transition:var(--tr)}
 .kpi-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
-.kpi-card .kpi-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem;font-size:1rem}
-.kpi-card .kpi-label{font-size:.72rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.35rem}
-.kpi-card .kpi-value{font-size:1.6rem;font-weight:800;line-height:1.2}
-.kpi-card .kpi-sub{font-size:.75rem;color:var(--text-muted);margin-top:.25rem}
-.kpi-card .kpi-trend{position:absolute;top:1.25rem;right:1.5rem;font-size:.75rem;font-weight:600;display:flex;align-items:center;gap:.2rem}
-
-/* ═══ TABLES ═══ */
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse}
-thead th{text-align:left;padding:.7rem 1rem;font-size:.7rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;
-  letter-spacing:.5px;background:var(--bg);border-bottom:2px solid var(--border)}
-tbody td{padding:.75rem 1rem;font-size:.84rem;border-bottom:1px solid var(--border-light);vertical-align:middle}
-tbody tr{transition:var(--transition)}
-tbody tr:hover{background:rgba(37,99,235,0.03)}
-
-/* ═══ BADGES ═══ */
-.badge{display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:99px;font-size:.7rem;font-weight:700;gap:.3rem}
-.badge-prospect{background:#dbeafe;color:#1e40af}
-.badge-client{background:var(--success-light);color:#065f46}
-.badge-inactif{background:#f1f5f9;color:#475569}
-.badge-partenaire{background:var(--info-light);color:#5b21b6}
-.badge-attente{background:var(--warning-light);color:#92400e}
-.badge-validee{background:var(--success-light);color:#065f46}
-.badge-payee{background:#dbeafe;color:#1e40af}
-
+.kpi-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem;font-size:1rem}
+.kpi-label{font-size:.72rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.35rem}
+.kpi-value{font-size:1.6rem;font-weight:800;line-height:1.2}.kpi-sub{font-size:.75rem;color:var(--text-muted);margin-top:.25rem}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse}
+thead th{text-align:left;padding:.7rem 1rem;font-size:.7rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;background:var(--bg);border-bottom:2px solid var(--border)}
+tbody td{padding:.75rem 1rem;font-size:.84rem;border-bottom:1px solid var(--border-light);vertical-align:middle}tbody tr{transition:var(--tr)}tbody tr:hover{background:rgba(37,99,235,.03)}
+.badge{display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:99px;font-size:.7rem;font-weight:700}
+.badge-prospect{background:#dbeafe;color:#1e40af}.badge-client{background:var(--success-light);color:#065f46}.badge-inactif{background:#f1f5f9;color:#475569}.badge-partenaire{background:var(--info-light);color:#5b21b6}
+.badge-attente{background:var(--warning-light);color:#92400e}.badge-validee{background:var(--success-light);color:#065f46}.badge-payee{background:#dbeafe;color:#1e40af}
 .stage-badge{display:inline-flex;align-items:center;padding:.25rem .7rem;border-radius:6px;font-size:.72rem;font-weight:700}
-
-/* ═══ BUTTONS ═══ */
-.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:var(--radius);border:none;
-  font-weight:600;cursor:pointer;transition:var(--transition);font-size:.82rem;font-family:inherit}
-.btn:hover{transform:translateY(-1px)}
-.btn-primary{background:var(--primary);color:#fff;box-shadow:0 1px 3px rgba(37,99,235,0.3)}
-.btn-primary:hover{background:var(--primary-light)}
-.btn-success{background:var(--success);color:#fff}
-.btn-danger{background:var(--danger);color:#fff}
-.btn-outline{border:1.5px solid var(--border);background:var(--bg-card);color:var(--text)}
-.btn-outline:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-bg)}
-.btn-ghost{background:transparent;color:var(--text-secondary);padding:.4rem .6rem}
-.btn-ghost:hover{background:var(--bg);color:var(--text)}
-.btn-sm{padding:.35rem .7rem;font-size:.75rem}
-.btn-icon{width:32px;height:32px;padding:0;justify-content:center;border-radius:8px}
-.btn-lg{padding:.75rem 1.5rem;font-size:.9rem}
-
-/* ═══ FORMS ═══ */
-.form-group{margin-bottom:1.1rem}
-.form-group label{display:block;font-size:.78rem;font-weight:600;color:var(--text-secondary);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.3px}
-.form-control{width:100%;padding:.7rem .9rem;border:1.5px solid var(--border);border-radius:var(--radius);
-  font-size:.85rem;font-family:inherit;transition:var(--transition);background:#fff}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:var(--radius);border:none;font-weight:600;cursor:pointer;transition:var(--tr);font-size:.82rem;font-family:inherit}
+.btn:hover{transform:translateY(-1px)}.btn-primary{background:var(--primary);color:#fff;box-shadow:0 1px 3px rgba(37,99,235,.3)}.btn-primary:hover{background:var(--primary-light)}
+.btn-outline{border:1.5px solid var(--border);background:var(--bg-card);color:var(--text)}.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+.btn-ghost{background:transparent;color:var(--text-secondary);padding:.4rem .6rem}.btn-ghost:hover{background:var(--bg);color:var(--text)}
+.btn-sm{padding:.35rem .7rem;font-size:.75rem}.btn-icon{width:32px;height:32px;padding:0;justify-content:center;border-radius:8px}.btn-lg{padding:.75rem 1.5rem;font-size:.9rem}
+.form-group{margin-bottom:1.1rem}.form-group label{display:block;font-size:.78rem;font-weight:600;color:var(--text-secondary);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.3px}
+.form-control{width:100%;padding:.7rem .9rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:.85rem;font-family:inherit;transition:var(--tr);background:#fff}
 .form-control:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-bg)}
-select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right .75rem center;padding-right:2rem}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-textarea.form-control{resize:vertical;min-height:80px}
-
-/* ═══ MODAL ═══ */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:9999;
-  align-items:center;justify-content:center;animation:fadeIn .15s ease}
-.modal-overlay.open{display:flex}
-.modal-box{background:#fff;border-radius:var(--radius-lg);width:540px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:slideUp .25s ease}
-.modal-header{padding:1.5rem 1.75rem 0;display:flex;justify-content:space-between;align-items:center}
-.modal-header h3{font-size:1.05rem;font-weight:700}
-.modal-body{padding:1.25rem 1.75rem}
-.modal-footer{padding:0 1.75rem 1.5rem;display:flex;gap:.5rem;justify-content:flex-end}
-
-/* ═══ PIPELINE KANBAN ═══ */
+select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center;padding-right:2rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}textarea.form-control{resize:vertical;min-height:80px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}.modal-box{background:#fff;border-radius:var(--radius-lg);width:540px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:slideUp .25s ease}
+.modal-header{padding:1.5rem 1.75rem 0;display:flex;justify-content:space-between;align-items:center}.modal-header h3{font-size:1.05rem;font-weight:700}
+.modal-body{padding:1.25rem 1.75rem}.modal-footer{padding:0 1.75rem 1.5rem;display:flex;gap:.5rem;justify-content:flex-end}
 .kanban{display:flex;gap:.75rem;overflow-x:auto;padding-bottom:1rem;min-height:calc(100vh - 200px)}
 .kanban-col{min-width:280px;max-width:300px;background:var(--bg);border-radius:var(--radius-lg);display:flex;flex-direction:column}
 .kanban-col-header{padding:1rem;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid transparent}
 .kanban-col-header h4{font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
-.kanban-col-header .col-count{background:rgba(0,0,0,0.06);padding:.15rem .5rem;border-radius:99px;font-size:.7rem;font-weight:700}
-.kanban-col-header .col-total{font-size:.72rem;color:var(--text-muted);font-weight:600}
+.col-count{background:rgba(0,0,0,.06);padding:.15rem .5rem;border-radius:99px;font-size:.7rem;font-weight:700}
+.col-total{font-size:.72rem;color:var(--text-muted);font-weight:600}
 .kanban-col-body{padding:.5rem;flex-grow:1;overflow-y:auto}
-.kanban-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;margin-bottom:.5rem;
-  cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-sm)}
+.kanban-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;margin-bottom:.5rem;cursor:pointer;transition:var(--tr);box-shadow:var(--shadow-sm)}
 .kanban-card:hover{box-shadow:var(--shadow-md);border-color:var(--primary)}
-.kanban-card .kc-ref{font-size:.68rem;color:var(--text-muted);font-weight:600}
-.kanban-card .kc-name{font-weight:700;font-size:.85rem;margin:.3rem 0}
-.kanban-card .kc-client{font-size:.78rem;color:var(--text-secondary)}
-.kanban-card .kc-amount{font-size:.9rem;font-weight:800;color:var(--primary);margin-top:.5rem}
-.kanban-card .kc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:.6rem;padding-top:.5rem;border-top:1px solid var(--border-light)}
-.kanban-card .kc-footer .kc-user{font-size:.7rem;color:var(--text-muted);display:flex;align-items:center;gap:.3rem}
-.kanban-card .kc-actions{display:flex;gap:.25rem}
-
-/* ═══ CHARTS ═══ */
-.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
-.chart-container{position:relative;height:280px}
+.kc-ref{font-size:.68rem;color:var(--text-muted);font-weight:600}.kc-name{font-weight:700;font-size:.85rem;margin:.3rem 0}
+.kc-client{font-size:.78rem;color:var(--text-secondary)}.kc-amount{font-size:.9rem;font-weight:800;color:var(--primary);margin-top:.5rem}
+.kc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:.6rem;padding-top:.5rem;border-top:1px solid var(--border-light)}
+.kc-user{font-size:.7rem;color:var(--text-muted);display:flex;align-items:center;gap:.3rem}
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}.chart-container{position:relative;height:280px}
 @media(max-width:1200px){.chart-grid{grid-template-columns:1fr}}
-
-/* ═══ COMMISSIONS ═══ */
 .commission-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
-.commission-summary .cs-card{text-align:center;padding:1.25rem;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border)}
-.cs-card .cs-value{font-size:1.4rem;font-weight:800;margin:.25rem 0}
-.cs-card .cs-label{font-size:.72rem;color:var(--text-secondary);text-transform:uppercase;font-weight:600}
-
-/* ═══ REPORTS ═══ */
-.report-card{border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;display:flex;align-items:center;gap:1.25rem;
-  cursor:pointer;transition:var(--transition);background:var(--bg-card);margin-bottom:.75rem}
+.cs-card{text-align:center;padding:1.25rem;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border)}
+.cs-value{font-size:1.4rem;font-weight:800;margin:.25rem 0}.cs-label{font-size:.72rem;color:var(--text-secondary);text-transform:uppercase;font-weight:600}
+.report-card{border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;display:flex;align-items:center;gap:1.25rem;cursor:pointer;transition:var(--tr);background:var(--bg-card);margin-bottom:.75rem}
 .report-card:hover{border-color:var(--primary);box-shadow:var(--shadow-md)}
 .report-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
-.report-info h4{font-weight:700;font-size:.9rem;margin-bottom:.2rem}
-.report-info p{font-size:.78rem;color:var(--text-secondary)}
-
-/* ═══ ADMIN ═══ */
+.report-info h4{font-weight:700;font-size:.9rem;margin-bottom:.2rem}.report-info p{font-size:.78rem;color:var(--text-secondary)}
 .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
-.admin-tabs{display:flex;gap:.25rem;margin-bottom:1.5rem;background:var(--bg);padding:.25rem;border-radius:var(--radius);border:1px solid var(--border)}
-.admin-tab{padding:.55rem 1.25rem;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;transition:var(--transition);border:none;background:transparent;color:var(--text-secondary);font-family:inherit}
+.admin-tabs{display:flex;gap:.25rem;margin-bottom:1.5rem;background:var(--bg);padding:.25rem;border-radius:var(--radius);border:1px solid var(--border);flex-wrap:wrap}
+.admin-tab{padding:.55rem 1.25rem;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;transition:var(--tr);border:none;background:transparent;color:var(--text-secondary);font-family:inherit}
 .admin-tab.active{background:#fff;color:var(--text);box-shadow:var(--shadow-sm)}
-
-/* ═══ SEARCH ═══ */
-.search-box{position:relative}
-.search-box input{padding-left:2.2rem}
-.search-box i{position:absolute;left:.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:.8rem}
-
-/* ═══ EMPTY STATE ═══ */
-.empty-state{text-align:center;padding:3rem 1rem;color:var(--text-muted)}
-.empty-state i{font-size:2.5rem;margin-bottom:1rem;opacity:.3}
-.empty-state h4{font-weight:700;margin-bottom:.3rem;color:var(--text-secondary)}
-.empty-state p{font-size:.85rem}
-
-/* ═══ FILTERS BAR ═══ */
+.sync-setup-card{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:2rem;text-align:center;margin-bottom:1.25rem}
+.sync-setup-card.connected{border-color:var(--success);border-style:solid;background:#f0fdf4}
+.sync-step{display:flex;align-items:flex-start;gap:1rem;text-align:left;margin-bottom:1rem;padding:1rem;background:var(--bg);border-radius:var(--radius)}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;flex-shrink:0}
+.step-text h4{font-size:.85rem;font-weight:700;margin-bottom:.2rem}.step-text p{font-size:.78rem;color:var(--text-secondary)}
+.search-box{position:relative}.search-box input{padding-left:2.2rem}.search-box i{position:absolute;left:.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:.8rem}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--text-muted)}.empty-state i{font-size:2.5rem;margin-bottom:1rem;opacity:.3}.empty-state h4{font-weight:700;margin-bottom:.3rem;color:var(--text-secondary)}
 .filters-bar{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-bottom:1.25rem}
-.filters-bar .form-control{width:auto;margin:0}
-
-/* ═══ PROGRESS BAR ═══ */
-.progress{height:8px;background:var(--border);border-radius:99px;overflow:hidden}
-.progress-bar{height:100%;border-radius:99px;transition:width .5s ease}
-
-/* ═══ TOAST ═══ */
+.progress{height:8px;background:var(--border);border-radius:99px;overflow:hidden}.progress-bar{height:100%;border-radius:99px;transition:width .5s ease}
 .toast-container{position:fixed;bottom:1.5rem;right:1.5rem;z-index:99999;display:flex;flex-direction:column;gap:.5rem}
-.toast{padding:.75rem 1.25rem;border-radius:var(--radius);font-size:.84rem;font-weight:600;box-shadow:var(--shadow-lg);
-  animation:slideUp .3s ease;display:flex;align-items:center;gap:.5rem;color:#fff;min-width:280px}
-.toast-success{background:var(--success)}
-.toast-error{background:var(--danger)}
-.toast-info{background:var(--primary)}
-
-/* ═══ PRINT ═══ */
+.toast{padding:.75rem 1.25rem;border-radius:var(--radius);font-size:.84rem;font-weight:600;box-shadow:var(--shadow-lg);animation:slideUp .3s ease;display:flex;align-items:center;gap:.5rem;color:#fff;min-width:280px;max-width:400px}
+.toast-success{background:var(--success)}.toast-error{background:var(--danger)}.toast-info{background:var(--primary)}
 @media print{.sidebar,.topbar,.btn,.no-print{display:none!important}.main{width:100%}.container{padding:0}}
-
-/* ═══ RESPONSIVE ═══ */
-@media(max-width:900px){
-  .sidebar{position:fixed;left:-260px;z-index:9998;transition:.3s ease;height:100vh}
-  .sidebar.open{left:0}
-  .admin-grid{grid-template-columns:1fr}
-  .form-row{grid-template-columns:1fr}
-  .commission-summary{grid-template-columns:1fr}
-}
+@media(max-width:900px){.sidebar{position:fixed;left:-260px;z-index:9998;transition:.3s;height:100vh}.sidebar.open{left:0}.admin-grid,.form-row{grid-template-columns:1fr}.commission-summary{grid-template-columns:1fr}#menu-toggle{display:inline-flex!important}}
 </style>
 </head>
 <body>
+<div id="login-screen"><div class="login-box">
+<div style="text-align:center;margin-bottom:.5rem"><div style="width:50px;height:50px;border-radius:14px;background:var(--primary);display:inline-flex;align-items:center;justify-content:center;margin-bottom:.75rem"><i class="fas fa-chart-line" style="color:#fff;font-size:1.3rem"></i></div></div>
+<h2>CRM Commercial</h2><p class="sub">Connectez-vous pour accéder au tableau de bord</p>
+<div id="login-error" class="login-error"><i class="fas fa-exclamation-circle"></i> Identifiants incorrects.</div>
+<div class="form-group"><label>Identifiant</label><input type="text" id="login-user" class="form-control" placeholder="Votre identifiant" autofocus></div>
+<div class="form-group"><label>Mot de passe</label><input type="password" id="login-pass" class="form-control" placeholder="••••••••" onkeydown="if(event.key==='Enter')Auth.login()"></div>
+<button class="btn btn-primary btn-lg" style="width:100%" onclick="Auth.login()"><i class="fas fa-arrow-right-to-bracket"></i> Se connecter</button>
+<p style="text-align:center;font-size:.72rem;color:var(--text-muted);margin-top:1.25rem">Accès par défaut : <strong>admin</strong> / <strong>Admin@2026</strong></p>
+</div></div>
 
-<!-- ═══════════════ LOGIN ═══════════════ -->
-<div id="login-screen">
-  <div class="login-box">
-    <div style="text-align:center;margin-bottom:.5rem">
-      <div style="width:50px;height:50px;border-radius:14px;background:var(--primary);display:inline-flex;align-items:center;justify-content:center;margin-bottom:.75rem">
-        <i class="fas fa-chart-line" style="color:#fff;font-size:1.3rem"></i>
-      </div>
-    </div>
-    <h2 style="text-align:center">CRM Commercial</h2>
-    <p class="sub" style="text-align:center">Connectez-vous pour accéder au tableau de bord</p>
-    <div id="login-error" class="login-error"><i class="fas fa-exclamation-circle"></i> Identifiants incorrects. Veuillez réessayer.</div>
-    <div class="form-group">
-      <label>Identifiant</label>
-      <input type="text" id="login-user" class="form-control" placeholder="Votre identifiant" autofocus>
-    </div>
-    <div class="form-group">
-      <label>Mot de passe</label>
-      <input type="password" id="login-pass" class="form-control" placeholder="••••••••" onkeydown="if(event.key==='Enter')Auth.login()">
-    </div>
-    <button class="btn btn-primary btn-lg" style="width:100%" onclick="Auth.login()">
-      <i class="fas fa-arrow-right-to-bracket"></i> Se connecter
-    </button>
-    <p style="text-align:center;font-size:.72rem;color:var(--text-muted);margin-top:1.25rem">
-      Accès par défaut : <strong>admin</strong> / <strong>Admin@2026</strong>
-    </p>
-  </div>
-</div>
-
-<!-- ═══════════════ SIDEBAR ═══════════════ -->
 <nav class="sidebar" id="sidebar">
-  <div class="sidebar-brand">
-    <div class="logo-circle" id="sidebar-logo-circle">C</div>
-    <div>
-      <div class="brand-text" id="sidebar-company">CRM</div>
-      <div class="brand-sub">Direction Commerciale</div>
-    </div>
-  </div>
-  <div class="nav-section">Navigation</div>
-  <ul class="nav-links" id="nav-links">
-    <li><a data-view="dashboard" class="active"><i class="fas fa-chart-pie"></i> Tableau de bord</a></li>
-    <li><a data-view="pipeline"><i class="fas fa-layer-group"></i> Pipeline</a></li>
-    <li><a data-view="contacts"><i class="fas fa-building"></i> Contacts</a></li>
-    <li><a data-view="commissions"><i class="fas fa-coins"></i> Commissions</a></li>
-    <li><a data-view="reports"><i class="fas fa-file-chart-column"></i> Rapports</a></li>
-  </ul>
-  <div class="nav-section">Système</div>
-  <ul class="nav-links">
-    <li><a data-view="admin"><i class="fas fa-gear"></i> Administration</a></li>
-  </ul>
-  <div class="sidebar-footer">
-    <div class="user-pill" onclick="Auth.logout()">
-      <div class="user-avatar" id="sidebar-avatar">A</div>
-      <div>
-        <div class="uname" id="sidebar-uname">Admin</div>
-        <div class="urole" id="sidebar-urole">Super Admin</div>
-      </div>
-      <i class="fas fa-right-from-bracket" style="margin-left:auto;color:#64748b;font-size:.8rem"></i>
-    </div>
-  </div>
-</nav>
+<div class="sidebar-brand"><div class="logo-circle" id="sb-logo">C</div><div><div class="brand-text" id="sb-company">CRM</div><div class="brand-sub">Direction Commerciale</div></div></div>
+<div style="padding:.75rem 1.5rem"><div class="sync-badge offline" id="sb-sync"><span class="sync-dot"></span><span id="sb-sync-text">Hors ligne</span></div></div>
+<div class="nav-section">Navigation</div>
+<ul class="nav-links"><li><a data-view="dashboard" class="active"><i class="fas fa-chart-pie"></i> Tableau de bord</a></li><li><a data-view="pipeline"><i class="fas fa-layer-group"></i> Pipeline</a></li><li><a data-view="contacts"><i class="fas fa-building"></i> Contacts</a></li><li><a data-view="commissions"><i class="fas fa-coins"></i> Commissions</a></li><li><a data-view="reports"><i class="fas fa-file-lines"></i> Rapports</a></li></ul>
+<div class="nav-section">Système</div><ul class="nav-links"><li><a data-view="admin"><i class="fas fa-gear"></i> Administration</a></li></ul>
+<div class="sidebar-footer">
+<div id="presence-bar" style="margin-bottom:.75rem;display:none"><div style="font-size:.65rem;color:var(--text-muted);text-transform:uppercase;font-weight:700;margin-bottom:.4rem">En ligne</div><div id="presence-list"></div></div>
+<div class="user-pill" onclick="Auth.logout()"><div class="user-avatar" id="sb-avatar">A</div><div><div class="uname" id="sb-uname">Admin</div><div class="urole" id="sb-urole">Super Admin</div></div><i class="fas fa-right-from-bracket" style="margin-left:auto;color:#64748b;font-size:.8rem"></i></div>
+</div></nav>
 
-<!-- ═══════════════ MAIN ═══════════════ -->
 <main class="main">
-  <header class="topbar">
-    <div style="display:flex;align-items:center;gap:.75rem">
-      <button class="btn btn-ghost btn-icon" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none" id="menu-toggle">
-        <i class="fas fa-bars"></i>
-      </button>
-      <h1 id="page-title">Tableau de bord</h1>
-    </div>
-    <div class="topbar-actions">
-      <select class="form-control" id="filter-period" style="width:170px;margin:0;padding:.5rem .75rem" onchange="App.refreshAll()">
-      </select>
-      <button class="btn btn-primary" onclick="Deals.openNew()"><i class="fas fa-plus"></i> Nouvelle affaire</button>
-    </div>
-  </header>
+<header class="topbar"><div style="display:flex;align-items:center;gap:.75rem"><button class="btn btn-ghost btn-icon" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none" id="menu-toggle"><i class="fas fa-bars"></i></button><h1 id="page-title">Tableau de bord</h1></div>
+<div class="topbar-actions"><div id="topbar-sync"></div><select class="form-control" id="filter-period" style="width:170px;margin:0;padding:.5rem .75rem" onchange="App.refreshAll()"></select><button class="btn btn-primary" onclick="Deals.openNew()"><i class="fas fa-plus"></i> Nouvelle affaire</button></div></header>
+<div class="container">
 
-  <div class="container" id="main-container">
+<section id="view-dashboard" class="view active">
+<div class="kpi-grid" id="kpi-grid"></div>
+<div class="chart-grid"><div class="card"><div class="card-header"><h3>Pipeline par étape</h3></div><div class="chart-container"><canvas id="chart-pipe"></canvas></div></div><div class="card"><div class="card-header"><h3>Performance mensuelle</h3></div><div class="chart-container"><canvas id="chart-month"></canvas></div></div></div>
+<div class="card"><div class="card-header"><h3><i class="fas fa-briefcase" style="color:var(--primary);margin-right:.4rem"></i> Affaires en cours</h3><div class="card-actions"><button class="btn btn-outline btn-sm" onclick="Reports.exportDashboard()"><i class="fas fa-file-pdf"></i> PDF</button></div></div><div class="table-wrap"><table id="tbl-dash"><thead><tr><th>Réf.</th><th>Affaire</th><th>Client</th><th>Interlocuteur</th><th>Montant</th><th>Étape</th><th>Commercial</th><th>Date</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
+</section>
 
-    <!-- ═══ DASHBOARD ═══ -->
-    <section id="view-dashboard" class="view active">
-      <div class="kpi-grid" id="kpi-grid"></div>
-      <div class="chart-grid">
-        <div class="card">
-          <div class="card-header"><h3>Pipeline par étape</h3></div>
-          <div class="chart-container"><canvas id="chart-pipeline"></canvas></div>
-        </div>
-        <div class="card">
-          <div class="card-header"><h3>Performance mensuelle</h3></div>
-          <div class="chart-container"><canvas id="chart-monthly"></canvas></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <h3><i class="fas fa-briefcase" style="color:var(--primary);margin-right:.4rem"></i> Affaires en cours</h3>
-          <div class="card-actions">
-            <button class="btn btn-outline btn-sm" onclick="Reports.exportDashboard()"><i class="fas fa-file-pdf"></i> Export PDF</button>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table id="tbl-dashboard">
-            <thead>
-              <tr><th>Réf.</th><th>Affaire</th><th>Client</th><th>Interlocuteur</th><th>Montant</th><th>Étape</th><th>Commercial</th><th>Date devis</th><th>Actions</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+<section id="view-pipeline" class="view">
+<div class="filters-bar no-print"><div class="search-box"><i class="fas fa-search"></i><input class="form-control" placeholder="Rechercher..." id="pipe-search" oninput="Pipeline.render()" style="width:260px"></div><select class="form-control" id="pipe-user" onchange="Pipeline.render()" style="width:200px;margin:0"></select></div>
+<div class="kanban" id="kanban"></div></section>
 
-    <!-- ═══ PIPELINE ═══ -->
-    <section id="view-pipeline" class="view">
-      <div class="filters-bar no-print">
-        <div class="search-box">
-          <i class="fas fa-search"></i>
-          <input class="form-control" placeholder="Rechercher une affaire..." id="pipeline-search" oninput="Pipeline.render()" style="width:260px">
-        </div>
-        <select class="form-control" id="pipeline-user-filter" onchange="Pipeline.render()" style="width:200px;margin:0"></select>
-      </div>
-      <div class="kanban" id="kanban"></div>
-    </section>
+<section id="view-contacts" class="view"><div class="card"><div class="card-header"><h3><i class="fas fa-building" style="color:var(--primary);margin-right:.4rem"></i> Contacts</h3><div class="card-actions"><div class="search-box"><i class="fas fa-search"></i><input class="form-control" placeholder="Rechercher..." id="ct-search" oninput="Contacts.render()" style="width:200px"></div><select class="form-control" id="ct-type" onchange="Contacts.render()" style="width:140px;margin:0"><option value="">Tous</option><option value="Prospect">Prospects</option><option value="Client actif">Clients actifs</option><option value="Client inactif">Inactifs</option><option value="Partenaire">Partenaires</option></select><button class="btn btn-primary" onclick="Contacts.openNew()"><i class="fas fa-plus"></i> Contact</button></div></div><div class="table-wrap"><table id="tbl-ct"><thead><tr><th>Raison sociale</th><th>Type</th><th>Secteur</th><th>Interlocuteur</th><th>Tél</th><th>Email</th><th>Commercial</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div></section>
 
-    <!-- ═══ CONTACTS ═══ -->
-    <section id="view-contacts" class="view">
-      <div class="card">
-        <div class="card-header">
-          <h3><i class="fas fa-building" style="color:var(--primary);margin-right:.4rem"></i> Base Clients & Prospects</h3>
-          <div class="card-actions">
-            <div class="search-box" style="margin-right:.5rem">
-              <i class="fas fa-search"></i>
-              <input class="form-control" placeholder="Rechercher..." id="contact-search" oninput="Contacts.render()" style="width:220px">
-            </div>
-            <select class="form-control" id="contact-type-filter" onchange="Contacts.render()" style="width:160px;margin:0">
-              <option value="">Tous les types</option>
-              <option value="Prospect">Prospects</option>
-              <option value="Client actif">Clients actifs</option>
-              <option value="Client inactif">Clients inactifs</option>
-              <option value="Partenaire">Partenaires</option>
-            </select>
-            <button class="btn btn-primary" onclick="Contacts.openNew()"><i class="fas fa-plus"></i> Contact</button>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table id="tbl-contacts">
-            <thead>
-              <tr><th>Raison sociale</th><th>Type</th><th>Secteur</th><th>Interlocuteur</th><th>Téléphone</th><th>Email</th><th>Commercial</th><th>Actions</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+<section id="view-commissions" class="view"><div class="commission-summary" id="comm-sum"></div><div class="card"><div class="card-header"><h3><i class="fas fa-coins" style="color:var(--warning);margin-right:.4rem"></i> Commissions</h3><div class="card-actions"><button class="btn btn-outline btn-sm" onclick="Reports.exportComm()"><i class="fas fa-file-pdf"></i> PDF</button></div></div><div class="table-wrap"><table id="tbl-comm"><thead><tr><th>Commercial</th><th>CA</th><th>Objectif</th><th>Atteinte</th><th>Taux</th><th>Commission</th><th>Bonus</th><th>Total</th><th>Statut</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div></section>
 
-    <!-- ═══ COMMISSIONS ═══ -->
-    <section id="view-commissions" class="view">
-      <div class="commission-summary" id="comm-summary"></div>
-      <div class="card" id="comm-card">
-        <div class="card-header">
-          <h3><i class="fas fa-coins" style="color:var(--warning);margin-right:.4rem"></i> Détail des commissions</h3>
-          <div class="card-actions">
-            <button class="btn btn-outline btn-sm" onclick="Reports.exportCommissions()"><i class="fas fa-file-pdf"></i> Export PDF</button>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table id="tbl-commissions">
-            <thead>
-              <tr><th>Commercial</th><th>CA réalisé</th><th>Objectif</th><th>Atteinte</th><th>Taux</th><th>Commission</th><th>Bonus</th><th>Total</th><th>Statut</th><th>Actions</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+<section id="view-reports" class="view"><div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+<div class="report-card" onclick="Reports.exportDashboard()"><div class="report-icon" style="background:var(--primary-bg);color:var(--primary)"><i class="fas fa-chart-pie"></i></div><div class="report-info"><h4>Activité commerciale</h4><p>KPI, affaires, pipeline</p></div></div>
+<div class="report-card" onclick="Reports.exportPipe()"><div class="report-icon" style="background:var(--info-light);color:var(--info)"><i class="fas fa-layer-group"></i></div><div class="report-info"><h4>Pipeline détaillé</h4><p>Affaires par étape</p></div></div>
+<div class="report-card" onclick="Reports.exportComm()"><div class="report-icon" style="background:var(--warning-light);color:var(--warning)"><i class="fas fa-coins"></i></div><div class="report-info"><h4>Commissions</h4><p>Détail par commercial</p></div></div>
+<div class="report-card" onclick="Reports.exportPerf()"><div class="report-icon" style="background:var(--success-light);color:var(--success)"><i class="fas fa-ranking-star"></i></div><div class="report-info"><h4>Performance</h4><p>Classement commerciaux</p></div></div>
+<div class="report-card" onclick="Reports.exportForecast()"><div class="report-icon" style="background:var(--danger-light);color:var(--danger)"><i class="fas fa-chart-line"></i></div><div class="report-info"><h4>Forecast</h4><p>Projection CA pipeline</p></div></div>
+<div class="report-card" onclick="App.exportJSON()"><div class="report-icon" style="background:#f0fdf4;color:#16a34a"><i class="fas fa-database"></i></div><div class="report-info"><h4>Sauvegarde JSON</h4><p>Export données complet</p></div></div>
+</div></section>
 
-    <!-- ═══ REPORTS ═══ -->
-    <section id="view-reports" class="view">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-        <div class="report-card" onclick="Reports.exportDashboard()">
-          <div class="report-icon" style="background:var(--primary-bg);color:var(--primary)"><i class="fas fa-chart-pie"></i></div>
-          <div class="report-info"><h4>Rapport d'activité commerciale</h4><p>Synthèse KPI, affaires actives, pipeline pondéré</p></div>
-        </div>
-        <div class="report-card" onclick="Reports.exportPipeline()">
-          <div class="report-icon" style="background:var(--info-light);color:var(--info)"><i class="fas fa-layer-group"></i></div>
-          <div class="report-info"><h4>Rapport Pipeline détaillé</h4><p>Toutes les affaires par étape avec montants et probabilités</p></div>
-        </div>
-        <div class="report-card" onclick="Reports.exportCommissions()">
-          <div class="report-icon" style="background:var(--warning-light);color:var(--warning)"><i class="fas fa-coins"></i></div>
-          <div class="report-info"><h4>Rapport de commissions</h4><p>Détail par commercial : CA, taux, commissions, bonus</p></div>
-        </div>
-        <div class="report-card" onclick="Reports.exportPerformance()">
-          <div class="report-icon" style="background:var(--success-light);color:var(--success)"><i class="fas fa-ranking-star"></i></div>
-          <div class="report-info"><h4>Performance individuelle</h4><p>Classement des commerciaux par CA et taux de conversion</p></div>
-        </div>
-        <div class="report-card" onclick="Reports.exportForecast()">
-          <div class="report-icon" style="background:var(--danger-light);color:var(--danger)"><i class="fas fa-chart-line"></i></div>
-          <div class="report-info"><h4>Prévisionnel (Forecast)</h4><p>Projection du CA basée sur le pipeline pondéré</p></div>
-        </div>
-        <div class="report-card" onclick="App.exportJSON()">
-          <div class="report-icon" style="background:#f0fdf4;color:#16a34a"><i class="fas fa-database"></i></div>
-          <div class="report-info"><h4>Sauvegarde complète (JSON)</h4><p>Export de toutes les données pour archivage</p></div>
-        </div>
-      </div>
-    </section>
+<section id="view-admin" class="view">
+<div class="admin-tabs"><button class="admin-tab active" data-tab="tab-settings">Entreprise</button><button class="admin-tab" data-tab="tab-users">Équipe</button><button class="admin-tab" data-tab="tab-comm">Commissions</button><button class="admin-tab" data-tab="tab-sync">Synchronisation</button><button class="admin-tab" data-tab="tab-data">Données</button></div>
 
-    <!-- ═══ ADMIN ═══ -->
-    <section id="view-admin" class="view">
-      <div class="admin-tabs" id="admin-tabs">
-        <button class="admin-tab active" data-tab="admin-settings">Entreprise</button>
-        <button class="admin-tab" data-tab="admin-users">Équipe commerciale</button>
-        <button class="admin-tab" data-tab="admin-comm-rules">Règles de commission</button>
-        <button class="admin-tab" data-tab="admin-data">Données</button>
-      </div>
+<div id="tab-settings" class="admin-panel"><div class="admin-grid"><div class="card"><div class="card-header"><h3>Paramètres</h3></div><div class="form-group"><label>Nom entreprise</label><input type="text" class="form-control" id="cfg-co"></div><div class="form-group"><label>Devise</label><select class="form-control" id="cfg-cur"><option value="FCFA">FCFA</option><option value="EUR">EUR</option><option value="USD">USD</option><option value="GBP">GBP</option><option value="MAD">MAD</option></select></div><div class="form-row"><div class="form-group"><label>Objectif mensuel</label><input type="number" class="form-control" id="cfg-tgt"></div><div class="form-group"><label>Objectif annuel</label><input type="number" class="form-control" id="cfg-atgt"></div></div><button class="btn btn-primary" onclick="Admin.saveSettings()"><i class="fas fa-check"></i> Enregistrer</button></div><div class="card"><div class="card-header"><h3>Étapes pipeline</h3></div><div id="cfg-stages"></div></div></div></div>
 
-      <div id="admin-settings" class="admin-panel">
-        <div class="admin-grid">
-          <div class="card">
-            <div class="card-header"><h3>Paramètres généraux</h3></div>
-            <div class="form-group"><label>Nom de l'entreprise</label><input type="text" class="form-control" id="cfg-company"></div>
-            <div class="form-group"><label>Devise</label>
-              <select class="form-control" id="cfg-currency">
-                <option value="FCFA">FCFA (Franc CFA)</option>
-                <option value="EUR">EUR (Euro)</option>
-                <option value="USD">USD (Dollar US)</option>
-                <option value="GBP">GBP (Livre Sterling)</option>
-                <option value="MAD">MAD (Dirham)</option>
-              </select>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Objectif CA mensuel</label><input type="number" class="form-control" id="cfg-target"></div>
-              <div class="form-group"><label>Objectif CA annuel</label><input type="number" class="form-control" id="cfg-annual-target"></div>
-            </div>
-            <button class="btn btn-primary" onclick="Admin.saveSettings()"><i class="fas fa-check"></i> Enregistrer</button>
-          </div>
-          <div class="card">
-            <div class="card-header"><h3>Étapes du pipeline</h3></div>
-            <div id="cfg-stages-list"></div>
-            <p style="font-size:.75rem;color:var(--text-muted);margin-top:.75rem"><i class="fas fa-info-circle"></i> Les étapes et probabilités sont configurables depuis ce panneau.</p>
-          </div>
-        </div>
-      </div>
+<div id="tab-users" class="admin-panel" style="display:none"><div class="card"><div class="card-header"><h3>Équipe</h3><button class="btn btn-primary" onclick="Users.openNew()"><i class="fas fa-user-plus"></i> Utilisateur</button></div><div class="table-wrap"><table id="tbl-users"><thead><tr><th>Nom</th><th>Login</th><th>Rôle</th><th>Taux</th><th>Statut</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div></div>
 
-      <div id="admin-users" class="admin-panel" style="display:none">
-        <div class="card">
-          <div class="card-header">
-            <h3>Gestion de l'équipe</h3>
-            <button class="btn btn-primary" onclick="Users.openNew()"><i class="fas fa-user-plus"></i> Utilisateur</button>
-          </div>
-          <div class="table-wrap">
-            <table id="tbl-users">
-              <thead><tr><th>Nom complet</th><th>Identifiant</th><th>Rôle</th><th>Taux comm.</th><th>Statut</th><th>Actions</th></tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+<div id="tab-comm" class="admin-panel" style="display:none"><div class="card"><div class="card-header"><h3>Règles</h3></div><div class="form-group"><label>Mode</label><select class="form-control" id="cfg-cmode"><option value="flat">Taux fixe</option><option value="tiered">Paliers</option></select></div><div id="cfg-tiers-sec" style="display:none"><div class="card-header"><h3>Paliers</h3><button class="btn btn-outline btn-sm" onclick="Admin.addTier()"><i class="fas fa-plus"></i></button></div><div id="cfg-tiers"></div></div><div class="form-group"><label>Déclenchement</label><select class="form-control" id="cfg-ctrig"><option value="signed">Devis signé</option><option value="paid">Paiement reçu</option></select></div><div class="form-group"><label>Bonus dépassement (%)</label><input type="number" class="form-control" id="cfg-bonus" value="2"></div><button class="btn btn-primary" onclick="Admin.saveComm()"><i class="fas fa-check"></i> Enregistrer</button></div></div>
 
-      <div id="admin-comm-rules" class="admin-panel" style="display:none">
-        <div class="card">
-          <div class="card-header"><h3>Règles de calcul des commissions</h3></div>
-          <div class="form-group"><label>Mode de calcul</label>
-            <select class="form-control" id="cfg-comm-mode">
-              <option value="flat">Taux fixe par commercial</option>
-              <option value="tiered">Paliers progressifs</option>
-            </select>
-          </div>
-          <div id="cfg-tiers-section" style="display:none">
-            <div class="card-header"><h3>Paliers de commission</h3><button class="btn btn-outline btn-sm" onclick="Admin.addTier()"><i class="fas fa-plus"></i> Palier</button></div>
-            <div id="cfg-tiers-list"></div>
-          </div>
-          <div class="form-group" style="margin-top:1rem"><label>Condition de déclenchement</label>
-            <select class="form-control" id="cfg-comm-trigger">
-              <option value="signed">Devis signé (Clos-Gagné)</option>
-              <option value="paid">Paiement client reçu</option>
-            </select>
-          </div>
-          <div class="form-group"><label>Bonus dépassement objectif (%)</label><input type="number" class="form-control" id="cfg-bonus-rate" value="2"></div>
-          <button class="btn btn-primary" onclick="Admin.saveCommRules()"><i class="fas fa-check"></i> Enregistrer</button>
-        </div>
-      </div>
-
-      <div id="admin-data" class="admin-panel" style="display:none">
-        <div class="admin-grid">
-          <div class="card">
-            <div class="card-header"><h3>Sauvegarde</h3></div>
-            <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:1rem">Exportez une copie complète de vos données au format JSON.</p>
-            <button class="btn btn-primary" onclick="App.exportJSON()"><i class="fas fa-download"></i> Télécharger la sauvegarde</button>
-          </div>
-          <div class="card">
-            <div class="card-header"><h3>Restauration</h3></div>
-            <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:1rem">Importez un fichier JSON de sauvegarde. Les données actuelles seront remplacées.</p>
-            <input type="file" id="import-file" accept=".json" style="display:none" onchange="App.importJSON(event)">
-            <button class="btn btn-outline" onclick="document.getElementById('import-file').click()"><i class="fas fa-upload"></i> Importer un fichier JSON</button>
-          </div>
-        </div>
-        <div class="card" style="margin-top:1.25rem">
-          <div class="card-header"><h3><i class="fas fa-clock-rotate-left" style="color:var(--info);margin-right:.4rem"></i> Journal d'audit (dernières actions)</h3></div>
-          <div class="table-wrap">
-            <table id="tbl-audit">
-              <thead><tr><th>Date/Heure</th><th>Utilisateur</th><th>Action</th><th>Détails</th></tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </div>
-</main>
-
-<!-- ═══════════════ MODALS ═══════════════ -->
-
-<!-- DEAL MODAL -->
-<div class="modal-overlay" id="modal-deal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h3 id="deal-modal-title">Nouvelle affaire</h3>
-      <button class="btn btn-ghost btn-icon" onclick="Modal.close('modal-deal')"><i class="fas fa-xmark"></i></button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="deal-id">
-      <div class="form-group"><label>Nom de l'affaire *</label><input type="text" class="form-control" id="deal-name" placeholder="Ex: Audit RH 2026"></div>
-      <div class="form-row">
-        <div class="form-group"><label>Client associé *</label><select class="form-control" id="deal-contact"></select></div>
-        <div class="form-group"><label>Interlocuteur décisionnaire</label><input type="text" class="form-control" id="deal-interlocuteur" placeholder="Nom et fonction"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Montant du devis *</label><input type="number" class="form-control" id="deal-amount" placeholder="0"></div>
-        <div class="form-group"><label>Étape du pipeline</label><select class="form-control" id="deal-stage"></select></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Commercial responsable</label><select class="form-control" id="deal-user"></select></div>
-        <div class="form-group"><label>Source</label>
-          <select class="form-control" id="deal-source">
-            <option value="Prospection">Prospection directe</option>
-            <option value="Réseau">Réseau / Recommandation</option>
-            <option value="Site web">Site web</option>
-            <option value="Salon">Salon / Événement</option>
-            <option value="Appel entrant">Appel entrant</option>
-            <option value="Autre">Autre</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Date du devis</label><input type="date" class="form-control" id="deal-date"></div>
-        <div class="form-group"><label>Date clôture prévue</label><input type="date" class="form-control" id="deal-close-date"></div>
-      </div>
-      <div class="form-group"><label>Prochaine action</label><input type="text" class="form-control" id="deal-next-action" placeholder="Ex: Relancer le client lundi"></div>
-      <div class="form-group" id="deal-loss-group" style="display:none"><label>Motif de perte *</label><textarea class="form-control" id="deal-loss-reason" placeholder="Pourquoi cette affaire a été perdue ?"></textarea></div>
-      <div class="form-group"><label>Notes</label><textarea class="form-control" id="deal-notes" placeholder="Notes internes..."></textarea></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="Modal.close('modal-deal')">Annuler</button>
-      <button class="btn btn-primary" onclick="Deals.save()"><i class="fas fa-check"></i> Enregistrer</button>
-    </div>
-  </div>
+<!-- ══════════════════════════════════════════ -->
+<!-- SYNC TAB — FIREBASE CONFIGURATION        -->
+<!-- ══════════════════════════════════════════ -->
+<div id="tab-sync" class="admin-panel" style="display:none">
+<div class="sync-setup-card" id="sync-card"><i class="fas fa-cloud" style="font-size:2.5rem;color:var(--text-muted);margin-bottom:.75rem"></i><h3 id="sync-title">Synchronisation non configurée</h3><p style="font-size:.85rem;color:var(--text-secondary)" id="sync-desc">Configurez Firebase pour synchroniser les données entre tous les utilisateurs en temps réel.</p></div>
+<div class="card"><div class="card-header"><h3><i class="fas fa-book" style="color:var(--primary);margin-right:.4rem"></i> Guide rapide (3 étapes)</h3></div>
+<div class="sync-step"><div class="step-num">1</div><div class="step-text"><h4>Créer un projet Firebase (gratuit)</h4><p>Allez sur <strong>console.firebase.google.com</strong> → Créer un projet</p></div></div>
+<div class="sync-step"><div class="step-num">2</div><div class="step-text"><h4>Activer Realtime Database</h4><p>Menu → Build → Realtime Database → Créer → Démarrer en <strong>mode test</strong></p></div></div>
+<div class="sync-step"><div class="step-num">3</div><div class="step-text"><h4>Copier la configuration</h4><p>Paramètres ⚙️ → Vos applications → App Web → Copier apiKey, databaseURL, projectId</p></div></div></div>
+<div class="card"><div class="card-header"><h3><i class="fas fa-key" style="color:var(--warning);margin-right:.4rem"></i> Configuration Firebase</h3></div>
+<div class="form-group"><label>API Key</label><input type="text" class="form-control" id="fb-key" placeholder="AIzaSyXXXXXXXXXXXXX"></div>
+<div class="form-group"><label>Database URL</label><input type="text" class="form-control" id="fb-url" placeholder="https://xxx-default-rtdb.firebaseio.com"></div>
+<div class="form-group"><label>Project ID</label><input type="text" class="form-control" id="fb-pid" placeholder="mon-crm-xxxxx"></div>
+<div style="display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-primary" onclick="Sync.connect()"><i class="fas fa-plug"></i> Connecter</button><button class="btn btn-outline" onclick="Sync.disconnect()"><i class="fas fa-unlink"></i> Déconnecter</button><button class="btn btn-outline" id="btn-push" style="display:none" onclick="Sync.pushAll()"><i class="fas fa-cloud-arrow-up"></i> Envoyer données locales</button></div></div>
+<div class="card" id="sync-log-card" style="display:none"><div class="card-header"><h3><i class="fas fa-list-check" style="color:var(--success);margin-right:.4rem"></i> Journal sync</h3></div><div id="sync-log" style="max-height:200px;overflow-y:auto;font-size:.78rem"></div></div>
 </div>
 
-<!-- CONTACT MODAL -->
-<div class="modal-overlay" id="modal-contact">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h3 id="contact-modal-title">Nouveau contact</h3>
-      <button class="btn btn-ghost btn-icon" onclick="Modal.close('modal-contact')"><i class="fas fa-xmark"></i></button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="contact-id">
-      <div class="form-group"><label>Raison sociale *</label><input type="text" class="form-control" id="contact-name" placeholder="Nom de l'entreprise"></div>
-      <div class="form-row">
-        <div class="form-group"><label>Type</label>
-          <select class="form-control" id="contact-type">
-            <option value="Prospect">Prospect</option>
-            <option value="Client actif">Client actif</option>
-            <option value="Client inactif">Client inactif</option>
-            <option value="Partenaire">Partenaire</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Secteur d'activité</label><input type="text" class="form-control" id="contact-sector" placeholder="Ex: BTP, Finance..."></div>
-      </div>
-      <div class="form-group"><label>Interlocuteur principal</label><input type="text" class="form-control" id="contact-person" placeholder="Nom Prénom, Fonction"></div>
-      <div class="form-row">
-        <div class="form-group"><label>Téléphone</label><input type="tel" class="form-control" id="contact-phone" placeholder="+225 07 00 00 00"></div>
-        <div class="form-group"><label>Email</label><input type="email" class="form-control" id="contact-email" placeholder="contact@entreprise.com"></div>
-      </div>
-      <div class="form-group"><label>Adresse</label><input type="text" class="form-control" id="contact-address" placeholder="Adresse complète"></div>
-      <div class="form-group"><label>Commercial assigné</label><select class="form-control" id="contact-user"></select></div>
-      <div class="form-group"><label>Notes</label><textarea class="form-control" id="contact-notes" placeholder="Notes sur ce contact..."></textarea></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="Modal.close('modal-contact')">Annuler</button>
-      <button class="btn btn-primary" onclick="Contacts.save()"><i class="fas fa-check"></i> Enregistrer</button>
-    </div>
-  </div>
-</div>
+<div id="tab-data" class="admin-panel" style="display:none"><div class="admin-grid"><div class="card"><div class="card-header"><h3>Sauvegarde</h3></div><p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:1rem">Export JSON complet.</p><button class="btn btn-primary" onclick="App.exportJSON()"><i class="fas fa-download"></i> Télécharger</button></div><div class="card"><div class="card-header"><h3>Restauration</h3></div><p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:1rem">Importer un fichier JSON.</p><input type="file" id="imp-file" accept=".json" style="display:none" onchange="App.importJSON(event)"><button class="btn btn-outline" onclick="document.getElementById('imp-file').click()"><i class="fas fa-upload"></i> Importer</button></div></div>
+<div class="card" style="margin-top:1.25rem"><div class="card-header"><h3><i class="fas fa-clock-rotate-left" style="color:var(--info);margin-right:.4rem"></i> Audit</h3></div><div class="table-wrap"><table id="tbl-audit"><thead><tr><th>Date</th><th>Utilisateur</th><th>Action</th><th>Détails</th></tr></thead><tbody></tbody></table></div></div></div>
+</section>
+</div></main>
 
-<!-- USER MODAL -->
-<div class="modal-overlay" id="modal-user">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h3 id="user-modal-title">Nouvel utilisateur</h3>
-      <button class="btn btn-ghost btn-icon" onclick="Modal.close('modal-user')"><i class="fas fa-xmark"></i></button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="user-id">
-      <div class="form-group"><label>Nom complet *</label><input type="text" class="form-control" id="user-name" placeholder="Prénom Nom"></div>
-      <div class="form-row">
-        <div class="form-group"><label>Identifiant (login) *</label><input type="text" class="form-control" id="user-login" placeholder="prenom.nom"></div>
-        <div class="form-group"><label>Mot de passe</label><input type="password" class="form-control" id="user-pass" placeholder="Min. 8 caractères"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Rôle</label>
-          <select class="form-control" id="user-role">
-            <option value="Commercial">Commercial</option>
-            <option value="Manager">Manager</option>
-            <option value="Super Admin">Super Admin</option>
-            <option value="Lecture seule">Lecture seule</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Taux de commission (%)</label><input type="number" class="form-control" id="user-rate" value="5" step="0.5" min="0" max="100"></div>
-      </div>
-      <div class="form-group"><label>Équipe / Zone</label><input type="text" class="form-control" id="user-team" placeholder="Ex: Zone Nord, Équipe A"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="Modal.close('modal-user')">Annuler</button>
-      <button class="btn btn-primary" onclick="Users.save()"><i class="fas fa-check"></i> Enregistrer</button>
-    </div>
-  </div>
-</div>
+<!-- MODALS -->
+<div class="modal-overlay" id="m-deal"><div class="modal-box"><div class="modal-header"><h3 id="m-deal-t">Nouvelle affaire</h3><button class="btn btn-ghost btn-icon" onclick="Modal.close('m-deal')"><i class="fas fa-xmark"></i></button></div><div class="modal-body"><input type="hidden" id="d-id"><div class="form-group"><label>Nom *</label><input type="text" class="form-control" id="d-name"></div><div class="form-row"><div class="form-group"><label>Client *</label><select class="form-control" id="d-ct"></select></div><div class="form-group"><label>Interlocuteur</label><input type="text" class="form-control" id="d-inter"></div></div><div class="form-row"><div class="form-group"><label>Montant *</label><input type="number" class="form-control" id="d-amt"></div><div class="form-group"><label>Étape</label><select class="form-control" id="d-stg"></select></div></div><div class="form-row"><div class="form-group"><label>Commercial</label><select class="form-control" id="d-usr"></select></div><div class="form-group"><label>Source</label><select class="form-control" id="d-src"><option>Prospection</option><option>Réseau</option><option>Site web</option><option>Salon</option><option>Appel entrant</option><option>Autre</option></select></div></div><div class="form-row"><div class="form-group"><label>Date devis</label><input type="date" class="form-control" id="d-date"></div><div class="form-group"><label>Clôture prévue</label><input type="date" class="form-control" id="d-cdate"></div></div><div class="form-group"><label>Prochaine action</label><input type="text" class="form-control" id="d-next"></div><div class="form-group" id="d-loss-grp" style="display:none"><label>Motif perte *</label><textarea class="form-control" id="d-loss"></textarea></div><div class="form-group"><label>Notes</label><textarea class="form-control" id="d-notes"></textarea></div></div><div class="modal-footer"><button class="btn btn-outline" onclick="Modal.close('m-deal')">Annuler</button><button class="btn btn-primary" onclick="Deals.save()"><i class="fas fa-check"></i> Enregistrer</button></div></div></div>
 
-<!-- CONTACT DETAIL MODAL -->
-<div class="modal-overlay" id="modal-contact-detail">
-  <div class="modal-box" style="width:620px">
-    <div class="modal-header">
-      <h3 id="contact-detail-title">Fiche client</h3>
-      <button class="btn btn-ghost btn-icon" onclick="Modal.close('modal-contact-detail')"><i class="fas fa-xmark"></i></button>
-    </div>
-    <div class="modal-body" id="contact-detail-body"></div>
-  </div>
-</div>
+<div class="modal-overlay" id="m-ct"><div class="modal-box"><div class="modal-header"><h3 id="m-ct-t">Nouveau contact</h3><button class="btn btn-ghost btn-icon" onclick="Modal.close('m-ct')"><i class="fas fa-xmark"></i></button></div><div class="modal-body"><input type="hidden" id="c-id"><div class="form-group"><label>Raison sociale *</label><input type="text" class="form-control" id="c-name"></div><div class="form-row"><div class="form-group"><label>Type</label><select class="form-control" id="c-type"><option>Prospect</option><option>Client actif</option><option>Client inactif</option><option>Partenaire</option></select></div><div class="form-group"><label>Secteur</label><input type="text" class="form-control" id="c-sec"></div></div><div class="form-group"><label>Interlocuteur</label><input type="text" class="form-control" id="c-person"></div><div class="form-row"><div class="form-group"><label>Téléphone</label><input type="tel" class="form-control" id="c-tel"></div><div class="form-group"><label>Email</label><input type="email" class="form-control" id="c-email"></div></div><div class="form-group"><label>Adresse</label><input type="text" class="form-control" id="c-addr"></div><div class="form-group"><label>Commercial</label><select class="form-control" id="c-usr"></select></div><div class="form-group"><label>Notes</label><textarea class="form-control" id="c-notes"></textarea></div></div><div class="modal-footer"><button class="btn btn-outline" onclick="Modal.close('m-ct')">Annuler</button><button class="btn btn-primary" onclick="Contacts.save()"><i class="fas fa-check"></i> Enregistrer</button></div></div></div>
 
-<!-- TOAST CONTAINER -->
-<div class="toast-container" id="toast-container"></div>
+<div class="modal-overlay" id="m-usr"><div class="modal-box"><div class="modal-header"><h3 id="m-usr-t">Nouvel utilisateur</h3><button class="btn btn-ghost btn-icon" onclick="Modal.close('m-usr')"><i class="fas fa-xmark"></i></button></div><div class="modal-body"><input type="hidden" id="u-id"><div class="form-group"><label>Nom complet *</label><input type="text" class="form-control" id="u-name"></div><div class="form-row"><div class="form-group"><label>Identifiant *</label><input type="text" class="form-control" id="u-login"></div><div class="form-group"><label>Mot de passe</label><input type="password" class="form-control" id="u-pass"></div></div><div class="form-row"><div class="form-group"><label>Rôle</label><select class="form-control" id="u-role"><option>Commercial</option><option>Manager</option><option>Super Admin</option><option>Lecture seule</option></select></div><div class="form-group"><label>Taux commission %</label><input type="number" class="form-control" id="u-rate" value="5" step="0.5"></div></div><div class="form-group"><label>Équipe</label><input type="text" class="form-control" id="u-team"></div></div><div class="modal-footer"><button class="btn btn-outline" onclick="Modal.close('m-usr')">Annuler</button><button class="btn btn-primary" onclick="Users.save()"><i class="fas fa-check"></i> Enregistrer</button></div></div></div>
 
-<!-- ═══════════════ JAVASCRIPT ═══════════════ -->
+<div class="modal-overlay" id="m-detail"><div class="modal-box" style="width:620px"><div class="modal-header"><h3 id="m-detail-t">Fiche</h3><button class="btn btn-ghost btn-icon" onclick="Modal.close('m-detail')"><i class="fas fa-xmark"></i></button></div><div class="modal-body" id="m-detail-body"></div></div></div>
+
+<div class="toast-container" id="toasts"></div>
+
 <script>
-/* ═══════════════════════════════════════════════
-   DATA LAYER
-   ═══════════════════════════════════════════════ */
-const DB_KEY = 'crm_dc_v2';
-const DEFAULT_STAGES = {
-  1:{name:'Prospection',prob:10,color:'#94a3b8'},
-  2:{name:'Qualification',prob:25,color:'#6366f1'},
-  3:{name:'Proposition / Devis',prob:50,color:'#f59e0b'},
-  4:{name:'Négociation',prob:75,color:'#8b5cf6'},
-  5:{name:'Clos – Gagné',prob:100,color:'#059669'},
-  6:{name:'Clos – Perdu',prob:0,color:'#dc2626'}
-};
+const DB='crm_v3',FB_KEY='crm_fb_cfg';
+const DSTG={1:{name:'Prospection',prob:10,color:'#94a3b8'},2:{name:'Qualification',prob:25,color:'#6366f1'},3:{name:'Proposition',prob:50,color:'#f59e0b'},4:{name:'Négociation',prob:75,color:'#8b5cf6'},5:{name:'Gagné',prob:100,color:'#059669'},6:{name:'Perdu',prob:0,color:'#dc2626'}};
+function hp(p){let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0}return'h_'+Math.abs(h).toString(36)}
+function ds(){return{settings:{company:'Mon Entreprise',currency:'FCFA',target:50000000,annualTarget:600000000,commMode:'flat',commTrigger:'signed',bonusRate:2,tiers:[{min:0,max:10000000,rate:5},{min:10000000,max:'INF',rate:7}]},stages:JSON.parse(JSON.stringify(DSTG)),users:[{id:1,name:'Administrateur',login:'admin',role:'Super Admin',rate:5,team:'Direction',active:true,pass:hp('Admin@2026')}],contacts:[],deals:[],audit:[],commissions:{}}}
+let S=JSON.parse(localStorage.getItem(DB))||ds(),CU=null,cP=null,cM=null;
+function sL(){try{localStorage.setItem(DB,JSON.stringify(S))}catch(e){Toast.s('Stockage plein','error')}}
+function save(){sL();Sync.push()}
+function aA(a,d=''){S.audit.unshift({date:new Date().toISOString(),user:CU?CU.name:'Sys',action:a,details:d});if(S.audit.length>200)S.audit.length=200}
+function fmt(n){return(!n&&n!==0)?'0':Number(n).toLocaleString('fr-FR')}
+function fc(n){return fmt(n)+' '+S.settings.currency}
+function gC(id){return S.contacts.find(c=>c.id===id)}
+function gU(id){return S.users.find(u=>u.id===id)}
+function gSN(s){return(S.stages[s]||{name:'?'}).name}
+function gSC(s){return(S.stages[s]||{color:'#ccc'}).color}
+function gSP(s){return(S.stages[s]||{prob:0}).prob}
+function infMax(v){return v==='INF'||v===Infinity||v===null?Infinity:Number(v)}
 
-function hashPassword(p){
-  /* Simple SHA-256 via SubtleCrypto fallback to basic hash */
-  let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0}return 'h_'+Math.abs(h).toString(36);
-}
-
-function defaultState(){
-  return {
-    settings:{company:'Mon Entreprise',currency:'FCFA',target:50000000,annualTarget:600000000,
-      commMode:'flat',commTrigger:'signed',bonusRate:2,tiers:[{min:0,max:10000000,rate:5},{min:10000000,max:Infinity,rate:7}]},
-    stages:JSON.parse(JSON.stringify(DEFAULT_STAGES)),
-    users:[{id:1,name:'Administrateur',login:'admin',role:'Super Admin',rate:5,team:'Direction',active:true,pass:hashPassword('Admin@2026')}],
-    contacts:[],
-    deals:[],
-    audit:[],
-    commissions:{}
-  };
-}
-
-let S = JSON.parse(localStorage.getItem(DB_KEY)) || defaultState();
-let currentUser = null;
-let chartPipeline = null, chartMonthly = null;
-
-function save(){
-  try{localStorage.setItem(DB_KEY, JSON.stringify(S));}catch(e){Toast.show('Erreur de sauvegarde: espace insuffisant','error');}
-}
-
-function addAudit(action, details=''){
-  S.audit.unshift({date:new Date().toISOString(), user:currentUser?currentUser.name:'Système', action, details});
-  if(S.audit.length>200) S.audit = S.audit.slice(0,200);
-}
-
-function fmt(n){
-  if(!n&&n!==0) return '0';
-  return Number(n).toLocaleString('fr-FR');
-}
-function fmtCur(n){return fmt(n)+' '+S.settings.currency}
-
-function getContact(id){return S.contacts.find(c=>c.id===id)}
-function getUser(id){return S.users.find(u=>u.id===id)}
-function getStageName(s){return(S.stages[s]||{name:'?'}).name}
-function getStageColor(s){return(S.stages[s]||{color:'#ccc'}).color}
-function getStageProb(s){return(S.stages[s]||{prob:0}).prob}
-
-/* ═══════════════════════════════════════════════
-   AUTH
-   ═══════════════════════════════════════════════ */
-const Auth = {
-  login(){
-    const u=document.getElementById('login-user').value.trim();
-    const p=document.getElementById('login-pass').value;
-    const errEl=document.getElementById('login-error');
-    if(!u||!p){errEl.style.display='block';return}
-    const user=S.users.find(x=>x.login===u && x.pass===hashPassword(p));
-    if(user){
-      if(user.active===false){errEl.innerHTML='<i class="fas fa-ban"></i> Compte désactivé. Contactez l\'administrateur.';errEl.style.display='block';return}
-      currentUser=user;
-      document.getElementById('login-screen').style.display='none';
-      document.getElementById('sidebar-uname').textContent=user.name;
-      document.getElementById('sidebar-urole').textContent=user.role;
-      document.getElementById('sidebar-avatar').textContent=user.name.charAt(0).toUpperCase();
-      addAudit('Connexion','Utilisateur: '+user.name);save();
-      // Role-based nav
-      if(user.role==='Commercial'){document.querySelector('[data-view="admin"]').parentElement.style.display='none';}
-      if(user.role==='Lecture seule'){
-        document.querySelector('[data-view="admin"]').parentElement.style.display='none';
-        document.querySelectorAll('.btn-primary').forEach(b=>{if(b.textContent.includes('Nouvelle'))b.style.display='none'});
-      }
-      App.init();
-    } else {
-      errEl.style.display='block';
-    }
-  },
-  logout(){
-    addAudit('Déconnexion');save();
-    currentUser=null;location.reload();
-  }
-};
-
-/* ═══════════════════════════════════════════════
-   TOAST
-   ═══════════════════════════════════════════════ */
-const Toast = {
-  show(msg, type='success'){
-    const c=document.getElementById('toast-container');
-    const t=document.createElement('div');
-    t.className='toast toast-'+type;
-    t.innerHTML=`<i class="fas fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i> ${msg}`;
-    c.appendChild(t);
-    setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300)},3000);
-  }
-};
-
-/* ═══════════════════════════════════════════════
-   MODAL
-   ═══════════════════════════════════════════════ */
-const Modal = {
-  open(id){document.getElementById(id).classList.add('open')},
-  close(id){document.getElementById(id).classList.remove('open')}
-};
-
-/* ═══════════════════════════════════════════════
-   NAV
-   ═══════════════════════════════════════════════ */
-const Nav = {
-  init(){
-    document.querySelectorAll('[data-view]').forEach(a=>{
-      a.addEventListener('click',()=>{
-        document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-        document.querySelectorAll('[data-view]').forEach(x=>x.classList.remove('active'));
-        a.classList.add('active');
-        const viewId='view-'+a.dataset.view;
-        document.getElementById(viewId).classList.add('active');
-        const titles={dashboard:'Tableau de bord',pipeline:'Pipeline commercial',contacts:'Gestion des contacts',
-          commissions:'Suivi des commissions',reports:'Rapports & Exports',admin:'Administration'};
-        document.getElementById('page-title').textContent=titles[a.dataset.view]||'';
+/* ══════════════════════════════════════
+   ★ SYNC ENGINE — FIREBASE REALTIME ★
+   ══════════════════════════════════════ */
+const Sync={
+  db:null,on:false,_listen:false,_mute:false,_log:[],
+  log(m,t='info'){this._log.unshift({ts:new Date().toLocaleTimeString('fr-FR'),m,t});if(this._log.length>80)this._log.length=80;const el=document.getElementById('sync-log');if(el)el.innerHTML=this._log.map(l=>`<div style="padding:.3rem 0;border-bottom:1px solid var(--border-light);color:${l.t==='error'?'var(--danger)':l.t==='success'?'var(--success)':'var(--text-secondary)'}"><span style="color:var(--text-muted);margin-right:.5rem">[${l.ts}]</span>${l.m}</div>`).join('');document.getElementById('sync-log-card').style.display='block'},
+  ui(s){const b=document.getElementById('sb-sync'),t=document.getElementById('sb-sync-text'),c=document.getElementById('sync-card'),ti=document.getElementById('sync-title'),tb=document.getElementById('topbar-sync'),pb=document.getElementById('btn-push');
+    if(s==='online'){b.className='sync-badge online';t.textContent='Synchronisé';c.className='sync-setup-card connected';ti.textContent='✓ Connecté';ti.style.color='var(--success)';pb.style.display='inline-flex';tb.innerHTML='<span class="sync-badge online" style="font-size:.7rem"><span class="sync-dot"></span>Sync</span>'}
+    else if(s==='syncing'){b.className='sync-badge syncing';t.textContent='Sync...';tb.innerHTML='<span class="sync-badge syncing" style="font-size:.7rem"><span class="sync-dot"></span>Sync...</span>'}
+    else{b.className='sync-badge offline';t.textContent='Hors ligne';c.className='sync-setup-card';ti.textContent='Non configurée';ti.style.color='';pb.style.display='none';tb.innerHTML='<span class="sync-badge offline" style="font-size:.7rem"><span class="sync-dot"></span>Local</span>'}},
+  loadCfg(){const c=localStorage.getItem(FB_KEY);if(c){try{const o=JSON.parse(c);document.getElementById('fb-key').value=o.apiKey||'';document.getElementById('fb-url').value=o.databaseURL||'';document.getElementById('fb-pid').value=o.projectId||'';return o}catch(e){}}return null},
+  saveCfg(c){localStorage.setItem(FB_KEY,JSON.stringify(c))},
+  connect(){
+    const apiKey=document.getElementById('fb-key').value.trim(),databaseURL=document.getElementById('fb-url').value.trim(),projectId=document.getElementById('fb-pid').value.trim();
+    if(!apiKey||!databaseURL||!projectId){Toast.s('Remplissez tous les champs','error');return}
+    this.ui('syncing');this.log('Connexion...');
+    try{
+      if(!firebase.apps.length)firebase.initializeApp({apiKey,databaseURL,projectId});
+      this.db=firebase.database();this.saveCfg({apiKey,databaseURL,projectId});
+      this.db.ref('.info/connected').on('value',snap=>{
+        if(snap.val()===true){this.on=true;this.ui('online');this.log('✓ Connecté','success');this._presence();if(!this._listen)this._attach()}
+        else{this.on=false;this.ui('offline');this.log('Connexion perdue','error')}
       });
-    });
-    document.querySelectorAll('.admin-tab').forEach(tab=>{
-      tab.addEventListener('click',()=>{
-        document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
-        document.querySelectorAll('.admin-panel').forEach(p=>p.style.display='none');
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).style.display='block';
-      });
-    });
-  }
+    }catch(e){this.log('Erreur: '+e.message,'error');Toast.s('Erreur Firebase','error');this.ui('offline')}
+  },
+  disconnect(){if(this.db){this._offPresence();this.db.goOffline()}this.on=false;this._listen=false;this.ui('offline');this.log('Déconnecté');Toast.s('Sync désactivée','info')},
+  _presence(){
+    if(!this.db||!CU)return;const uid='u_'+CU.id,ref=this.db.ref('presence/'+uid);
+    this.db.ref('.info/connected').on('value',snap=>{if(snap.val()===true){ref.set({name:CU.name,role:CU.role,ts:firebase.database.ServerValue.TIMESTAMP,on:true});ref.onDisconnect().set({name:CU.name,role:CU.role,ts:firebase.database.ServerValue.TIMESTAMP,on:false})}});
+    this.db.ref('presence').on('value',snap=>{const d=snap.val()||{};const ol=Object.values(d).filter(u=>u.on);const bar=document.getElementById('presence-bar'),list=document.getElementById('presence-list');
+      if(ol.length>0){bar.style.display='block';const cols=['#2563eb','#059669','#d97706','#dc2626','#7c3aed','#0ea5e9'];list.innerHTML=ol.map((u,i)=>`<div class="presence-avatar" style="background:${cols[i%cols.length]}" title="${u.name}">${u.name.charAt(0)}<span class="online-dot"></span></div>`).join('')+`<span style="font-size:.68rem;color:#94a3b8;margin-left:.75rem">${ol.length} connecté(s)</span>`}else bar.style.display='none'})
+  },
+  _offPresence(){if(!this.db||!CU)return;this.db.ref('presence/u_'+CU.id).set({name:CU.name,role:CU.role,ts:firebase.database.ServerValue.TIMESTAMP,on:false})},
+  _attach(){
+    if(!this.db)return;this._listen=true;
+    this.db.ref('crm_data').on('value',snap=>{
+      if(this._mute)return;const r=snap.val();if(!r){this.log('Base distante vide');return}
+      const la=S.audit||[];
+      S.settings=r.settings||S.settings;S.stages=r.stages||S.stages;S.users=r.users||S.users;S.contacts=r.contacts||S.contacts;S.deals=r.deals||S.deals;S.commissions=r.commissions||S.commissions;
+      if(r.audit){const ra=r.audit||[];const mg=[...ra];la.forEach(l=>{if(!mg.find(x=>x.date===l.date&&x.action===l.action&&x.user===l.user))mg.push(l)});S.audit=mg.sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,200)}
+      if(S.settings.tiers)S.settings.tiers.forEach(t=>{if(t.max===null)t.max='INF'});
+      sL();if(CU){const u=S.users.find(x=>x.id===CU.id);if(u)CU=u}App.refreshAll();this.log('⬇ Données synchronisées','success')
+    });this.log('Écoute temps réel activée')
+  },
+  push(){
+    if(!this.db||!this.on)return;this._mute=true;
+    const d=JSON.parse(JSON.stringify(S));if(d.settings.tiers)d.settings.tiers.forEach(t=>{if(t.max===Infinity||t.max===null)t.max='INF'});
+    this.db.ref('crm_data').set(d).then(()=>{this._mute=false;this.log('⬆ Envoyé','success')}).catch(e=>{this._mute=false;this.log('Erreur push: '+e.message,'error')})
+  },
+  pushAll(){if(!this.db||!this.on){Toast.s('Non connecté','error');return}if(!confirm('Envoyer toutes les données locales vers Firebase ?'))return;this.push();Toast.s('Données envoyées','info')},
+  auto(){const c=this.loadCfg();if(c&&c.apiKey&&c.databaseURL&&c.projectId){this.log('Config trouvée, connexion auto...');this.connect()}}
 };
 
-/* ═══════════════════════════════════════════════
-   PERIOD FILTER
-   ═══════════════════════════════════════════════ */
-function buildPeriodFilter(){
-  const sel=document.getElementById('filter-period');
-  sel.innerHTML='';
-  const now=new Date();
-  for(let i=5;i>=-6;i--){
-    const d=new Date(now.getFullYear(), now.getMonth()-i, 1);
-    const val=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-    const label=d.toLocaleString('fr-FR',{month:'long',year:'numeric'});
-    const opt=document.createElement('option');
-    opt.value=val; opt.textContent=label.charAt(0).toUpperCase()+label.slice(1);
-    if(i===0)opt.selected=true;
-    sel.appendChild(opt);
-  }
-  // Ajouter options trimestrielles
-  const optAll=document.createElement('option');
-  optAll.value='ALL';optAll.textContent='— Toutes les périodes —';
-  sel.appendChild(optAll);
-}
+/* ══ AUTH ══ */
+const Auth={
+  login(){const u=document.getElementById('login-user').value.trim(),p=document.getElementById('login-pass').value,e=document.getElementById('login-error');if(!u||!p){e.style.display='block';return}const usr=S.users.find(x=>x.login===u&&x.pass===hp(p));if(usr){if(usr.active===false){e.innerHTML='<i class="fas fa-ban"></i> Compte désactivé.';e.style.display='block';return}CU=usr;document.getElementById('login-screen').style.display='none';document.getElementById('sb-uname').textContent=usr.name;document.getElementById('sb-urole').textContent=usr.role;document.getElementById('sb-avatar').textContent=usr.name.charAt(0);aA('Connexion',usr.name);save();if(usr.role==='Commercial')document.querySelector('[data-view="admin"]').parentElement.style.display='none';if(usr.role==='Lecture seule'){document.querySelector('[data-view="admin"]').parentElement.style.display='none';document.querySelectorAll('.btn-primary').forEach(b=>{if(b.textContent.includes('Nouvelle')||b.textContent.includes('affaire'))b.style.display='none'})}App.init()}else e.style.display='block'},
+  logout(){aA('Déconnexion');Sync._offPresence();save();CU=null;location.reload()}
+};
+const Toast={s(m,t='success'){const c=document.getElementById('toasts'),e=document.createElement('div');e.className='toast toast-'+t;e.innerHTML=`<i class="fas fa-${t==='success'?'check-circle':t==='error'?'exclamation-circle':'info-circle'}"></i> ${m}`;c.appendChild(e);setTimeout(()=>{e.style.opacity='0';setTimeout(()=>e.remove(),300)},3500)}};
+const Modal={open(id){document.getElementById(id).classList.add('open')},close(id){document.getElementById(id).classList.remove('open')}};
+const Nav={init(){document.querySelectorAll('[data-view]').forEach(a=>a.addEventListener('click',()=>{document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.querySelectorAll('[data-view]').forEach(x=>x.classList.remove('active'));a.classList.add('active');document.getElementById('view-'+a.dataset.view).classList.add('active');const t={dashboard:'Tableau de bord',pipeline:'Pipeline',contacts:'Contacts',commissions:'Commissions',reports:'Rapports',admin:'Administration'};document.getElementById('page-title').textContent=t[a.dataset.view]||''}));document.querySelectorAll('.admin-tab').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.admin-panel').forEach(p=>p.style.display='none');tab.classList.add('active');document.getElementById(tab.dataset.tab).style.display='block'}))}};
+function buildPF(){const s=document.getElementById('filter-period');s.innerHTML='';const n=new Date();for(let i=5;i>=-6;i--){const d=new Date(n.getFullYear(),n.getMonth()-i,1);const v=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');const l=d.toLocaleString('fr-FR',{month:'long',year:'numeric'});const o=document.createElement('option');o.value=v;o.textContent=l.charAt(0).toUpperCase()+l.slice(1);if(i===0)o.selected=true;s.appendChild(o)}const a=document.createElement('option');a.value='ALL';a.textContent='— Toutes —';s.appendChild(a)}
+function gP(){return document.getElementById('filter-period').value}
+function fP(it){const p=gP();return p==='ALL'?it:it.filter(d=>(d.date||'').startsWith(p))}
 
-function getPeriod(){return document.getElementById('filter-period').value}
-function filterByPeriod(items){
-  const p=getPeriod();
-  if(p==='ALL')return items;
-  return items.filter(d=>(d.date||'').startsWith(p));
-}
-
-/* ═══════════════════════════════════════════════
-   DEALS
-   ═══════════════════════════════════════════════ */
-const Deals = {
-  openNew(){
-    document.getElementById('deal-id').value='';
-    document.getElementById('deal-modal-title').textContent='Nouvelle affaire';
-    document.getElementById('deal-name').value='';
-    document.getElementById('deal-interlocuteur').value='';
-    document.getElementById('deal-amount').value='';
-    document.getElementById('deal-date').value=new Date().toISOString().split('T')[0];
-    document.getElementById('deal-close-date').value='';
-    document.getElementById('deal-next-action').value='';
-    document.getElementById('deal-loss-reason').value='';
-    document.getElementById('deal-notes').value='';
-    document.getElementById('deal-stage').value='1';
-    document.getElementById('deal-loss-group').style.display='none';
-    this._populateSelects();
-    Modal.open('modal-deal');
-  },
-  edit(id){
-    const d=S.deals.find(x=>x.id===id);if(!d)return;
-    document.getElementById('deal-id').value=d.id;
-    document.getElementById('deal-modal-title').textContent='Modifier l\'affaire';
-    document.getElementById('deal-name').value=d.name||'';
-    document.getElementById('deal-interlocuteur').value=d.interlocuteur||'';
-    document.getElementById('deal-amount').value=d.amount||'';
-    document.getElementById('deal-stage').value=d.stage||1;
-    document.getElementById('deal-date').value=d.date||'';
-    document.getElementById('deal-close-date').value=d.closeDate||'';
-    document.getElementById('deal-source').value=d.source||'Prospection';
-    document.getElementById('deal-next-action').value=d.nextAction||'';
-    document.getElementById('deal-loss-reason').value=d.lossReason||'';
-    document.getElementById('deal-notes').value=d.notes||'';
-    document.getElementById('deal-loss-group').style.display=d.stage==6?'block':'none';
-    this._populateSelects();
-    document.getElementById('deal-contact').value=d.contactId||'';
-    document.getElementById('deal-user').value=d.userId||'';
-    Modal.open('modal-deal');
-  },
-  _populateSelects(){
-    const cs=document.getElementById('deal-contact');
-    cs.innerHTML='<option value="">— Choisir —</option>'+S.contacts.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-    const us=document.getElementById('deal-user');
-    us.innerHTML=S.users.filter(u=>u.active!==false).map(u=>`<option value="${u.id}">${u.name}</option>`).join('');
-    if(currentUser)us.value=currentUser.id;
-    const ss=document.getElementById('deal-stage');
-    ss.innerHTML=Object.entries(S.stages).map(([k,v])=>`<option value="${k}">${k}. ${v.name} (${v.prob}%)</option>`).join('');
-    // Show/hide loss reason
-    ss.onchange=()=>{document.getElementById('deal-loss-group').style.display=ss.value==='6'?'block':'none'};
-  },
-  save(){
-    const id=document.getElementById('deal-id').value;
-    const name=document.getElementById('deal-name').value.trim();
-    const amount=parseFloat(document.getElementById('deal-amount').value);
-    if(!name){Toast.show('Le nom de l\'affaire est obligatoire','error');return}
-    if(!amount||amount<=0){Toast.show('Le montant est obligatoire','error');return}
-    const stage=parseInt(document.getElementById('deal-stage').value);
-    if(stage===6 && !document.getElementById('deal-loss-reason').value.trim()){Toast.show('Le motif de perte est obligatoire','error');return}
-    const data={
-      name, amount, stage,
-      contactId:parseInt(document.getElementById('deal-contact').value)||null,
-      interlocuteur:document.getElementById('deal-interlocuteur').value.trim(),
-      userId:parseInt(document.getElementById('deal-user').value)||currentUser?.id||1,
-      source:document.getElementById('deal-source').value,
-      date:document.getElementById('deal-date').value,
-      closeDate:document.getElementById('deal-close-date').value,
-      nextAction:document.getElementById('deal-next-action').value.trim(),
-      lossReason:document.getElementById('deal-loss-reason').value.trim(),
-      notes:document.getElementById('deal-notes').value.trim()
-    };
-    if(id){
-      const idx=S.deals.findIndex(d=>d.id==id);
-      S.deals[idx]={...S.deals[idx],...data,updatedAt:new Date().toISOString()};
-      addAudit('Modification affaire', name+' – '+fmtCur(amount));
-      Toast.show('Affaire mise à jour');
-    } else {
-      data.id=Date.now();
-      data.ref='AF-'+String(S.deals.length+1).padStart(4,'0');
-      data.createdAt=new Date().toISOString();
-      data.updatedAt=data.createdAt;
-      S.deals.push(data);
-      addAudit('Création affaire', data.ref+' – '+name);
-      Toast.show('Affaire créée avec succès');
-    }
-    save(); Modal.close('modal-deal'); App.refreshAll();
-  },
-  delete(id){
-    const d=S.deals.find(x=>x.id===id);
-    if(!d||!confirm('Supprimer définitivement l\'affaire '+d.ref+' ?'))return;
-    S.deals=S.deals.filter(x=>x.id!==id);
-    addAudit('Suppression affaire', d.ref+' – '+d.name);
-    save(); App.refreshAll(); Toast.show('Affaire supprimée');
-  },
-  changeStage(id,newStage){
-    const d=S.deals.find(x=>x.id===id);if(!d)return;
-    d.stage=parseInt(newStage);d.updatedAt=new Date().toISOString();
-    addAudit('Changement étape', d.ref+' → '+getStageName(newStage));
-    save(); App.refreshAll();
-  }
+/* ══ DEALS ══ */
+const Deals={
+  openNew(){$('d-id').value='';$('m-deal-t').textContent='Nouvelle affaire';['d-name','d-inter','d-amt','d-cdate','d-next','d-loss','d-notes'].forEach(x=>$(x).value='');$('d-date').value=new Date().toISOString().split('T')[0];$('d-stg').value='1';$('d-loss-grp').style.display='none';this._p();Modal.open('m-deal')},
+  edit(id){const d=S.deals.find(x=>x.id===id);if(!d)return;$('d-id').value=d.id;$('m-deal-t').textContent='Modifier';$('d-name').value=d.name||'';$('d-inter').value=d.interlocuteur||'';$('d-amt').value=d.amount||'';$('d-stg').value=d.stage||1;$('d-date').value=d.date||'';$('d-cdate').value=d.closeDate||'';$('d-src').value=d.source||'Prospection';$('d-next').value=d.nextAction||'';$('d-loss').value=d.lossReason||'';$('d-notes').value=d.notes||'';$('d-loss-grp').style.display=d.stage==6?'block':'none';this._p();$('d-ct').value=d.contactId||'';$('d-usr').value=d.userId||'';Modal.open('m-deal')},
+  _p(){$('d-ct').innerHTML='<option value="">—</option>'+S.contacts.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');$('d-usr').innerHTML=S.users.filter(u=>u.active!==false).map(u=>`<option value="${u.id}">${u.name}</option>`).join('');if(CU)$('d-usr').value=CU.id;$('d-stg').innerHTML=Object.entries(S.stages).map(([k,v])=>`<option value="${k}">${k}. ${v.name} (${v.prob}%)</option>`).join('');$('d-stg').onchange=()=>$('d-loss-grp').style.display=$('d-stg').value==='6'?'block':'none'},
+  save(){const id=$('d-id').value,name=$('d-name').value.trim(),amt=parseFloat($('d-amt').value);if(!name){Toast.s('Nom obligatoire','error');return}if(!amt||amt<=0){Toast.s('Montant obligatoire','error');return}const stg=parseInt($('d-stg').value);if(stg===6&&!$('d-loss').value.trim()){Toast.s('Motif perte obligatoire','error');return}const data={name,amount:amt,stage:stg,contactId:parseInt($('d-ct').value)||null,interlocuteur:$('d-inter').value.trim(),userId:parseInt($('d-usr').value)||CU?.id||1,source:$('d-src').value,date:$('d-date').value,closeDate:$('d-cdate').value,nextAction:$('d-next').value.trim(),lossReason:$('d-loss').value.trim(),notes:$('d-notes').value.trim()};if(id){const i=S.deals.findIndex(d=>d.id==id);S.deals[i]={...S.deals[i],...data,updatedAt:new Date().toISOString()};aA('Modif. affaire',name);Toast.s('Affaire mise à jour')}else{data.id=Date.now();data.ref='AF-'+String(S.deals.length+1).padStart(4,'0');data.createdAt=new Date().toISOString();S.deals.push(data);aA('Création affaire',data.ref);Toast.s('Affaire créée')}save();Modal.close('m-deal');App.refreshAll()},
+  delete(id){const d=S.deals.find(x=>x.id===id);if(!d||!confirm('Supprimer '+d.ref+'?'))return;S.deals=S.deals.filter(x=>x.id!==id);aA('Suppr. affaire',d.ref);save();App.refreshAll()},
+  chgStg(id,ns){const d=S.deals.find(x=>x.id===id);if(!d)return;d.stage=parseInt(ns);d.updatedAt=new Date().toISOString();aA('Étape',d.ref+'→'+gSN(ns));save();App.refreshAll()}
 };
 
-/* ═══════════════════════════════════════════════
-   CONTACTS
-   ═══════════════════════════════════════════════ */
-const Contacts = {
-  openNew(){
-    document.getElementById('contact-id').value='';
-    document.getElementById('contact-modal-title').textContent='Nouveau contact';
-    ['contact-name','contact-sector','contact-person','contact-phone','contact-email','contact-address','contact-notes'].forEach(x=>document.getElementById(x).value='');
-    document.getElementById('contact-type').value='Prospect';
-    const us=document.getElementById('contact-user');
-    us.innerHTML='<option value="">— Non assigné —</option>'+S.users.filter(u=>u.active!==false).map(u=>`<option value="${u.id}">${u.name}</option>`).join('');
-    Modal.open('modal-contact');
-  },
-  edit(id){
-    const c=S.contacts.find(x=>x.id===id);if(!c)return;
-    document.getElementById('contact-id').value=c.id;
-    document.getElementById('contact-modal-title').textContent='Modifier le contact';
-    document.getElementById('contact-name').value=c.name||'';
-    document.getElementById('contact-type').value=c.type||'Prospect';
-    document.getElementById('contact-sector').value=c.sector||'';
-    document.getElementById('contact-person').value=c.person||'';
-    document.getElementById('contact-phone').value=c.phone||'';
-    document.getElementById('contact-email').value=c.email||'';
-    document.getElementById('contact-address').value=c.address||'';
-    document.getElementById('contact-notes').value=c.notes||'';
-    const us=document.getElementById('contact-user');
-    us.innerHTML='<option value="">— Non assigné —</option>'+S.users.filter(u=>u.active!==false).map(u=>`<option value="${u.id}">${u.name}</option>`).join('');
-    us.value=c.userId||'';
-    Modal.open('modal-contact');
-  },
-  save(){
-    const id=document.getElementById('contact-id').value;
-    const name=document.getElementById('contact-name').value.trim();
-    if(!name){Toast.show('La raison sociale est obligatoire','error');return}
-    const data={
-      name, type:document.getElementById('contact-type').value,
-      sector:document.getElementById('contact-sector').value.trim(),
-      person:document.getElementById('contact-person').value.trim(),
-      phone:document.getElementById('contact-phone').value.trim(),
-      email:document.getElementById('contact-email').value.trim(),
-      address:document.getElementById('contact-address').value.trim(),
-      userId:parseInt(document.getElementById('contact-user').value)||null,
-      notes:document.getElementById('contact-notes').value.trim()
-    };
-    if(id){
-      const idx=S.contacts.findIndex(c=>c.id==id);
-      S.contacts[idx]={...S.contacts[idx],...data,updatedAt:new Date().toISOString()};
-      addAudit('Modification contact', name); Toast.show('Contact mis à jour');
-    } else {
-      data.id=Date.now(); data.createdAt=new Date().toISOString(); data.updatedAt=data.createdAt;
-      S.contacts.push(data);
-      addAudit('Création contact', name); Toast.show('Contact créé avec succès');
-    }
-    save(); Modal.close('modal-contact'); App.refreshAll();
-  },
-  delete(id){
-    const c=S.contacts.find(x=>x.id===id);
-    if(!c||!confirm('Supprimer le contact '+c.name+' ?'))return;
-    S.contacts=S.contacts.filter(x=>x.id!==id);
-    addAudit('Suppression contact', c.name); save(); App.refreshAll(); Toast.show('Contact supprimé');
-  },
-  showDetail(id){
-    const c=S.contacts.find(x=>x.id===id);if(!c)return;
-    const deals=S.deals.filter(d=>d.contactId===c.id);
-    const caTotal=deals.filter(d=>d.stage===5).reduce((a,b)=>a+b.amount,0);
-    const user=c.userId?getUser(c.userId):null;
-    const typeBadge={'Prospect':'badge-prospect','Client actif':'badge-client','Client inactif':'badge-inactif','Partenaire':'badge-partenaire'};
-    document.getElementById('contact-detail-title').textContent=c.name;
-    document.getElementById('contact-detail-body').innerHTML=`
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
-        <div><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Type</span><br><span class="badge ${typeBadge[c.type]||''}">${c.type}</span></div>
-        <div><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Secteur</span><br><strong>${c.sector||'—'}</strong></div>
-        <div><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Interlocuteur</span><br><strong>${c.person||'—'}</strong></div>
-        <div><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Commercial</span><br><strong>${user?user.name:'Non assigné'}</strong></div>
-        <div><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Téléphone</span><br><strong>${c.phone||'—'}</strong></div>
-        <div><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Email</span><br><strong>${c.email||'—'}</strong></div>
-      </div>
-      ${c.address?`<div style="margin-bottom:1rem"><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Adresse</span><br><strong>${c.address}</strong></div>`:''}
-      ${c.notes?`<div style="margin-bottom:1rem;padding:1rem;background:var(--bg);border-radius:var(--radius)"><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Notes</span><br>${c.notes}</div>`:''}
-      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
-        <h4 style="font-size:.85rem;margin-bottom:.75rem"><i class="fas fa-briefcase" style="color:var(--primary)"></i> Affaires liées (${deals.length}) — CA gagné: <strong style="color:var(--success)">${fmtCur(caTotal)}</strong></h4>
-        ${deals.length?`<table><thead><tr><th>Réf.</th><th>Affaire</th><th>Montant</th><th>Étape</th></tr></thead><tbody>
-          ${deals.map(d=>`<tr><td>${d.ref}</td><td>${d.name}</td><td>${fmtCur(d.amount)}</td><td><span class="stage-badge" style="background:${getStageColor(d.stage)}20;color:${getStageColor(d.stage)}">${getStageName(d.stage)}</span></td></tr>`).join('')}
-        </tbody></table>`:'<p style="color:var(--text-muted);font-size:.85rem">Aucune affaire liée.</p>'}
-      </div>`;
-    Modal.open('modal-contact-detail');
-  },
-  render(){
-    const search=(document.getElementById('contact-search').value||'').toLowerCase();
-    const typeFilter=document.getElementById('contact-type-filter').value;
-    let items=S.contacts.filter(c=>{
-      if(typeFilter && c.type!==typeFilter)return false;
-      if(search && !c.name.toLowerCase().includes(search) && !(c.person||'').toLowerCase().includes(search) && !(c.sector||'').toLowerCase().includes(search))return false;
-      return true;
-    });
-    const tbody=document.querySelector('#tbl-contacts tbody');
-    if(!items.length){tbody.innerHTML=`<tr><td colspan="8"><div class="empty-state"><i class="fas fa-building"></i><h4>Aucun contact</h4><p>Ajoutez votre premier client ou prospect</p></div></td></tr>`;return}
-    const typeBadge={'Prospect':'badge-prospect','Client actif':'badge-client','Client inactif':'badge-inactif','Partenaire':'badge-partenaire'};
-    tbody.innerHTML=items.map(c=>{
-      const user=c.userId?getUser(c.userId):null;
-      return `<tr>
-        <td><strong style="cursor:pointer;color:var(--primary)" onclick="Contacts.showDetail(${c.id})">${c.name}</strong></td>
-        <td><span class="badge ${typeBadge[c.type]||''}">${c.type}</span></td>
-        <td>${c.sector||'—'}</td>
-        <td>${c.person||'—'}</td>
-        <td>${c.phone||'—'}</td>
-        <td>${c.email||'—'}</td>
-        <td>${user?user.name:'—'}</td>
-        <td>
-          <button class="btn btn-ghost btn-icon btn-sm" onclick="Contacts.edit(${c.id})"><i class="fas fa-pen" style="color:var(--primary)"></i></button>
-          <button class="btn btn-ghost btn-icon btn-sm" onclick="Contacts.delete(${c.id})"><i class="fas fa-trash" style="color:var(--danger)"></i></button>
-        </td>
-      </tr>`}).join('');
-  }
+/* ══ CONTACTS ══ */
+const Contacts={
+  openNew(){$('c-id').value='';$('m-ct-t').textContent='Nouveau contact';['c-name','c-sec','c-person','c-tel','c-email','c-addr','c-notes'].forEach(x=>$(x).value='');$('c-type').value='Prospect';$('c-usr').innerHTML='<option value="">—</option>'+S.users.filter(u=>u.active!==false).map(u=>`<option value="${u.id}">${u.name}</option>`).join('');Modal.open('m-ct')},
+  edit(id){const c=S.contacts.find(x=>x.id===id);if(!c)return;$('c-id').value=c.id;$('m-ct-t').textContent='Modifier';$('c-name').value=c.name||'';$('c-type').value=c.type||'Prospect';$('c-sec').value=c.sector||'';$('c-person').value=c.person||'';$('c-tel').value=c.phone||'';$('c-email').value=c.email||'';$('c-addr').value=c.address||'';$('c-notes').value=c.notes||'';$('c-usr').innerHTML='<option value="">—</option>'+S.users.filter(u=>u.active!==false).map(u=>`<option value="${u.id}">${u.name}</option>`).join('');$('c-usr').value=c.userId||'';Modal.open('m-ct')},
+  save(){const id=$('c-id').value,name=$('c-name').value.trim();if(!name){Toast.s('Nom obligatoire','error');return}const data={name,type:$('c-type').value,sector:$('c-sec').value.trim(),person:$('c-person').value.trim(),phone:$('c-tel').value.trim(),email:$('c-email').value.trim(),address:$('c-addr').value.trim(),userId:parseInt($('c-usr').value)||null,notes:$('c-notes').value.trim()};if(id){const i=S.contacts.findIndex(c=>c.id==id);S.contacts[i]={...S.contacts[i],...data,updatedAt:new Date().toISOString()};aA('Modif. contact',name);Toast.s('Contact mis à jour')}else{data.id=Date.now();data.createdAt=new Date().toISOString();S.contacts.push(data);aA('Création contact',name);Toast.s('Contact créé')}save();Modal.close('m-ct');App.refreshAll()},
+  delete(id){const c=S.contacts.find(x=>x.id===id);if(!c||!confirm('Supprimer '+c.name+'?'))return;S.contacts=S.contacts.filter(x=>x.id!==id);aA('Suppr. contact',c.name);save();App.refreshAll()},
+  detail(id){const c=S.contacts.find(x=>x.id===id);if(!c)return;const deals=S.deals.filter(d=>d.contactId===c.id);const ca=deals.filter(d=>d.stage===5).reduce((a,b)=>a+b.amount,0);const u=c.userId?gU(c.userId):null;const tb={'Prospect':'badge-prospect','Client actif':'badge-client','Client inactif':'badge-inactif','Partenaire':'badge-partenaire'};$('m-detail-t').textContent=c.name;$('m-detail-body').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem"><div><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Type</span><br><span class="badge ${tb[c.type]||''}">${c.type}</span></div><div><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Secteur</span><br><strong>${c.sector||'—'}</strong></div><div><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Interlocuteur</span><br><strong>${c.person||'—'}</strong></div><div><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Commercial</span><br><strong>${u?u.name:'—'}</strong></div><div><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Tél</span><br><strong>${c.phone||'—'}</strong></div><div><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Email</span><br><strong>${c.email||'—'}</strong></div></div>${c.notes?`<div style="padding:1rem;background:var(--bg);border-radius:var(--radius);margin-bottom:1rem"><span style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Notes</span><br>${c.notes}</div>`:''}<div style="border-top:1px solid var(--border);padding-top:1rem"><h4 style="font-size:.85rem;margin-bottom:.75rem">Affaires (${deals.length}) — CA: <strong style="color:var(--success)">${fc(ca)}</strong></h4>${deals.length?`<table><thead><tr><th>Réf</th><th>Affaire</th><th>Montant</th><th>Étape</th></tr></thead><tbody>${deals.map(d=>`<tr><td>${d.ref}</td><td>${d.name}</td><td>${fc(d.amount)}</td><td><span class="stage-badge" style="background:${gSC(d.stage)}20;color:${gSC(d.stage)}">${gSN(d.stage)}</span></td></tr>`).join('')}</tbody></table>`:'<p style="color:var(--text-muted)">Aucune affaire.</p>'}</div>`;Modal.open('m-detail')},
+  render(){const s=($('ct-search').value||'').toLowerCase(),tf=$('ct-type').value;let it=S.contacts.filter(c=>{if(tf&&c.type!==tf)return false;if(s&&!c.name.toLowerCase().includes(s)&&!(c.person||'').toLowerCase().includes(s))return false;return true});const tb=document.querySelector('#tbl-ct tbody');const tbb={'Prospect':'badge-prospect','Client actif':'badge-client','Client inactif':'badge-inactif','Partenaire':'badge-partenaire'};if(!it.length){tb.innerHTML='<tr><td colspan="8"><div class="empty-state"><i class="fas fa-building"></i><h4>Aucun contact</h4></div></td></tr>';return}tb.innerHTML=it.map(c=>{const u=c.userId?gU(c.userId):null;return`<tr><td><strong style="cursor:pointer;color:var(--primary)" onclick="Contacts.detail(${c.id})">${c.name}</strong></td><td><span class="badge ${tbb[c.type]||''}">${c.type}</span></td><td>${c.sector||'—'}</td><td>${c.person||'—'}</td><td>${c.phone||'—'}</td><td>${c.email||'—'}</td><td>${u?u.name:'—'}</td><td><button class="btn btn-ghost btn-icon btn-sm" onclick="Contacts.edit(${c.id})"><i class="fas fa-pen" style="color:var(--primary)"></i></button><button class="btn btn-ghost btn-icon btn-sm" onclick="Contacts.delete(${c.id})"><i class="fas fa-trash" style="color:var(--danger)"></i></button></td></tr>`}).join('')}
 };
 
-/* ═══════════════════════════════════════════════
-   USERS
-   ═══════════════════════════════════════════════ */
-const Users = {
-  openNew(){
-    document.getElementById('user-id').value='';
-    document.getElementById('user-modal-title').textContent='Nouvel utilisateur';
-    ['user-name','user-login','user-pass','user-team'].forEach(x=>document.getElementById(x).value='');
-    document.getElementById('user-role').value='Commercial';
-    document.getElementById('user-rate').value=5;
-    Modal.open('modal-user');
-  },
-  edit(id){
-    const u=S.users.find(x=>x.id===id);if(!u)return;
-    document.getElementById('user-id').value=u.id;
-    document.getElementById('user-modal-title').textContent='Modifier l\'utilisateur';
-    document.getElementById('user-name').value=u.name;
-    document.getElementById('user-login').value=u.login;
-    document.getElementById('user-pass').value='';
-    document.getElementById('user-role').value=u.role;
-    document.getElementById('user-rate').value=u.rate;
-    document.getElementById('user-team').value=u.team||'';
-    Modal.open('modal-user');
-  },
-  save(){
-    const id=document.getElementById('user-id').value;
-    const name=document.getElementById('user-name').value.trim();
-    const login=document.getElementById('user-login').value.trim();
-    if(!name||!login){Toast.show('Nom et identifiant obligatoires','error');return}
-    const pass=document.getElementById('user-pass').value;
-    const data={
-      name, login, role:document.getElementById('user-role').value,
-      rate:parseFloat(document.getElementById('user-rate').value)||0,
-      team:document.getElementById('user-team').value.trim(), active:true
-    };
-    if(id){
-      const idx=S.users.findIndex(u=>u.id==id);
-      if(pass) data.pass=hashPassword(pass);
-      S.users[idx]={...S.users[idx],...data};
-      addAudit('Modification utilisateur', name); Toast.show('Utilisateur mis à jour');
-    } else {
-      if(!pass){Toast.show('Le mot de passe est obligatoire pour un nouvel utilisateur','error');return}
-      data.id=Date.now(); data.pass=hashPassword(pass);
-      S.users.push(data);
-      addAudit('Création utilisateur', name); Toast.show('Utilisateur créé');
-    }
-    save(); Modal.close('modal-user'); App.refreshAll();
-  },
-  toggleActive(id){
-    const u=S.users.find(x=>x.id===id);if(!u||u.id===1)return;
-    u.active=!u.active;
-    addAudit(u.active?'Activation':'Désactivation'+' utilisateur', u.name);
-    save(); App.refreshAll();
-  },
-  delete(id){
-    if(id===1){Toast.show('Impossible de supprimer le Super Admin principal','error');return}
-    const u=S.users.find(x=>x.id===id);
-    if(!u||!confirm('Supprimer l\'utilisateur '+u.name+' ?'))return;
-    S.users=S.users.filter(x=>x.id!==id);
-    addAudit('Suppression utilisateur', u.name); save(); App.refreshAll(); Toast.show('Utilisateur supprimé');
-  },
-  render(){
-    const tbody=document.querySelector('#tbl-users tbody');
-    tbody.innerHTML=S.users.map(u=>`<tr${u.active===false?' style="opacity:.5"':''}>
-      <td><strong>${u.name}</strong></td>
-      <td><code style="font-size:.78rem;background:var(--bg);padding:.2rem .5rem;border-radius:4px">${u.login}</code></td>
-      <td>${u.role}</td>
-      <td>${u.rate}%</td>
-      <td><span class="badge ${u.active!==false?'badge-client':'badge-inactif'}">${u.active!==false?'Actif':'Inactif'}</span></td>
-      <td>
-        <button class="btn btn-ghost btn-icon btn-sm" onclick="Users.edit(${u.id})" title="Modifier"><i class="fas fa-pen" style="color:var(--primary)"></i></button>
-        ${u.id!==1?`<button class="btn btn-ghost btn-icon btn-sm" onclick="Users.toggleActive(${u.id})" title="${u.active!==false?'Désactiver':'Activer'}"><i class="fas fa-${u.active!==false?'ban':'check'}" style="color:${u.active!==false?'var(--warning)':'var(--success)'}"></i></button>
-        <button class="btn btn-ghost btn-icon btn-sm" onclick="Users.delete(${u.id})" title="Supprimer"><i class="fas fa-trash" style="color:var(--danger)"></i></button>`:''}
-      </td>
-    </tr>`).join('');
-  }
+/* ══ USERS ══ */
+const Users={
+  openNew(){$('u-id').value='';$('m-usr-t').textContent='Nouvel utilisateur';['u-name','u-login','u-pass','u-team'].forEach(x=>$(x).value='');$('u-role').value='Commercial';$('u-rate').value=5;Modal.open('m-usr')},
+  edit(id){const u=S.users.find(x=>x.id===id);if(!u)return;$('u-id').value=u.id;$('m-usr-t').textContent='Modifier';$('u-name').value=u.name;$('u-login').value=u.login;$('u-pass').value='';$('u-role').value=u.role;$('u-rate').value=u.rate;$('u-team').value=u.team||'';Modal.open('m-usr')},
+  save(){const id=$('u-id').value,name=$('u-name').value.trim(),login=$('u-login').value.trim();if(!name||!login){Toast.s('Champs obligatoires','error');return}const pass=$('u-pass').value;const data={name,login,role:$('u-role').value,rate:parseFloat($('u-rate').value)||0,team:$('u-team').value.trim(),active:true};if(id){const i=S.users.findIndex(u=>u.id==id);if(pass)data.pass=hp(pass);S.users[i]={...S.users[i],...data};aA('Modif. user',name);Toast.s('Utilisateur mis à jour')}else{if(!pass){Toast.s('Mot de passe obligatoire','error');return}data.id=Date.now();data.pass=hp(pass);S.users.push(data);aA('Création user',name);Toast.s('Utilisateur créé')}save();Modal.close('m-usr');App.refreshAll()},
+  toggle(id){const u=S.users.find(x=>x.id===id);if(!u||u.id===1)return;u.active=!u.active;aA((u.active?'Activ.':'Désact.')+' user',u.name);save();App.refreshAll()},
+  del(id){if(id===1)return Toast.s('Impossible','error');const u=S.users.find(x=>x.id===id);if(!u||!confirm('Supprimer?'))return;S.users=S.users.filter(x=>x.id!==id);aA('Suppr. user',u.name);save();App.refreshAll()},
+  render(){document.querySelector('#tbl-users tbody').innerHTML=S.users.map(u=>`<tr${u.active===false?' style="opacity:.5"':''}><td><strong>${u.name}</strong></td><td><code style="font-size:.78rem;background:var(--bg);padding:.2rem .5rem;border-radius:4px">${u.login}</code></td><td>${u.role}</td><td>${u.rate}%</td><td><span class="badge ${u.active!==false?'badge-client':'badge-inactif'}">${u.active!==false?'Actif':'Inactif'}</span></td><td><button class="btn btn-ghost btn-icon btn-sm" onclick="Users.edit(${u.id})"><i class="fas fa-pen" style="color:var(--primary)"></i></button>${u.id!==1?`<button class="btn btn-ghost btn-icon btn-sm" onclick="Users.toggle(${u.id})"><i class="fas fa-${u.active!==false?'ban':'check'}" style="color:${u.active!==false?'var(--warning)':'var(--success)'}"></i></button><button class="btn btn-ghost btn-icon btn-sm" onclick="Users.del(${u.id})"><i class="fas fa-trash" style="color:var(--danger)"></i></button>`:''}</td></tr>`).join('')}
 };
 
-/* ═══════════════════════════════════════════════
-   PIPELINE
-   ═══════════════════════════════════════════════ */
-const Pipeline = {
-  render(){
-    const search=(document.getElementById('pipeline-search').value||'').toLowerCase();
-    const userFilter=document.getElementById('pipeline-user-filter').value;
-    // Populate user filter
-    const uf=document.getElementById('pipeline-user-filter');
-    const curVal=uf.value;
-    uf.innerHTML='<option value="">Tous les commerciaux</option>'+S.users.filter(u=>u.active!==false).map(u=>`<option value="${u.id}">${u.name}</option>`).join('');
-    uf.value=curVal;
-    let deals=filterByPeriod(S.deals);
-    if(search) deals=deals.filter(d=>d.name.toLowerCase().includes(search)||(d.ref||'').toLowerCase().includes(search));
-    if(userFilter) deals=deals.filter(d=>d.userId==userFilter);
-    const kanban=document.getElementById('kanban');
-    kanban.innerHTML=Object.entries(S.stages).map(([k,v])=>{
-      const stageDeals=deals.filter(d=>d.stage==k);
-      const total=stageDeals.reduce((a,b)=>a+b.amount,0);
-      return `<div class="kanban-col">
-        <div class="kanban-col-header" style="border-bottom-color:${v.color}">
-          <h4><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${v.color};margin-right:4px"></span> ${v.name} <span class="col-count">${stageDeals.length}</span></h4>
-          <span class="col-total">${fmtCur(total)}</span>
-        </div>
-        <div class="kanban-col-body">${stageDeals.length?stageDeals.map(d=>{
-          const contact=getContact(d.contactId);
-          const user=getUser(d.userId);
-          return `<div class="kanban-card" ondblclick="Deals.edit(${d.id})">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <span class="kc-ref">${d.ref||''}</span>
-              <div class="kc-actions">
-                <select class="form-control" style="width:auto;padding:.15rem .4rem;font-size:.68rem;margin:0;border-radius:4px" onchange="Deals.changeStage(${d.id},this.value)">
-                  ${Object.entries(S.stages).map(([sk,sv])=>`<option value="${sk}" ${sk==k?'selected':''}>${sv.name}</option>`).join('')}
-                </select>
-              </div>
-            </div>
-            <div class="kc-name">${d.name}</div>
-            <div class="kc-client"><i class="fas fa-building" style="font-size:.65rem;margin-right:.2rem"></i>${contact?contact.name:'—'}</div>
-            <div class="kc-amount">${fmtCur(d.amount)}</div>
-            <div class="kc-footer">
-              <span class="kc-user"><i class="fas fa-user"></i> ${user?user.name:'—'}</span>
-              <span style="font-size:.68rem;color:var(--text-muted)">${d.date||''}</span>
-            </div>
-          </div>`}).join(''):`<div class="empty-state" style="padding:2rem"><i class="fas fa-inbox"></i><p style="font-size:.78rem">Aucune affaire</p></div>`}</div>
-      </div>`}).join('');
-  }
+/* ══ PIPELINE ══ */
+const Pipeline={render(){const s=($('pipe-search').value||'').toLowerCase(),uf=$('pipe-user');const cv=uf.value;uf.innerHTML='<option value="">Tous</option>'+S.users.filter(u=>u.active!==false).map(u=>`<option value="${u.id}">${u.name}</option>`).join('');uf.value=cv;let dl=fP(S.deals);if(s)dl=dl.filter(d=>d.name.toLowerCase().includes(s)||(d.ref||'').toLowerCase().includes(s));if(cv)dl=dl.filter(d=>d.userId==cv);$('kanban').innerHTML=Object.entries(S.stages).map(([k,v])=>{const sd=dl.filter(d=>d.stage==k);const tot=sd.reduce((a,b)=>a+b.amount,0);return`<div class="kanban-col"><div class="kanban-col-header" style="border-bottom-color:${v.color}"><h4><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${v.color}"></span> ${v.name} <span class="col-count">${sd.length}</span></h4><span class="col-total">${fc(tot)}</span></div><div class="kanban-col-body">${sd.length?sd.map(d=>{const ct=gC(d.contactId),us=gU(d.userId);return`<div class="kanban-card" ondblclick="Deals.edit(${d.id})"><div style="display:flex;justify-content:space-between;align-items:center"><span class="kc-ref">${d.ref||''}</span><select class="form-control" style="width:auto;padding:.15rem .4rem;font-size:.68rem;margin:0;border-radius:4px" onchange="Deals.chgStg(${d.id},this.value)">${Object.entries(S.stages).map(([sk,sv])=>`<option value="${sk}" ${sk==k?'selected':''}>${sv.name}</option>`).join('')}</select></div><div class="kc-name">${d.name}</div><div class="kc-client"><i class="fas fa-building" style="font-size:.65rem"></i> ${ct?ct.name:'—'}</div><div class="kc-amount">${fc(d.amount)}</div><div class="kc-footer"><span class="kc-user"><i class="fas fa-user"></i> ${us?us.name:'—'}</span><span style="font-size:.68rem;color:var(--text-muted)">${d.date||''}</span></div></div>`}).join(''):'<div class="empty-state" style="padding:2rem"><i class="fas fa-inbox"></i><p style="font-size:.78rem">Vide</p></div>'}</div></div>`}).join('')}};
+
+/* ══ COMMISSIONS ══ */
+const Commissions={
+  calc(){const p=gP(),cm=S.users.filter(u=>u.role!=='Lecture seule'&&u.active!==false),tpu=S.settings.target/(cm.length||1);let tC=0,tCA=0,tB=0;const rows=cm.map(u=>{const won=S.deals.filter(d=>d.stage===5&&d.userId===u.id&&(p==='ALL'||d.date.startsWith(p)));const ca=won.reduce((a,b)=>a+b.amount,0);const att=tpu>0?Math.round(ca/tpu*100):0;let rate=u.rate||0;if(S.settings.commMode==='tiered'&&S.settings.tiers){const tier=S.settings.tiers.find(t=>ca>=t.min&&ca<infMax(t.max));if(tier)rate=tier.rate}const com=Math.round(ca*rate/100);const bon=att>100?Math.round((ca-tpu)*(S.settings.bonusRate||0)/100):0;const tot=com+bon;tC+=tot;tCA+=ca;tB+=bon;const ck=p+'_'+u.id;const st=(S.commissions||{})[ck]||'Attente';return{user:u,ca,att,rate,com,bon,tot,st,ck}});return{rows,tC,tCA,tB}},
+  render(){const{rows,tC,tCA,tB}=this.calc();$('comm-sum').innerHTML=`<div class="cs-card"><div class="cs-label">CA gagné</div><div class="cs-value" style="color:var(--success)">${fc(tCA)}</div></div><div class="cs-card"><div class="cs-label">Commissions</div><div class="cs-value" style="color:var(--primary)">${fc(tC)}</div></div><div class="cs-card"><div class="cs-label">Bonus</div><div class="cs-value" style="color:var(--warning)">${fc(tB)}</div></div>`;const sb={'Attente':'badge-attente','Validée':'badge-validee','Payée':'badge-payee'};document.querySelector('#tbl-comm tbody').innerHTML=rows.map(r=>`<tr><td><strong>${r.user.name}</strong></td><td>${fc(r.ca)}</td><td>${fc(Math.round(S.settings.target/(S.users.filter(u=>u.active!==false&&u.role!=='Lecture seule').length||1)))}</td><td><div class="progress" style="width:80px;display:inline-block;vertical-align:middle"><div class="progress-bar" style="width:${Math.min(100,r.att)}%;background:${r.att>=100?'var(--success)':r.att>=50?'var(--primary)':'var(--danger)'}"></div></div> <strong>${r.att}%</strong></td><td>${r.rate}%</td><td>${fc(r.com)}</td><td>${r.bon>0?fc(r.bon):'—'}</td><td><strong>${fc(r.tot)}</strong></td><td><span class="badge ${sb[r.st]||'badge-attente'}">${r.st}</span></td><td>${CU?.role==='Super Admin'||CU?.role==='Manager'?`<select class="form-control" style="width:auto;padding:.2rem .4rem;font-size:.72rem;margin:0" onchange="Commissions.setSt('${r.ck}',this.value)"><option value="Attente" ${r.st==='Attente'?'selected':''}>Attente</option><option value="Validée" ${r.st==='Validée'?'selected':''}>Validée</option><option value="Payée" ${r.st==='Payée'?'selected':''}>Payée</option></select>`:'—'}</td></tr>`).join('')},
+  setSt(k,s){if(!S.commissions)S.commissions={};S.commissions[k]=s;aA('Statut comm.',k+'→'+s);save();this.render();Toast.s('Statut mis à jour')}
 };
 
-/* ═══════════════════════════════════════════════
-   COMMISSIONS
-   ═══════════════════════════════════════════════ */
-const Commissions = {
-  calculate(){
-    const period=getPeriod();
-    const commercials=S.users.filter(u=>u.role!=='Lecture seule'&&u.active!==false);
-    const targetPerUser=S.settings.target/(commercials.length||1);
-    let totalComm=0, totalCA=0, totalBonus=0;
-    const rows=commercials.map(u=>{
-      const wonDeals=S.deals.filter(d=>d.stage===5 && d.userId===u.id && (period==='ALL'||d.date.startsWith(period)));
-      const ca=wonDeals.reduce((a,b)=>a+b.amount,0);
-      const atteinte=targetPerUser>0?Math.round((ca/targetPerUser)*100):0;
-      let rate=u.rate||0;
-      if(S.settings.commMode==='tiered'&&S.settings.tiers){
-        const tier=S.settings.tiers.find(t=>ca>=t.min&&ca<(t.max===Infinity?Number.MAX_SAFE_INTEGER:t.max));
-        if(tier)rate=tier.rate;
-      }
-      const commission=Math.round(ca*rate/100);
-      const bonus=atteinte>100?Math.round((ca-targetPerUser)*(S.settings.bonusRate||0)/100):0;
-      const total=commission+bonus;
-      totalComm+=total; totalCA+=ca; totalBonus+=bonus;
-      const commKey=period+'_'+u.id;
-      const status=(S.commissions||{})[commKey]||'Attente';
-      return {user:u, ca, atteinte, rate, commission, bonus, total, status, commKey};
-    });
-    return {rows, totalComm, totalCA, totalBonus};
-  },
-  render(){
-    const {rows, totalComm, totalCA, totalBonus}=this.calculate();
-    // Summary
-    document.getElementById('comm-summary').innerHTML=`
-      <div class="cs-card"><div class="cs-label">CA total gagné</div><div class="cs-value" style="color:var(--success)">${fmtCur(totalCA)}</div></div>
-      <div class="cs-card"><div class="cs-label">Commissions totales</div><div class="cs-value" style="color:var(--primary)">${fmtCur(totalComm)}</div></div>
-      <div class="cs-card"><div class="cs-label">Bonus distribués</div><div class="cs-value" style="color:var(--warning)">${fmtCur(totalBonus)}</div></div>`;
-    // Table
-    const statusBadge={'Attente':'badge-attente','Validée':'badge-validee','Payée':'badge-payee'};
-    const tbody=document.querySelector('#tbl-commissions tbody');
-    tbody.innerHTML=rows.map(r=>`<tr>
-      <td><strong>${r.user.name}</strong></td>
-      <td>${fmtCur(r.ca)}</td>
-      <td>${fmtCur(Math.round(S.settings.target/(S.users.filter(u=>u.active!==false&&u.role!=='Lecture seule').length||1)))}</td>
-      <td><div class="progress" style="width:100px;display:inline-block;vertical-align:middle"><div class="progress-bar" style="width:${Math.min(100,r.atteinte)}%;background:${r.atteinte>=100?'var(--success)':r.atteinte>=50?'var(--primary)':'var(--danger)'}"></div></div> <strong>${r.atteinte}%</strong></td>
-      <td>${r.rate}%</td>
-      <td>${fmtCur(r.commission)}</td>
-      <td>${r.bonus>0?fmtCur(r.bonus):'—'}</td>
-      <td><strong>${fmtCur(r.total)}</strong></td>
-      <td><span class="badge ${statusBadge[r.status]||'badge-attente'}">${r.status}</span></td>
-      <td>
-        ${currentUser?.role==='Super Admin'||currentUser?.role==='Manager'?`
-        <select class="form-control" style="width:auto;padding:.2rem .4rem;font-size:.72rem;margin:0" onchange="Commissions.setStatus('${r.commKey}',this.value)">
-          <option value="Attente" ${r.status==='Attente'?'selected':''}>En attente</option>
-          <option value="Validée" ${r.status==='Validée'?'selected':''}>Validée</option>
-          <option value="Payée" ${r.status==='Payée'?'selected':''}>Payée</option>
-        </select>`:'—'}
-      </td>
-    </tr>`).join('');
-  },
-  setStatus(key, status){
-    if(!S.commissions)S.commissions={};
-    S.commissions[key]=status;
-    addAudit('Changement statut commission', key+' → '+status);
-    save(); this.render(); Toast.show('Statut commission mis à jour');
-  }
+/* ══ DASHBOARD ══ */
+const Dashboard={
+  render(){const dl=fP(S.deals),rl=dl.filter(d=>d.stage===5).reduce((a,b)=>a+b.amount,0),lt=dl.filter(d=>d.stage===6).reduce((a,b)=>a+b.amount,0),ac=dl.filter(d=>d.stage<5&&d.stage>0),wt=ac.reduce((a,b)=>a+(b.amount*gSP(b.stage)/100),0),tc=dl.filter(d=>d.stage>=5).length,wn=dl.filter(d=>d.stage===5).length,cv=tc>0?Math.round(wn/tc*100):0,qs=dl.filter(d=>d.stage>=3).length,tg=S.settings.target||1,tp=Math.round(rl/tg*100);
+    $('kpi-grid').innerHTML=`<div class="kpi-card"><div class="kpi-icon" style="background:var(--success-light);color:var(--success)"><i class="fas fa-trophy"></i></div><div class="kpi-label">CA Réalisé</div><div class="kpi-value" style="color:var(--success)">${fc(rl)}</div><div class="kpi-sub">${wn} gagnée(s)</div></div><div class="kpi-card"><div class="kpi-icon" style="background:var(--primary-bg);color:var(--primary)"><i class="fas fa-scale-balanced"></i></div><div class="kpi-label">Pipeline pondéré</div><div class="kpi-value" style="color:var(--primary)">${fc(Math.round(wt))}</div><div class="kpi-sub">${ac.length} en cours</div></div><div class="kpi-card"><div class="kpi-icon" style="background:var(--warning-light);color:var(--warning)"><i class="fas fa-file-invoice"></i></div><div class="kpi-label">Devis envoyés</div><div class="kpi-value">${qs}</div><div class="kpi-sub">${fc(dl.filter(d=>d.stage>=3).reduce((a,b)=>a+b.amount,0))}</div></div><div class="kpi-card"><div class="kpi-icon" style="background:var(--info-light);color:var(--info)"><i class="fas fa-percent"></i></div><div class="kpi-label">Conversion</div><div class="kpi-value">${cv}%</div><div class="kpi-sub">${wn}/${tc}</div></div><div class="kpi-card"><div class="kpi-icon" style="background:var(--danger-light);color:var(--danger)"><i class="fas fa-bullseye"></i></div><div class="kpi-label">Objectif</div><div class="kpi-value">${tp}%</div><div class="progress" style="margin-top:.5rem"><div class="progress-bar" style="width:${Math.min(100,tp)}%;background:${tp>=100?'var(--success)':tp>=50?'var(--primary)':'var(--danger)'}"></div></div><div class="kpi-sub">Obj: ${fc(tg)}</div></div><div class="kpi-card"><div class="kpi-icon" style="background:var(--danger-light);color:var(--danger)"><i class="fas fa-circle-xmark"></i></div><div class="kpi-label">Perdu</div><div class="kpi-value" style="color:var(--danger)">${fc(lt)}</div><div class="kpi-sub">${dl.filter(d=>d.stage===6).length} affaire(s)</div></div>`;
+    const sh=dl.filter(d=>d.stage<6).sort((a,b)=>b.amount-a.amount),tbody=document.querySelector('#tbl-dash tbody');
+    if(!sh.length)tbody.innerHTML='<tr><td colspan="9"><div class="empty-state"><i class="fas fa-briefcase"></i><h4>Aucune affaire</h4></div></td></tr>';
+    else tbody.innerHTML=sh.map(d=>{const c=gC(d.contactId),u=gU(d.userId);return`<tr><td><code style="font-size:.75rem;background:var(--bg);padding:.15rem .4rem;border-radius:3px">${d.ref||''}</code></td><td><strong>${d.name}</strong></td><td>${c?`<span style="cursor:pointer;color:var(--primary)" onclick="Contacts.detail(${c.id})">${c.name}</span>`:'—'}</td><td>${d.interlocuteur||'—'}</td><td style="font-weight:700">${fc(d.amount)}</td><td><span class="stage-badge" style="background:${gSC(d.stage)}18;color:${gSC(d.stage)}">${gSN(d.stage)}</span></td><td>${u?u.name:'—'}</td><td>${d.date||'—'}</td><td><button class="btn btn-ghost btn-icon btn-sm" onclick="Deals.edit(${d.id})"><i class="fas fa-pen" style="color:var(--primary)"></i></button><button class="btn btn-ghost btn-icon btn-sm" onclick="Deals.delete(${d.id})"><i class="fas fa-trash" style="color:var(--danger)"></i></button></td></tr>`}).join('');
+    this.charts(dl)},
+  charts(dl){const pd=Object.entries(S.stages).map(([k,v])=>({l:v.name,t:dl.filter(d=>d.stage==k).reduce((a,b)=>a+b.amount,0),c:v.color}));if(cP)cP.destroy();cP=new Chart($('chart-pipe'),{type:'bar',data:{labels:pd.map(p=>p.l),datasets:[{label:'Montant',data:pd.map(p=>p.t),backgroundColor:pd.map(p=>p.c+'44'),borderColor:pd.map(p=>p.c),borderWidth:2,borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>fmt(v)},grid:{color:'#f1f5f9'}},x:{grid:{display:false}}}}});
+    const now=new Date(),ms=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1),k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'),l=d.toLocaleString('fr-FR',{month:'short'});ms.push({l,w:S.deals.filter(x=>x.stage===5&&(x.date||'').startsWith(k)).reduce((a,b)=>a+b.amount,0),p:S.deals.filter(x=>x.stage<5&&x.stage>0&&(x.date||'').startsWith(k)).reduce((a,b)=>a+b.amount,0)})}if(cM)cM.destroy();cM=new Chart($('chart-month'),{type:'bar',data:{labels:ms.map(m=>m.l),datasets:[{label:'CA Gagné',data:ms.map(m=>m.w),backgroundColor:'#05966944',borderColor:'#059669',borderWidth:2,borderRadius:6},{label:'Pipeline',data:ms.map(m=>m.p),backgroundColor:'#2563eb33',borderColor:'#2563eb',borderWidth:2,borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:16,font:{size:11}}}},scales:{y:{ticks:{callback:v=>fmt(v)},grid:{color:'#f1f5f9'}},x:{grid:{display:false}}}}})}
 };
 
-/* ═══════════════════════════════════════════════
-   DASHBOARD
-   ═══════════════════════════════════════════════ */
-const Dashboard = {
-  render(){
-    const deals=filterByPeriod(S.deals);
-    const realized=deals.filter(d=>d.stage===5).reduce((a,b)=>a+b.amount,0);
-    const lost=deals.filter(d=>d.stage===6).reduce((a,b)=>a+b.amount,0);
-    const activeDeals=deals.filter(d=>d.stage<5&&d.stage>0);
-    const weighted=activeDeals.reduce((a,b)=>a+(b.amount*getStageProb(b.stage)/100),0);
-    const totalClosed=deals.filter(d=>d.stage>=5).length;
-    const won=deals.filter(d=>d.stage===5).length;
-    const conversion=totalClosed>0?Math.round(won/totalClosed*100):0;
-    const quoteSent=deals.filter(d=>d.stage>=3).length;
-    const target=S.settings.target||1;
-    const targetPct=Math.round(realized/target*100);
-
-    // KPIs
-    document.getElementById('kpi-grid').innerHTML=`
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:var(--success-light);color:var(--success)"><i class="fas fa-trophy"></i></div>
-        <div class="kpi-label">CA Réalisé</div>
-        <div class="kpi-value" style="color:var(--success)">${fmtCur(realized)}</div>
-        <div class="kpi-sub">sur ${won} affaire(s) gagnée(s)</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:var(--primary-bg);color:var(--primary)"><i class="fas fa-scale-balanced"></i></div>
-        <div class="kpi-label">Pipeline pondéré</div>
-        <div class="kpi-value" style="color:var(--primary)">${fmtCur(Math.round(weighted))}</div>
-        <div class="kpi-sub">${activeDeals.length} affaire(s) en cours</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:var(--warning-light);color:var(--warning)"><i class="fas fa-file-invoice"></i></div>
-        <div class="kpi-label">Devis envoyés</div>
-        <div class="kpi-value">${quoteSent}</div>
-        <div class="kpi-sub">${fmtCur(deals.filter(d=>d.stage>=3).reduce((a,b)=>a+b.amount,0))} en valeur</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:var(--info-light);color:var(--info)"><i class="fas fa-percent"></i></div>
-        <div class="kpi-label">Taux de conversion</div>
-        <div class="kpi-value">${conversion}%</div>
-        <div class="kpi-sub">${won} gagné / ${totalClosed} clôturé</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:var(--danger-light);color:var(--danger)"><i class="fas fa-bullseye"></i></div>
-        <div class="kpi-label">Objectif</div>
-        <div class="kpi-value">${targetPct}%</div>
-        <div class="progress" style="margin-top:.5rem"><div class="progress-bar" style="width:${Math.min(100,targetPct)}%;background:${targetPct>=100?'var(--success)':targetPct>=50?'var(--primary)':'var(--danger)'}"></div></div>
-        <div class="kpi-sub">Objectif : ${fmtCur(target)}</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:var(--danger-light);color:var(--danger)"><i class="fas fa-circle-xmark"></i></div>
-        <div class="kpi-label">Perdu</div>
-        <div class="kpi-value" style="color:var(--danger)">${fmtCur(lost)}</div>
-        <div class="kpi-sub">${deals.filter(d=>d.stage===6).length} affaire(s)</div>
-      </div>`;
-
-    // Dashboard table (active deals)
-    const showDeals=deals.filter(d=>d.stage<6).sort((a,b)=>b.amount-a.amount);
-    const tbody=document.querySelector('#tbl-dashboard tbody');
-    if(!showDeals.length){
-      tbody.innerHTML=`<tr><td colspan="9"><div class="empty-state"><i class="fas fa-briefcase"></i><h4>Aucune affaire</h4><p>Créez votre première affaire pour commencer le suivi</p></div></td></tr>`;
-    } else {
-      tbody.innerHTML=showDeals.map(d=>{
-        const contact=getContact(d.contactId);
-        const user=getUser(d.userId);
-        return `<tr>
-          <td><code style="font-size:.75rem;background:var(--bg);padding:.15rem .4rem;border-radius:3px">${d.ref||''}</code></td>
-          <td><strong>${d.name}</strong></td>
-          <td>${contact?`<span style="cursor:pointer;color:var(--primary)" onclick="Contacts.showDetail(${contact.id})">${contact.name}</span>`:'—'}</td>
-          <td>${d.interlocuteur||'—'}</td>
-          <td style="font-weight:700">${fmtCur(d.amount)}</td>
-          <td><span class="stage-badge" style="background:${getStageColor(d.stage)}18;color:${getStageColor(d.stage)}">${getStageName(d.stage)}</span></td>
-          <td>${user?user.name:'—'}</td>
-          <td>${d.date||'—'}</td>
-          <td>
-            <button class="btn btn-ghost btn-icon btn-sm" onclick="Deals.edit(${d.id})" title="Modifier"><i class="fas fa-pen" style="color:var(--primary)"></i></button>
-            <button class="btn btn-ghost btn-icon btn-sm" onclick="Deals.delete(${d.id})" title="Supprimer"><i class="fas fa-trash" style="color:var(--danger)"></i></button>
-          </td>
-        </tr>`}).join('');
-    }
-
-    // Charts
-    this.renderCharts(deals);
-  },
-  renderCharts(deals){
-    // Pipeline chart
-    const pipeData=Object.entries(S.stages).map(([k,v])=>({
-      label:v.name, count:deals.filter(d=>d.stage==k).length,
-      total:deals.filter(d=>d.stage==k).reduce((a,b)=>a+b.amount,0), color:v.color
-    }));
-    if(chartPipeline)chartPipeline.destroy();
-    chartPipeline=new Chart(document.getElementById('chart-pipeline'),{
-      type:'bar', data:{labels:pipeData.map(p=>p.label),datasets:[
-        {label:'Montant ('+S.settings.currency+')',data:pipeData.map(p=>p.total),backgroundColor:pipeData.map(p=>p.color+'44'),borderColor:pipeData.map(p=>p.color),borderWidth:2,borderRadius:6}
-      ]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>fmt(v)},grid:{color:'#f1f5f9'}},x:{grid:{display:false}}}}
-    });
-    // Monthly chart (last 6 months)
-    const now=new Date();
-    const months=[];
-    for(let i=5;i>=0;i--){
-      const d=new Date(now.getFullYear(),now.getMonth()-i,1);
-      const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-      const label=d.toLocaleString('fr-FR',{month:'short'});
-      const won=S.deals.filter(dd=>dd.stage===5&&(dd.date||'').startsWith(key)).reduce((a,b)=>a+b.amount,0);
-      const pipe=S.deals.filter(dd=>dd.stage<5&&dd.stage>0&&(dd.date||'').startsWith(key)).reduce((a,b)=>a+b.amount,0);
-      months.push({label,won,pipe});
-    }
-    if(chartMonthly)chartMonthly.destroy();
-    chartMonthly=new Chart(document.getElementById('chart-monthly'),{
-      type:'bar', data:{labels:months.map(m=>m.label),datasets:[
-        {label:'CA Gagné',data:months.map(m=>m.won),backgroundColor:'#05966944',borderColor:'#059669',borderWidth:2,borderRadius:6},
-        {label:'Pipeline',data:months.map(m=>m.pipe),backgroundColor:'#2563eb33',borderColor:'#2563eb',borderWidth:2,borderRadius:6}
-      ]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:16,font:{size:11}}}},scales:{y:{ticks:{callback:v=>fmt(v)},grid:{color:'#f1f5f9'}},x:{grid:{display:false}}}}
-    });
-  }
+/* ══ ADMIN ══ */
+const Admin={
+  render(){$('cfg-co').value=S.settings.company;$('cfg-cur').value=S.settings.currency;$('cfg-tgt').value=S.settings.target;$('cfg-atgt').value=S.settings.annualTarget||'';$('cfg-cmode').value=S.settings.commMode||'flat';$('cfg-ctrig').value=S.settings.commTrigger||'signed';$('cfg-bonus').value=S.settings.bonusRate||0;$('cfg-cmode').onchange=()=>$('cfg-tiers-sec').style.display=$('cfg-cmode').value==='tiered'?'block':'none';$('cfg-tiers-sec').style.display=S.settings.commMode==='tiered'?'block':'none';$('cfg-stages').innerHTML=Object.entries(S.stages).map(([k,v])=>`<div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem;padding:.5rem;background:var(--bg);border-radius:var(--radius)"><span style="width:12px;height:12px;border-radius:50%;background:${v.color}"></span><strong style="font-size:.82rem;flex:1">${k}. ${v.name}</strong><span style="font-size:.75rem;color:var(--text-muted)">${v.prob}%</span></div>`).join('');this.rTiers();Users.render();document.querySelector('#tbl-audit tbody').innerHTML=(S.audit||[]).slice(0,50).map(a=>`<tr><td style="font-size:.78rem;white-space:nowrap">${new Date(a.date).toLocaleString('fr-FR')}</td><td>${a.user}</td><td>${a.action}</td><td style="font-size:.78rem;color:var(--text-secondary)">${a.details||'—'}</td></tr>`).join('');$('sb-company').textContent=S.settings.company;$('sb-logo').textContent=(S.settings.company||'C').charAt(0).toUpperCase()},
+  saveSettings(){S.settings.company=$('cfg-co').value.trim();S.settings.currency=$('cfg-cur').value;S.settings.target=parseFloat($('cfg-tgt').value)||0;S.settings.annualTarget=parseFloat($('cfg-atgt').value)||0;aA('Modif. paramètres',S.settings.company);save();App.refreshAll();Toast.s('Paramètres enregistrés')},
+  saveComm(){S.settings.commMode=$('cfg-cmode').value;S.settings.commTrigger=$('cfg-ctrig').value;S.settings.bonusRate=parseFloat($('cfg-bonus').value)||0;aA('Modif. règles comm.');save();App.refreshAll();Toast.s('Règles mises à jour')},
+  rTiers(){if(!S.settings.tiers)S.settings.tiers=[];$('cfg-tiers').innerHTML=S.settings.tiers.map((t,i)=>`<div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem"><input type="number" class="form-control" value="${t.min}" style="width:120px;margin:0" onchange="S.settings.tiers[${i}].min=parseFloat(this.value)"><span>→</span><input type="number" class="form-control" value="${t.max==='INF'?'':t.max}" style="width:120px;margin:0" placeholder="∞" onchange="S.settings.tiers[${i}].max=this.value?parseFloat(this.value):'INF'"><span>:</span><input type="number" class="form-control" value="${t.rate}" style="width:80px;margin:0" onchange="S.settings.tiers[${i}].rate=parseFloat(this.value)"><span style="font-size:.78rem;color:var(--text-muted)">%</span><button class="btn btn-ghost btn-icon btn-sm" onclick="S.settings.tiers.splice(${i},1);Admin.rTiers()"><i class="fas fa-xmark" style="color:var(--danger)"></i></button></div>`).join('')},
+  addTier(){if(!S.settings.tiers)S.settings.tiers=[];S.settings.tiers.push({min:0,max:'INF',rate:5});this.rTiers()}
 };
 
-/* ═══════════════════════════════════════════════
-   ADMIN
-   ═══════════════════════════════════════════════ */
-const Admin = {
-  render(){
-    document.getElementById('cfg-company').value=S.settings.company;
-    document.getElementById('cfg-currency').value=S.settings.currency;
-    document.getElementById('cfg-target').value=S.settings.target;
-    document.getElementById('cfg-annual-target').value=S.settings.annualTarget||'';
-    document.getElementById('cfg-comm-mode').value=S.settings.commMode||'flat';
-    document.getElementById('cfg-comm-trigger').value=S.settings.commTrigger||'signed';
-    document.getElementById('cfg-bonus-rate').value=S.settings.bonusRate||0;
-    document.getElementById('cfg-comm-mode').onchange=()=>{
-      document.getElementById('cfg-tiers-section').style.display=document.getElementById('cfg-comm-mode').value==='tiered'?'block':'none';
-    };
-    document.getElementById('cfg-tiers-section').style.display=S.settings.commMode==='tiered'?'block':'none';
-    // Stages
-    document.getElementById('cfg-stages-list').innerHTML=Object.entries(S.stages).map(([k,v])=>`
-      <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem;padding:.5rem;background:var(--bg);border-radius:var(--radius)">
-        <span style="width:12px;height:12px;border-radius:50%;background:${v.color};flex-shrink:0"></span>
-        <strong style="font-size:.82rem;flex:1">${k}. ${v.name}</strong>
-        <span style="font-size:.75rem;color:var(--text-muted)">${v.prob}%</span>
-      </div>`).join('');
-    // Tiers
-    this.renderTiers();
-    // Users
-    Users.render();
-    // Audit log
-    const auditTbody=document.querySelector('#tbl-audit tbody');
-    auditTbody.innerHTML=(S.audit||[]).slice(0,50).map(a=>`<tr>
-      <td style="font-size:.78rem;white-space:nowrap">${new Date(a.date).toLocaleString('fr-FR')}</td>
-      <td>${a.user}</td><td>${a.action}</td><td style="font-size:.78rem;color:var(--text-secondary)">${a.details||'—'}</td>
-    </tr>`).join('');
-    // Sidebar branding
-    document.getElementById('sidebar-company').textContent=S.settings.company;
-    document.getElementById('sidebar-logo-circle').textContent=(S.settings.company||'C').charAt(0).toUpperCase();
-  },
-  saveSettings(){
-    S.settings.company=document.getElementById('cfg-company').value.trim();
-    S.settings.currency=document.getElementById('cfg-currency').value;
-    S.settings.target=parseFloat(document.getElementById('cfg-target').value)||0;
-    S.settings.annualTarget=parseFloat(document.getElementById('cfg-annual-target').value)||0;
-    addAudit('Modification paramètres', 'Entreprise: '+S.settings.company);
-    save(); App.refreshAll(); Toast.show('Paramètres enregistrés');
-  },
-  saveCommRules(){
-    S.settings.commMode=document.getElementById('cfg-comm-mode').value;
-    S.settings.commTrigger=document.getElementById('cfg-comm-trigger').value;
-    S.settings.bonusRate=parseFloat(document.getElementById('cfg-bonus-rate').value)||0;
-    addAudit('Modification règles commission');
-    save(); App.refreshAll(); Toast.show('Règles de commission mises à jour');
-  },
-  renderTiers(){
-    if(!S.settings.tiers)S.settings.tiers=[];
-    document.getElementById('cfg-tiers-list').innerHTML=S.settings.tiers.map((t,i)=>`
-      <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem">
-        <input type="number" class="form-control" value="${t.min}" style="width:120px;margin:0" placeholder="Min" onchange="S.settings.tiers[${i}].min=parseFloat(this.value)">
-        <span style="color:var(--text-muted)">→</span>
-        <input type="number" class="form-control" value="${t.max===Infinity?'':t.max}" style="width:120px;margin:0" placeholder="Max (vide=∞)" onchange="S.settings.tiers[${i}].max=this.value?parseFloat(this.value):Infinity">
-        <span style="color:var(--text-muted)">:</span>
-        <input type="number" class="form-control" value="${t.rate}" style="width:80px;margin:0" placeholder="%" onchange="S.settings.tiers[${i}].rate=parseFloat(this.value)">
-        <span style="font-size:.78rem;color:var(--text-muted)">%</span>
-        <button class="btn btn-ghost btn-icon btn-sm" onclick="S.settings.tiers.splice(${i},1);Admin.renderTiers()"><i class="fas fa-xmark" style="color:var(--danger)"></i></button>
-      </div>`).join('');
-  },
-  addTier(){
-    if(!S.settings.tiers)S.settings.tiers=[];
-    S.settings.tiers.push({min:0,max:Infinity,rate:5});
-    this.renderTiers();
-  }
+/* ══ REPORTS ══ */
+const Reports={
+  _h(){return`<div style="text-align:center;padding:1rem;border-bottom:2px solid #1e293b;margin-bottom:1.5rem"><h2 style="margin:0;font-size:1.2rem">${S.settings.company}</h2><p style="margin:.25rem 0 0;color:#64748b;font-size:.8rem">Rapport ${new Date().toLocaleDateString('fr-FR')} — ${gP()==='ALL'?'Toutes périodes':gP()}</p></div>`},
+  _pdf(el,fn){html2pdf().set({margin:[10,10,10,10],filename:fn+'.pdf',html2canvas:{scale:2},jsPDF:{format:'a4',orientation:'landscape'}}).from(el).save();Toast.s('Export PDF...','info')},
+  exportDashboard(){const d=document.createElement('div');d.style.cssText='padding:1.5rem;font-family:sans-serif;font-size:12px;color:#1e293b';const dl=fP(S.deals),r=dl.filter(x=>x.stage===5).reduce((a,b)=>a+b.amount,0),w=dl.filter(x=>x.stage<5).reduce((a,b)=>a+(b.amount*gSP(b.stage)/100),0),ad=dl.filter(x=>x.stage<6);d.innerHTML=this._h()+`<h3 style="margin-bottom:1rem">Activité commerciale</h3><table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr style="background:#0f172a;color:white"><th style="padding:6px">Réf.</th><th style="padding:6px">Affaire</th><th style="padding:6px">Client</th><th style="padding:6px">Interloc.</th><th style="padding:6px">Montant</th><th style="padding:6px">Étape</th><th style="padding:6px">Commercial</th></tr></thead><tbody>${ad.map((x,i)=>{const c=gC(x.contactId),u=gU(x.userId);return`<tr style="background:${i%2?'#f8fafc':'white'}"><td style="padding:5px">${x.ref||''}</td><td style="padding:5px">${x.name}</td><td style="padding:5px">${c?c.name:'—'}</td><td style="padding:5px">${x.interlocuteur||'—'}</td><td style="padding:5px;font-weight:700">${fc(x.amount)}</td><td style="padding:5px">${gSN(x.stage)}</td><td style="padding:5px">${u?u.name:'—'}</td></tr>`}).join('')}</tbody></table>`;this._pdf(d,'Activite_'+S.settings.company)},
+  exportComm(){const d=document.createElement('div');d.style.cssText='padding:1.5rem;font-family:sans-serif;font-size:12px;color:#1e293b';const{rows,tC,tCA}=Commissions.calc();d.innerHTML=this._h()+`<h3 style="margin-bottom:1rem">Commissions</h3><table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr style="background:#0f172a;color:white"><th style="padding:6px">Commercial</th><th style="padding:6px">CA</th><th style="padding:6px">Att.</th><th style="padding:6px">Taux</th><th style="padding:6px">Commission</th><th style="padding:6px">Bonus</th><th style="padding:6px">Total</th><th style="padding:6px">Statut</th></tr></thead><tbody>${rows.map((r,i)=>`<tr style="background:${i%2?'#f8fafc':'white'}"><td style="padding:5px;font-weight:700">${r.user.name}</td><td style="padding:5px">${fc(r.ca)}</td><td style="padding:5px">${r.att}%</td><td style="padding:5px">${r.rate}%</td><td style="padding:5px">${fc(r.com)}</td><td style="padding:5px">${r.bon>0?fc(r.bon):'—'}</td><td style="padding:5px;font-weight:700">${fc(r.tot)}</td><td style="padding:5px">${r.st}</td></tr>`).join('')}</tbody></table>`;this._pdf(d,'Commissions_'+S.settings.company)},
+  exportPipe(){const d=document.createElement('div');d.style.cssText='padding:1.5rem;font-family:sans-serif;font-size:12px;color:#1e293b';const dl=fP(S.deals);let h=this._h()+'<h3>Pipeline</h3>';Object.entries(S.stages).forEach(([k,v])=>{const sd=dl.filter(x=>x.stage==k);h+=`<h4 style="margin:1rem 0 .5rem;color:${v.color}">${v.name} (${sd.length}) — ${fc(sd.reduce((a,b)=>a+b.amount,0))}</h4>`;if(sd.length){h+='<table style="width:100%;border-collapse:collapse;font-size:10px;margin-bottom:.5rem"><tbody>';sd.forEach(x=>{const c=gC(x.contactId),u=gU(x.userId);h+=`<tr><td style="padding:3px">${x.ref||''}</td><td style="padding:3px">${x.name}</td><td style="padding:3px">${c?c.name:'—'}</td><td style="padding:3px;text-align:right;font-weight:700">${fc(x.amount)}</td><td style="padding:3px">${u?u.name:'—'}</td></tr>`});h+='</tbody></table>'}});d.innerHTML=h;this._pdf(d,'Pipeline_'+S.settings.company)},
+  exportPerf(){const d=document.createElement('div');d.style.cssText='padding:1.5rem;font-family:sans-serif;font-size:12px;color:#1e293b';const perf=S.users.filter(u=>u.active!==false&&u.role!=='Lecture seule').map(u=>{const dl=fP(S.deals).filter(x=>x.userId===u.id),w=dl.filter(x=>x.stage===5);return{name:u.name,n:dl.length,w:w.length,ca:w.reduce((a,b)=>a+b.amount,0),cv:dl.filter(x=>x.stage>=5).length>0?Math.round(w.length/dl.filter(x=>x.stage>=5).length*100):0}}).sort((a,b)=>b.ca-a.ca);d.innerHTML=this._h()+`<h3>Performance</h3><table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr style="background:#0f172a;color:white"><th style="padding:6px">#</th><th style="padding:6px">Commercial</th><th style="padding:6px">Affaires</th><th style="padding:6px">Gagnées</th><th style="padding:6px">CA</th><th style="padding:6px">Conv.</th></tr></thead><tbody>${perf.map((p,i)=>`<tr style="background:${i%2?'#f8fafc':'white'}"><td style="padding:5px;font-weight:700">${i+1}</td><td style="padding:5px">${p.name}</td><td style="padding:5px">${p.n}</td><td style="padding:5px">${p.w}</td><td style="padding:5px;font-weight:700">${fc(p.ca)}</td><td style="padding:5px">${p.cv}%</td></tr>`).join('')}</tbody></table>`;this._pdf(d,'Performance_'+S.settings.company)},
+  exportForecast(){const d=document.createElement('div');d.style.cssText='padding:1.5rem;font-family:sans-serif;font-size:12px;color:#1e293b';const ad=S.deals.filter(x=>x.stage>0&&x.stage<5),fo=ad.reduce((a,b)=>a+(b.amount*gSP(b.stage)/100),0),rl=fP(S.deals).filter(x=>x.stage===5).reduce((a,b)=>a+b.amount,0);d.innerHTML=this._h()+`<h3>Forecast</h3><table style="width:100%;margin-bottom:1.5rem"><tr><td style="padding:1rem;background:#dbeafe;border-radius:8px;text-align:center"><strong>CA Réalisé</strong><br><span style="font-size:1.3rem;font-weight:800;color:#059669">${fc(rl)}</span></td><td style="padding:1rem;background:#ede9fe;border-radius:8px;text-align:center"><strong>Forecast</strong><br><span style="font-size:1.3rem;font-weight:800;color:#7c3aed">${fc(Math.round(fo))}</span></td><td style="padding:1rem;background:#d1fae5;border-radius:8px;text-align:center"><strong>Total</strong><br><span style="font-size:1.3rem;font-weight:800;color:#059669">${fc(Math.round(rl+fo))}</span></td></tr></table><table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr style="background:#0f172a;color:white"><th style="padding:6px">Affaire</th><th style="padding:6px">Client</th><th style="padding:6px;text-align:right">Montant</th><th style="padding:6px">Étape</th><th style="padding:6px;text-align:right">Pondéré</th></tr></thead><tbody>${ad.sort((a,b)=>b.amount-a.amount).map((x,i)=>{const c=gC(x.contactId);return`<tr style="background:${i%2?'#f8fafc':'white'}"><td style="padding:5px">${x.name}</td><td style="padding:5px">${c?c.name:'—'}</td><td style="padding:5px;text-align:right;font-weight:700">${fc(x.amount)}</td><td style="padding:5px">${gSN(x.stage)}</td><td style="padding:5px;text-align:right;color:#7c3aed;font-weight:700">${fc(Math.round(x.amount*gSP(x.stage)/100))}</td></tr>`}).join('')}</tbody></table>`;this._pdf(d,'Forecast_'+S.settings.company)}
 };
 
-/* ═══════════════════════════════════════════════
-   REPORTS
-   ═══════════════════════════════════════════════ */
-const Reports = {
-  _generateHeader(){
-    return `<div style="text-align:center;padding:1rem;border-bottom:2px solid #1e293b;margin-bottom:1.5rem">
-      <h2 style="margin:0;font-size:1.2rem">${S.settings.company}</h2>
-      <p style="margin:.25rem 0 0;color:#64748b;font-size:.8rem">Rapport généré le ${new Date().toLocaleDateString('fr-FR')} — Période: ${getPeriod()==='ALL'?'Toutes':getPeriod()}</p>
-    </div>`;
-  },
-  _exportPDF(element, filename){
-    html2pdf().set({margin:[10,10,10,10],filename:filename+'.pdf',html2canvas:{scale:2,useCORS:true},jsPDF:{format:'a4',orientation:'landscape'}}).from(element).save();
-    Toast.show('Export PDF en cours...');
-  },
-  exportDashboard(){
-    const div=document.createElement('div');
-    div.style.cssText='padding:1.5rem;font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#1e293b';
-    const deals=filterByPeriod(S.deals);
-    const realized=deals.filter(d=>d.stage===5).reduce((a,b)=>a+b.amount,0);
-    const weighted=deals.filter(d=>d.stage<5).reduce((a,b)=>a+(b.amount*getStageProb(b.stage)/100),0);
-    const activeDeals=deals.filter(d=>d.stage<6);
-    div.innerHTML=this._generateHeader()+`
-      <h3 style="margin-bottom:1rem">Rapport d'activité commerciale</h3>
-      <table style="width:100%;margin-bottom:1rem;font-size:11px"><tr>
-        <td style="padding:.5rem;background:#f1f5f9;border-radius:6px;text-align:center"><strong>CA Réalisé</strong><br><span style="font-size:1.1rem;font-weight:800;color:#059669">${fmtCur(realized)}</span></td>
-        <td style="padding:.5rem;background:#f1f5f9;border-radius:6px;text-align:center"><strong>Pipeline pondéré</strong><br><span style="font-size:1.1rem;font-weight:800;color:#2563eb">${fmtCur(Math.round(weighted))}</span></td>
-        <td style="padding:.5rem;background:#f1f5f9;border-radius:6px;text-align:center"><strong>Affaires actives</strong><br><span style="font-size:1.1rem;font-weight:800">${activeDeals.length}</span></td>
-      </tr></table>
-      <table style="width:100%;border-collapse:collapse;font-size:10px">
-        <thead><tr style="background:#0f172a;color:white"><th style="padding:6px;text-align:left">Réf.</th><th style="padding:6px;text-align:left">Affaire</th><th style="padding:6px;text-align:left">Client</th><th style="padding:6px;text-align:left">Interlocuteur</th><th style="padding:6px;text-align:left">Montant</th><th style="padding:6px;text-align:left">Étape</th><th style="padding:6px;text-align:left">Commercial</th></tr></thead>
-        <tbody>${activeDeals.map((d,i)=>{const c=getContact(d.contactId);const u=getUser(d.userId);return`<tr style="background:${i%2?'#f8fafc':'white'}"><td style="padding:5px">${d.ref||''}</td><td style="padding:5px">${d.name}</td><td style="padding:5px">${c?c.name:'—'}</td><td style="padding:5px">${d.interlocuteur||'—'}</td><td style="padding:5px;font-weight:700">${fmtCur(d.amount)}</td><td style="padding:5px">${getStageName(d.stage)}</td><td style="padding:5px">${u?u.name:'—'}</td></tr>`}).join('')}</tbody>
-      </table>`;
-    this._exportPDF(div, 'Rapport_Activite_'+S.settings.company);
-  },
-  exportCommissions(){
-    const div=document.createElement('div');
-    div.style.cssText='padding:1.5rem;font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#1e293b';
-    const {rows,totalComm,totalCA}=Commissions.calculate();
-    div.innerHTML=this._generateHeader()+`
-      <h3 style="margin-bottom:1rem">Rapport de Commissions</h3>
-      <table style="width:100%;border-collapse:collapse;font-size:10px">
-        <thead><tr style="background:#0f172a;color:white"><th style="padding:6px;text-align:left">Commercial</th><th style="padding:6px;text-align:left">CA Réalisé</th><th style="padding:6px;text-align:left">Atteinte</th><th style="padding:6px;text-align:left">Taux</th><th style="padding:6px;text-align:left">Commission</th><th style="padding:6px;text-align:left">Bonus</th><th style="padding:6px;text-align:left">Total</th><th style="padding:6px;text-align:left">Statut</th></tr></thead>
-        <tbody>${rows.map((r,i)=>`<tr style="background:${i%2?'#f8fafc':'white'}"><td style="padding:5px;font-weight:700">${r.user.name}</td><td style="padding:5px">${fmtCur(r.ca)}</td><td style="padding:5px">${r.atteinte}%</td><td style="padding:5px">${r.rate}%</td><td style="padding:5px">${fmtCur(r.commission)}</td><td style="padding:5px">${r.bonus>0?fmtCur(r.bonus):'—'}</td><td style="padding:5px;font-weight:700">${fmtCur(r.total)}</td><td style="padding:5px">${r.status}</td></tr>`).join('')}
-        <tr style="background:#0f172a;color:white;font-weight:700"><td style="padding:6px">TOTAL</td><td style="padding:6px">${fmtCur(totalCA)}</td><td style="padding:6px" colspan="4"></td><td style="padding:6px">${fmtCur(totalComm)}</td><td style="padding:6px"></td></tr></tbody>
-      </table>`;
-    this._exportPDF(div, 'Rapport_Commissions_'+S.settings.company);
-  },
-  exportPipeline(){
-    const div=document.createElement('div');
-    div.style.cssText='padding:1.5rem;font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#1e293b';
-    const deals=filterByPeriod(S.deals);
-    let html=this._generateHeader()+'<h3 style="margin-bottom:1rem">Rapport Pipeline Détaillé</h3>';
-    Object.entries(S.stages).forEach(([k,v])=>{
-      const sd=deals.filter(d=>d.stage==k);
-      const total=sd.reduce((a,b)=>a+b.amount,0);
-      html+=`<h4 style="margin:1rem 0 .5rem;color:${v.color}">${v.name} (${sd.length}) — ${fmtCur(total)}</h4>`;
-      if(sd.length){
-        html+=`<table style="width:100%;border-collapse:collapse;font-size:10px;margin-bottom:.5rem"><thead><tr style="background:#f1f5f9"><th style="padding:4px;text-align:left">Réf.</th><th style="padding:4px;text-align:left">Affaire</th><th style="padding:4px;text-align:left">Client</th><th style="padding:4px;text-align:right">Montant</th><th style="padding:4px;text-align:left">Commercial</th></tr></thead><tbody>`;
-        sd.forEach(d=>{const c=getContact(d.contactId);const u=getUser(d.userId);
-          html+=`<tr><td style="padding:3px">${d.ref||''}</td><td style="padding:3px">${d.name}</td><td style="padding:3px">${c?c.name:'—'}</td><td style="padding:3px;text-align:right;font-weight:700">${fmtCur(d.amount)}</td><td style="padding:3px">${u?u.name:'—'}</td></tr>`;
-        });
-        html+='</tbody></table>';
-      }
-    });
-    div.innerHTML=html;
-    this._exportPDF(div, 'Rapport_Pipeline_'+S.settings.company);
-  },
-  exportPerformance(){
-    const div=document.createElement('div');
-    div.style.cssText='padding:1.5rem;font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#1e293b';
-    const commercials=S.users.filter(u=>u.active!==false&&u.role!=='Lecture seule');
-    const perf=commercials.map(u=>{
-      const deals=filterByPeriod(S.deals).filter(d=>d.userId===u.id);
-      const won=deals.filter(d=>d.stage===5);
-      const ca=won.reduce((a,b)=>a+b.amount,0);
-      const closed=deals.filter(d=>d.stage>=5).length;
-      const conv=closed>0?Math.round(won.length/closed*100):0;
-      return {name:u.name, deals:deals.length, won:won.length, ca, conv};
-    }).sort((a,b)=>b.ca-a.ca);
-    div.innerHTML=this._generateHeader()+`
-      <h3 style="margin-bottom:1rem">Performance Individuelle</h3>
-      <table style="width:100%;border-collapse:collapse;font-size:10px">
-        <thead><tr style="background:#0f172a;color:white"><th style="padding:6px;text-align:left">Rang</th><th style="padding:6px;text-align:left">Commercial</th><th style="padding:6px;text-align:left">Affaires</th><th style="padding:6px;text-align:left">Gagnées</th><th style="padding:6px;text-align:left">CA Réalisé</th><th style="padding:6px;text-align:left">Conversion</th></tr></thead>
-        <tbody>${perf.map((p,i)=>`<tr style="background:${i%2?'#f8fafc':'white'}"><td style="padding:5px;font-weight:700">${i+1}</td><td style="padding:5px">${p.name}</td><td style="padding:5px">${p.deals}</td><td style="padding:5px">${p.won}</td><td style="padding:5px;font-weight:700">${fmtCur(p.ca)}</td><td style="padding:5px">${p.conv}%</td></tr>`).join('')}</tbody>
-      </table>`;
-    this._exportPDF(div, 'Performance_'+S.settings.company);
-  },
-  exportForecast(){
-    const div=document.createElement('div');
-    div.style.cssText='padding:1.5rem;font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#1e293b';
-    const activeDeals=S.deals.filter(d=>d.stage>0&&d.stage<5);
-    const forecast=activeDeals.reduce((a,b)=>a+(b.amount*getStageProb(b.stage)/100),0);
-    const realized=filterByPeriod(S.deals).filter(d=>d.stage===5).reduce((a,b)=>a+b.amount,0);
-    div.innerHTML=this._generateHeader()+`
-      <h3 style="margin-bottom:1rem">Prévisionnel (Forecast)</h3>
-      <table style="width:100%;margin-bottom:1.5rem"><tr>
-        <td style="padding:1rem;background:#dbeafe;border-radius:8px;text-align:center"><strong>CA Déjà Réalisé</strong><br><span style="font-size:1.3rem;font-weight:800;color:#059669">${fmtCur(realized)}</span></td>
-        <td style="padding:1rem;background:#ede9fe;border-radius:8px;text-align:center"><strong>Forecast Pipeline</strong><br><span style="font-size:1.3rem;font-weight:800;color:#7c3aed">${fmtCur(Math.round(forecast))}</span></td>
-        <td style="padding:1rem;background:#d1fae5;border-radius:8px;text-align:center"><strong>Total Projeté</strong><br><span style="font-size:1.3rem;font-weight:800;color:#059669">${fmtCur(Math.round(realized+forecast))}</span></td>
-      </tr></table>
-      <h4 style="margin-bottom:.5rem">Détail du pipeline actif</h4>
-      <table style="width:100%;border-collapse:collapse;font-size:10px">
-        <thead><tr style="background:#0f172a;color:white"><th style="padding:6px;text-align:left">Affaire</th><th style="padding:6px;text-align:left">Client</th><th style="padding:6px;text-align:right">Montant</th><th style="padding:6px;text-align:left">Étape</th><th style="padding:6px;text-align:right">Prob.</th><th style="padding:6px;text-align:right">Pondéré</th></tr></thead>
-        <tbody>${activeDeals.sort((a,b)=>b.amount-a.amount).map((d,i)=>{const c=getContact(d.contactId);return`<tr style="background:${i%2?'#f8fafc':'white'}"><td style="padding:5px">${d.name}</td><td style="padding:5px">${c?c.name:'—'}</td><td style="padding:5px;text-align:right;font-weight:700">${fmtCur(d.amount)}</td><td style="padding:5px">${getStageName(d.stage)}</td><td style="padding:5px;text-align:right">${getStageProb(d.stage)}%</td><td style="padding:5px;text-align:right;font-weight:700;color:#7c3aed">${fmtCur(Math.round(d.amount*getStageProb(d.stage)/100))}</td></tr>`}).join('')}
-        <tr style="background:#0f172a;color:white;font-weight:700"><td style="padding:6px" colspan="2">TOTAL FORECAST</td><td style="padding:6px;text-align:right">${fmtCur(activeDeals.reduce((a,b)=>a+b.amount,0))}</td><td style="padding:6px" colspan="2"></td><td style="padding:6px;text-align:right">${fmtCur(Math.round(forecast))}</td></tr>
-        </tbody></table>`;
-    this._exportPDF(div, 'Forecast_'+S.settings.company);
-  }
-};
-
-/* ═══════════════════════════════════════════════
-   APP CONTROLLER
-   ═══════════════════════════════════════════════ */
-const App = {
-  init(){
-    buildPeriodFilter();
-    Nav.init();
-    this.refreshAll();
-  },
-  refreshAll(){
-    Dashboard.render();
-    Pipeline.render();
-    Contacts.render();
-    Commissions.render();
-    Admin.render();
-  },
-  exportJSON(){
-    const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;a.download='CRM_Backup_'+S.settings.company.replace(/\s/g,'_')+'_'+new Date().toISOString().split('T')[0]+'.json';
-    a.click();URL.revokeObjectURL(url);
-    addAudit('Export données JSON');save();
-    Toast.show('Sauvegarde JSON téléchargée');
-  },
-  importJSON(event){
-    const file=event.target.files[0];if(!file)return;
-    if(!confirm('ATTENTION : Cette opération remplacera toutes les données actuelles. Continuer ?'))return;
-    const reader=new FileReader();
-    reader.onload=e=>{
-      try{
-        const data=JSON.parse(e.target.result);
-        if(!data.settings||!data.users||!data.deals){throw new Error('Format invalide');}
-        Object.assign(S,data);
-        save();addAudit('Import données JSON',file.name);
-        App.refreshAll();Toast.show('Données importées avec succès');
-      }catch(err){Toast.show('Erreur: fichier invalide — '+err.message,'error');}
-    };
-    reader.readAsText(file);
-  }
+/* ══ APP ══ */
+function $(id){return document.getElementById(id)}
+const App={
+  init(){buildPF();Nav.init();this.refreshAll();Sync.auto()},
+  refreshAll(){Dashboard.render();Pipeline.render();Contacts.render();Commissions.render();Admin.render()},
+  exportJSON(){const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='CRM_'+S.settings.company.replace(/\s/g,'_')+'_'+new Date().toISOString().split('T')[0]+'.json';a.click();URL.revokeObjectURL(u);aA('Export JSON');save();Toast.s('Sauvegarde téléchargée')},
+  importJSON(ev){const f=ev.target.files[0];if(!f)return;if(!confirm('Remplacer toutes les données ?'))return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(!d.settings||!d.users)throw new Error('Format invalide');Object.assign(S,d);save();aA('Import JSON',f.name);App.refreshAll();Toast.s('Importé')}catch(err){Toast.s('Fichier invalide','error')}};r.readAsText(f)}
 };
 </script>
 </body>
