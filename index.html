@@ -227,44 +227,40 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
 const DB='crm_v3',JB_KEY='crm_jb_cfg';
 const DSTG={1:{name:'Prospection',prob:10,color:'#94a3b8'},2:{name:'Qualification',prob:25,color:'#6366f1'},3:{name:'Proposition',prob:50,color:'#f59e0b'},4:{name:'Négociation',prob:75,color:'#8b5cf6'},5:{name:'Gagné',prob:100,color:'#059669'},6:{name:'Perdu',prob:0,color:'#dc2626'}};
 function hp(p){let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0}return'h_'+Math.abs(h).toString(36)}
-function ds(){return{settings:{company:'Mon Entreprise',currency:'FCFA',target:50000000,annualTarget:600000000,commMode:'flat',commTrigger:'signed',bonusRate:2,tiers:[{min:0,max:10000000,rate:5},{min:10000000,max:'INF',rate:7}]},stages:JSON.parse(JSON.stringify(DSTG)),users:[{id:1,name:'Administrateur',login:'superadmin',role:'Super Admin',rate:5,team:'Direction',active:true,pass:'h_iyug7c'},{id:2,name:'Eric',login:'eric.commercial',role:'Commercial',rate:5,team:'Commercial',active:true,pass:'h_po7rwg'}],contacts:[],deals:[],audit:[],commissions:{}}}
+/* ═══════════════════════════════════════════════
+   COMPTES SYSTÈME — hashes pré-calculés stables
+   Admin2026Secure -> h_iyug7c
+   Eric2026Secure  -> h_po7rwg
+   ═══════════════════════════════════════════════ */
+const SYS_ACCOUNTS=[
+  {id:1,name:'Administrateur',login:'superadmin',role:'Super Admin',rate:5,team:'Direction',active:true,pass:'h_iyug7c'},
+  {id:2,name:'Eric',login:'eric.commercial',role:'Commercial',rate:5,team:'Commercial',active:true,pass:'h_po7rwg'}
+];
+function ds(){
+  return{
+    settings:{company:'Mon Entreprise',currency:'FCFA',target:50000000,annualTarget:600000000,commMode:'flat',commTrigger:'signed',bonusRate:2,tiers:[{min:0,max:10000000,rate:5},{min:10000000,max:'INF',rate:7}]},
+    stages:JSON.parse(JSON.stringify(DSTG)),
+    users:JSON.parse(JSON.stringify(SYS_ACCOUNTS)),
+    contacts:[],deals:[],audit:[],commissions:{}
+  };
+}
 let S=JSON.parse(localStorage.getItem(DB))||ds(),CU=null,cP=null,cM=null;
-/* ── Migration : garantit que les 2 comptes système sont toujours présents ── */
-(function migrateUsers(){
-  const sys=[
-    {id:1,name:'Administrateur',login:'superadmin',role:'Super Admin',rate:5,team:'Direction',active:true,pass:'h_iyug7c'},
-    {id:2,name:'Eric',login:'eric.commercial',role:'Commercial',rate:5,team:'Commercial',active:true,pass:'h_po7rwg'}
-  ];
-  sys.forEach(su=>{
-    const idx=S.users.findIndex(u=>u.id===su.id);
-    if(idx===-1){S.users.push(su);}
-    else{
-      /* Mettre à jour login/role/active mais NE PAS écraser le mot de passe
-         si l'utilisateur l'a déjà personnalisé (hash différent du défaut) */
-      S.users[idx].login=su.login;
-      S.users[idx].role=su.role;
+/* ── Garantie absolue : les comptes système ont TOUJOURS les bons identifiants ── */
+(function enforceSystemAccounts(){
+  SYS_ACCOUNTS.forEach(sys=>{
+    const idx=S.users.findIndex(u=>u.id===sys.id);
+    if(idx===-1){
+      S.users.push(JSON.parse(JSON.stringify(sys)));
+    } else {
+      S.users[idx].login=sys.login;
+      S.users[idx].pass=sys.pass;   // toujours réinitialiser au hash correct
+      S.users[idx].role=sys.role;
       S.users[idx].active=true;
-      /* Réinitialiser si absent ou hash d'une ancienne version corrompue */
-      const VALID_PASSES=['h_iyug7c','h_po7rwg'];
-      const BROKEN_PASSES=['h_ykyk3n','h_mkjfta','h_tf2by5'];
-      if(!S.users[idx].pass||BROKEN_PASSES.includes(S.users[idx].pass)){
-        S.users[idx].pass=su.pass;
-      }
     }
   });
-  /* Supprimer l'ancien compte admin si présent */
+  /* Nettoyer ancien compte admin */
   S.users=S.users.filter(u=>!(u.login==='admin'&&u.id===1));
-  try{localStorage.setItem(DB,JSON.stringify(S))}catch(e){}
-})();
-/* ── Force refresh localStorage to guarantee clean state ── */
-(function enforceAuthVersion(){
-  const VER='auth_v3';
-  if(localStorage.getItem(VER)!=='1'){
-    // Reset system account passwords to known-good hashes
-    const sysPass={1:'h_iyug7c',2:'h_po7rwg'};
-    S.users.forEach(u=>{if(sysPass[u.id])u.pass=sysPass[u.id];});
-    try{localStorage.setItem(DB,JSON.stringify(S));localStorage.setItem(VER,'1');}catch(e){}
-  }
+  try{localStorage.setItem(DB,JSON.stringify(S));}catch(e){}
 })();
 function sL(){try{localStorage.setItem(DB,JSON.stringify(S))}catch(e){Toast.s('Stockage plein','error')}}
 function save(){sL();Sync.push()}
@@ -414,6 +410,12 @@ const Sync={
     S.commissions=remote.commissions||S.commissions;
     if(remote.audit){const ra=remote.audit||[];const mg=[...ra];la.forEach(l=>{if(!mg.find(x=>x.date===l.date&&x.action===l.action))mg.push(l)});S.audit=mg.sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,200);}
     if(S.settings.tiers)S.settings.tiers.forEach(t=>{if(t.max===null)t.max='INF';});
+    /* Re-enforce system account credentials after every remote merge */
+    SYS_ACCOUNTS.forEach(sys=>{
+      const idx=S.users.findIndex(u=>u.id===sys.id);
+      if(idx===-1){S.users.push(JSON.parse(JSON.stringify(sys)));}
+      else{S.users[idx].login=sys.login;S.users[idx].pass=sys.pass;S.users[idx].role=sys.role;S.users[idx].active=true;}
+    });
     sL();
     if(CU){const u=S.users.find(x=>x.id===CU.id);if(u)CU=u;}
   },
