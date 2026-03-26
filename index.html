@@ -8,8 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
 <style>
 :root{--sidebar-w:260px;--topbar-h:60px;--primary:#2563eb;--primary-light:#3b82f6;--primary-bg:rgba(37,99,235,0.08);--bg:#f1f5f9;--bg-card:#fff;--sidebar-bg:#0c1222;--sidebar-hover:#162033;--sidebar-active:#1e3a5f;--text:#0f172a;--text-secondary:#64748b;--text-muted:#94a3b8;--border:#e2e8f0;--border-light:#f1f5f9;--success:#059669;--success-light:#d1fae5;--warning:#d97706;--warning-light:#fef3c7;--danger:#dc2626;--danger-light:#fee2e2;--info:#7c3aed;--info-light:#ede9fe;--radius:10px;--radius-lg:14px;--shadow-sm:0 1px 2px rgba(0,0,0,.04);--shadow-md:0 4px 6px -1px rgba(0,0,0,.07);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08);--tr:0.2s cubic-bezier(.4,0,.2,1)}
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex}
@@ -179,19 +178,25 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
 <div id="tab-comm" class="admin-panel" style="display:none"><div class="card"><div class="card-header"><h3>Règles</h3></div><div class="form-group"><label>Mode</label><select class="form-control" id="cfg-cmode"><option value="flat">Taux fixe</option><option value="tiered">Paliers</option></select></div><div id="cfg-tiers-sec" style="display:none"><div class="card-header"><h3>Paliers</h3><button class="btn btn-outline btn-sm" onclick="Admin.addTier()"><i class="fas fa-plus"></i></button></div><div id="cfg-tiers"></div></div><div class="form-group"><label>Déclenchement</label><select class="form-control" id="cfg-ctrig"><option value="signed">Devis signé</option><option value="paid">Paiement reçu</option></select></div><div class="form-group"><label>Bonus dépassement (%)</label><input type="number" class="form-control" id="cfg-bonus" value="2"></div><button class="btn btn-primary" onclick="Admin.saveComm()"><i class="fas fa-check"></i> Enregistrer</button></div></div>
 
 <!-- ══════════════════════════════════════════ -->
-<!-- SYNC TAB — FIREBASE CONFIGURATION        -->
+<!-- SYNC TAB — JSONBIN.IO CONFIGURATION      -->
 <!-- ══════════════════════════════════════════ -->
 <div id="tab-sync" class="admin-panel" style="display:none">
-<div class="sync-setup-card" id="sync-card"><i class="fas fa-cloud" style="font-size:2.5rem;color:var(--text-muted);margin-bottom:.75rem"></i><h3 id="sync-title">Synchronisation non configurée</h3><p style="font-size:.85rem;color:var(--text-secondary)" id="sync-desc">Configurez Firebase pour synchroniser les données entre tous les utilisateurs en temps réel.</p></div>
-<div class="card"><div class="card-header"><h3><i class="fas fa-book" style="color:var(--primary);margin-right:.4rem"></i> Guide rapide (3 étapes)</h3></div>
-<div class="sync-step"><div class="step-num">1</div><div class="step-text"><h4>Créer un projet Firebase (gratuit)</h4><p>Allez sur <strong>console.firebase.google.com</strong> → Créer un projet</p></div></div>
-<div class="sync-step"><div class="step-num">2</div><div class="step-text"><h4>Activer Realtime Database</h4><p>Menu → Build → Realtime Database → Créer → Démarrer en <strong>mode test</strong></p></div></div>
-<div class="sync-step"><div class="step-num">3</div><div class="step-text"><h4>Copier la configuration</h4><p>Paramètres ⚙️ → Vos applications → App Web → Copier apiKey, databaseURL, projectId</p></div></div></div>
-<div class="card"><div class="card-header"><h3><i class="fas fa-key" style="color:var(--warning);margin-right:.4rem"></i> Configuration Firebase</h3></div>
-<div class="form-group"><label>API Key</label><input type="text" class="form-control" id="fb-key" placeholder="AIzaSyXXXXXXXXXXXXX"></div>
-<div class="form-group"><label>Database URL</label><input type="text" class="form-control" id="fb-url" placeholder="https://xxx-default-rtdb.firebaseio.com"></div>
-<div class="form-group"><label>Project ID</label><input type="text" class="form-control" id="fb-pid" placeholder="mon-crm-xxxxx"></div>
-<div style="display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-primary" onclick="Sync.connect()"><i class="fas fa-plug"></i> Connecter</button><button class="btn btn-outline" onclick="Sync.disconnect()"><i class="fas fa-unlink"></i> Déconnecter</button><button class="btn btn-outline" id="btn-push" style="display:none" onclick="Sync.pushAll()"><i class="fas fa-cloud-arrow-up"></i> Envoyer données locales</button></div></div>
+<div class="sync-setup-card" id="sync-card"><i class="fas fa-cloud" style="font-size:2.5rem;color:var(--text-muted);margin-bottom:.75rem"></i><h3 id="sync-title">Synchronisation non configurée</h3><p style="font-size:.85rem;color:var(--text-secondary)" id="sync-desc">Configurez JSONBin.io pour synchroniser les données entre les utilisateurs en temps réel.</p></div>
+
+<div class="card"><div class="card-header"><h3><i class="fas fa-book" style="color:var(--primary);margin-right:.4rem"></i> Guide de configuration (3 étapes)</h3></div>
+<div class="sync-step"><div class="step-num">1</div><div class="step-text"><h4>Créer un compte JSONBin.io (gratuit)</h4><p>Allez sur <strong>jsonbin.io</strong> → Sign Up → connectez-vous à votre tableau de bord</p></div></div>
+<div class="sync-step"><div class="step-num">2</div><div class="step-text"><h4>Récupérer votre X-Master-Key</h4><p>Menu → API Keys → copiez votre <strong>X-Master-Key</strong> (commence par <code>$2a$...</code>)</p></div></div>
+<div class="sync-step"><div class="step-num">3</div><div class="step-text"><h4>Créer un Bin & copier son ID</h4><p>Bins → Create Bin → collez <code>{}</code> → Save → copiez le <strong>BIN ID</strong> dans l'URL (ex: <code>64f3a...</code>)</p></div></div></div>
+
+<div class="card"><div class="card-header"><h3><i class="fas fa-key" style="color:var(--warning);margin-right:.4rem"></i> Configuration JSONBin.io</h3></div>
+<div class="form-group"><label>X-Master-Key</label><input type="password" class="form-control" id="jb-key" placeholder="$2a$10$XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"></div>
+<div class="form-group"><label>BIN ID</label><input type="text" class="form-control" id="jb-bin" placeholder="64f3a1b2e3d4c5f6a7b8c9d0"></div>
+<div class="form-group"><label>Intervalle de polling (secondes)</label><select class="form-control" id="jb-interval" style="width:auto"><option value="15">15 s</option><option value="30" selected>30 s</option><option value="60">60 s</option><option value="120">2 min</option></select></div>
+<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem">
+  <button class="btn btn-primary" onclick="Sync.connect()"><i class="fas fa-plug"></i> Connecter</button>
+  <button class="btn btn-outline" onclick="Sync.disconnect()"><i class="fas fa-unlink"></i> Déconnecter</button>
+  <button class="btn btn-outline" id="btn-push" style="display:none" onclick="Sync.pushAll()"><i class="fas fa-cloud-arrow-up"></i> Forcer l'envoi</button>
+</div></div>
 <div class="card" id="sync-log-card" style="display:none"><div class="card-header"><h3><i class="fas fa-list-check" style="color:var(--success);margin-right:.4rem"></i> Journal sync</h3></div><div id="sync-log" style="max-height:200px;overflow-y:auto;font-size:.78rem"></div></div>
 </div>
 
@@ -212,7 +217,7 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
 <div class="toast-container" id="toasts"></div>
 
 <script>
-const DB='crm_v3',FB_KEY='crm_fb_cfg';
+const DB='crm_v3',JB_KEY='crm_jb_cfg';
 const DSTG={1:{name:'Prospection',prob:10,color:'#94a3b8'},2:{name:'Qualification',prob:25,color:'#6366f1'},3:{name:'Proposition',prob:50,color:'#f59e0b'},4:{name:'Négociation',prob:75,color:'#8b5cf6'},5:{name:'Gagné',prob:100,color:'#059669'},6:{name:'Perdu',prob:0,color:'#dc2626'}};
 function hp(p){let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0}return'h_'+Math.abs(h).toString(36)}
 function ds(){return{settings:{company:'Mon Entreprise',currency:'FCFA',target:50000000,annualTarget:600000000,commMode:'flat',commTrigger:'signed',bonusRate:2,tiers:[{min:0,max:10000000,rate:5},{min:10000000,max:'INF',rate:7}]},stages:JSON.parse(JSON.stringify(DSTG)),users:[{id:1,name:'Administrateur',login:'superadmin',role:'Super Admin',rate:5,team:'Direction',active:true,pass:hp('Dx#9mK2!vLpQ')},{id:2,name:'Eric',login:'eric.commercial',role:'Commercial',rate:5,team:'Commercial',active:true,pass:hp('Wr$7nJ4@xTbM')}],contacts:[],deals:[],audit:[],commissions:{}}}
@@ -241,56 +246,176 @@ function gSP(s){return(S.stages[s]||{prob:0}).prob}
 function infMax(v){return v==='INF'||v===Infinity||v===null?Infinity:Number(v)}
 
 /* ══════════════════════════════════════
-   ★ SYNC ENGINE — FIREBASE REALTIME ★
+   ★ SYNC ENGINE — JSONBIN.IO ★
    ══════════════════════════════════════ */
 const Sync={
-  db:null,on:false,_listen:false,_mute:false,_log:[],
-  log(m,t='info'){this._log.unshift({ts:new Date().toLocaleTimeString('fr-FR'),m,t});if(this._log.length>80)this._log.length=80;const el=document.getElementById('sync-log');if(el)el.innerHTML=this._log.map(l=>`<div style="padding:.3rem 0;border-bottom:1px solid var(--border-light);color:${l.t==='error'?'var(--danger)':l.t==='success'?'var(--success)':'var(--text-secondary)'}"><span style="color:var(--text-muted);margin-right:.5rem">[${l.ts}]</span>${l.m}</div>`).join('');document.getElementById('sync-log-card').style.display='block'},
-  ui(s){const b=document.getElementById('sb-sync'),t=document.getElementById('sb-sync-text'),c=document.getElementById('sync-card'),ti=document.getElementById('sync-title'),tb=document.getElementById('topbar-sync'),pb=document.getElementById('btn-push');
-    if(s==='online'){b.className='sync-badge online';t.textContent='Synchronisé';c.className='sync-setup-card connected';ti.textContent='✓ Connecté';ti.style.color='var(--success)';pb.style.display='inline-flex';tb.innerHTML='<span class="sync-badge online" style="font-size:.7rem"><span class="sync-dot"></span>Sync</span>'}
-    else if(s==='syncing'){b.className='sync-badge syncing';t.textContent='Sync...';tb.innerHTML='<span class="sync-badge syncing" style="font-size:.7rem"><span class="sync-dot"></span>Sync...</span>'}
-    else{b.className='sync-badge offline';t.textContent='Hors ligne';c.className='sync-setup-card';ti.textContent='Non configurée';ti.style.color='';pb.style.display='none';tb.innerHTML='<span class="sync-badge offline" style="font-size:.7rem"><span class="sync-dot"></span>Local</span>'}},
-  loadCfg(){const c=localStorage.getItem(FB_KEY);if(c){try{const o=JSON.parse(c);document.getElementById('fb-key').value=o.apiKey||'';document.getElementById('fb-url').value=o.databaseURL||'';document.getElementById('fb-pid').value=o.projectId||'';return o}catch(e){}}return null},
-  saveCfg(c){localStorage.setItem(FB_KEY,JSON.stringify(c))},
+  on:false,_timer:null,_pushing:false,_lastHash:null,_log:[],
+
+  /* ── Logging ── */
+  log(m,t='info'){
+    this._log.unshift({ts:new Date().toLocaleTimeString('fr-FR'),m,t});
+    if(this._log.length>80)this._log.length=80;
+    const el=document.getElementById('sync-log');
+    if(el)el.innerHTML=this._log.map(l=>`<div style="padding:.3rem 0;border-bottom:1px solid var(--border-light);color:${l.t==='error'?'var(--danger)':l.t==='success'?'var(--success)':'var(--text-secondary)'}"><span style="color:var(--text-muted);margin-right:.5rem">[${l.ts}]</span>${l.m}</div>`).join('');
+    document.getElementById('sync-log-card').style.display='block';
+  },
+
+  /* ── UI Status ── */
+  ui(s){
+    const b=document.getElementById('sb-sync'),t=document.getElementById('sb-sync-text'),
+          c=document.getElementById('sync-card'),ti=document.getElementById('sync-title'),
+          tb=document.getElementById('topbar-sync'),pb=document.getElementById('btn-push');
+    if(s==='online'){
+      b.className='sync-badge online';t.textContent='Synchronisé';
+      c.className='sync-setup-card connected';ti.textContent='✓ Connecté à JSONBin';ti.style.color='var(--success)';
+      pb.style.display='inline-flex';
+      tb.innerHTML='<span class="sync-badge online" style="font-size:.7rem"><span class="sync-dot"></span>Sync</span>';
+    }else if(s==='syncing'){
+      b.className='sync-badge syncing';t.textContent='Sync...';
+      tb.innerHTML='<span class="sync-badge syncing" style="font-size:.7rem"><span class="sync-dot"></span>Sync...</span>';
+    }else{
+      b.className='sync-badge offline';t.textContent='Hors ligne';
+      c.className='sync-setup-card';ti.textContent='Non configurée';ti.style.color='';
+      pb.style.display='none';
+      tb.innerHTML='<span class="sync-badge offline" style="font-size:.7rem"><span class="sync-dot"></span>Local</span>';
+    }
+  },
+
+  /* ── Config persistence ── */
+  loadCfg(){
+    const c=localStorage.getItem(JB_KEY);
+    if(c){try{const o=JSON.parse(c);document.getElementById('jb-key').value=o.masterKey||'';document.getElementById('jb-bin').value=o.binId||'';if(o.interval)document.getElementById('jb-interval').value=o.interval;return o}catch(e){}}
+    return null;
+  },
+  saveCfg(c){localStorage.setItem(JB_KEY,JSON.stringify(c))},
+  _cfg(){const c=localStorage.getItem(JB_KEY);return c?JSON.parse(c):null;},
+
+  /* ── Hash helper to detect remote changes ── */
+  _hash(obj){const s=JSON.stringify(obj);let h=0;for(let i=0;i<s.length;i++){h=(Math.imul(31,h)+s.charCodeAt(i))|0}return h.toString(36)},
+
+  /* ── Connect & start polling ── */
   connect(){
-    const apiKey=document.getElementById('fb-key').value.trim(),databaseURL=document.getElementById('fb-url').value.trim(),projectId=document.getElementById('fb-pid').value.trim();
-    if(!apiKey||!databaseURL||!projectId){Toast.s('Remplissez tous les champs','error');return}
-    this.ui('syncing');this.log('Connexion...');
+    const masterKey=document.getElementById('jb-key').value.trim(),
+          binId=document.getElementById('jb-bin').value.trim(),
+          interval=parseInt(document.getElementById('jb-interval').value)||30;
+    if(!masterKey||!binId){Toast.s('Remplissez X-Master-Key et BIN ID','error');return;}
+    this.saveCfg({masterKey,binId,interval});
+    this.ui('syncing');this.log('Connexion à JSONBin.io...');
+    /* Test de connexion : lecture du bin */
+    this._read().then(remote=>{
+      if(remote===null){
+        /* Bin vide ou non accessible → on écrit les données locales pour initialiser */
+        this.log('Bin vide — initialisation avec les données locales...','info');
+        return this._write().then(()=>{this.on=true;this.ui('online');this.log('✓ Bin initialisé et connecté','success');this._startPolling(interval);});
+      }
+      /* Bin accessible → merge et démarrage */
+      this._merge(remote);
+      this.on=true;this.ui('online');this.log('✓ Connecté — données synchronisées','success');
+      this._startPolling(interval);
+    }).catch(e=>{this.log('Erreur connexion : '+e.message,'error');Toast.s('Connexion JSONBin échouée','error');this.ui('offline');});
+  },
+
+  /* ── Disconnect ── */
+  disconnect(){
+    this._stopPolling();this.on=false;this.ui('offline');
+    this.log('Déconnecté');Toast.s('Sync désactivée','info');
+  },
+
+  /* ── Read from JSONBin ── */
+  async _read(){
+    const cfg=this._cfg();if(!cfg)return null;
+    const r=await fetch(`https://api.jsonbin.io/v3/b/${cfg.binId}/latest`,{
+      headers:{'X-Master-Key':cfg.masterKey,'X-Bin-Meta':false}
+    });
+    if(r.status===200){const j=await r.json();return j.record||j;}
+    if(r.status===404)return null;
+    throw new Error('HTTP '+r.status);
+  },
+
+  /* ── Write to JSONBin ── */
+  async _write(){
+    const cfg=this._cfg();if(!cfg)return;
+    const payload=JSON.parse(JSON.stringify(S));
+    if(payload.settings&&payload.settings.tiers)payload.settings.tiers.forEach(t=>{if(t.max===Infinity||t.max===null)t.max='INF';});
+    payload._syncMeta={updatedBy:CU?CU.name:'Sys',updatedAt:new Date().toISOString()};
+    const r=await fetch(`https://api.jsonbin.io/v3/b/${cfg.binId}`,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':cfg.masterKey},
+      body:JSON.stringify(payload)
+    });
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    this._lastHash=this._hash(payload);
+    return r;
+  },
+
+  /* ── Merge remote data into local state ── */
+  _merge(remote){
+    if(!remote||!remote.settings)return;
+    const la=S.audit||[];
+    S.settings=remote.settings||S.settings;
+    S.stages=remote.stages||S.stages;
+    /* Préserver les mots de passe locaux lors du merge users */
+    if(remote.users){
+      remote.users.forEach(ru=>{const lu=S.users.find(u=>u.id===ru.id);if(lu&&lu.pass&&!ru.pass)ru.pass=lu.pass;});
+      S.users=remote.users;
+    }
+    S.contacts=remote.contacts||S.contacts;
+    S.deals=remote.deals||S.deals;
+    S.commissions=remote.commissions||S.commissions;
+    if(remote.audit){const ra=remote.audit||[];const mg=[...ra];la.forEach(l=>{if(!mg.find(x=>x.date===l.date&&x.action===l.action))mg.push(l)});S.audit=mg.sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,200);}
+    if(S.settings.tiers)S.settings.tiers.forEach(t=>{if(t.max===null)t.max='INF';});
+    sL();
+    if(CU){const u=S.users.find(x=>x.id===CU.id);if(u)CU=u;}
+  },
+
+  /* ── Polling loop ── */
+  _startPolling(interval){
+    this._stopPolling();
+    this._timer=setInterval(()=>this._poll(),interval*1000);
+    this.log(`Polling toutes les ${interval}s activé`);
+  },
+  _stopPolling(){if(this._timer){clearInterval(this._timer);this._timer=null;}},
+
+  async _poll(){
+    if(!this.on||this._pushing)return;
     try{
-      if(!firebase.apps.length)firebase.initializeApp({apiKey,databaseURL,projectId});
-      this.db=firebase.database();this.saveCfg({apiKey,databaseURL,projectId});
-      this.db.ref('.info/connected').on('value',snap=>{
-        if(snap.val()===true){this.on=true;this.ui('online');this.log('✓ Connecté','success');this._presence();if(!this._listen)this._attach()}
-        else{this.on=false;this.ui('offline');this.log('Connexion perdue','error')}
-      });
-    }catch(e){this.log('Erreur: '+e.message,'error');Toast.s('Erreur Firebase','error');this.ui('offline')}
+      const remote=await this._read();
+      if(!remote)return;
+      const rHash=this._hash(remote);
+      if(rHash!==this._lastHash){
+        this.log('⬇ Nouvelles données détectées — synchronisation...','info');
+        this.ui('syncing');
+        this._merge(remote);
+        this._lastHash=rHash;
+        App.refreshAll();
+        this.ui('online');
+        this.log('⬇ Synchronisé depuis JSONBin','success');
+      }
+    }catch(e){this.log('Erreur polling : '+e.message,'error');}
   },
-  disconnect(){if(this.db){this._offPresence();this.db.goOffline()}this.on=false;this._listen=false;this.ui('offline');this.log('Déconnecté');Toast.s('Sync désactivée','info')},
-  _presence(){
-    if(!this.db||!CU)return;const uid='u_'+CU.id,ref=this.db.ref('presence/'+uid);
-    this.db.ref('.info/connected').on('value',snap=>{if(snap.val()===true){ref.set({name:CU.name,role:CU.role,ts:firebase.database.ServerValue.TIMESTAMP,on:true});ref.onDisconnect().set({name:CU.name,role:CU.role,ts:firebase.database.ServerValue.TIMESTAMP,on:false})}});
-    this.db.ref('presence').on('value',snap=>{const d=snap.val()||{};const ol=Object.values(d).filter(u=>u.on);const bar=document.getElementById('presence-bar'),list=document.getElementById('presence-list');
-      if(ol.length>0){bar.style.display='block';const cols=['#2563eb','#059669','#d97706','#dc2626','#7c3aed','#0ea5e9'];list.innerHTML=ol.map((u,i)=>`<div class="presence-avatar" style="background:${cols[i%cols.length]}" title="${u.name}">${u.name.charAt(0)}<span class="online-dot"></span></div>`).join('')+`<span style="font-size:.68rem;color:#94a3b8;margin-left:.75rem">${ol.length} connecté(s)</span>`}else bar.style.display='none'})
-  },
-  _offPresence(){if(!this.db||!CU)return;this.db.ref('presence/u_'+CU.id).set({name:CU.name,role:CU.role,ts:firebase.database.ServerValue.TIMESTAMP,on:false})},
-  _attach(){
-    if(!this.db)return;this._listen=true;
-    this.db.ref('crm_data').on('value',snap=>{
-      if(this._mute)return;const r=snap.val();if(!r){this.log('Base distante vide');return}
-      const la=S.audit||[];
-      S.settings=r.settings||S.settings;S.stages=r.stages||S.stages;S.users=r.users||S.users;S.contacts=r.contacts||S.contacts;S.deals=r.deals||S.deals;S.commissions=r.commissions||S.commissions;
-      if(r.audit){const ra=r.audit||[];const mg=[...ra];la.forEach(l=>{if(!mg.find(x=>x.date===l.date&&x.action===l.action&&x.user===l.user))mg.push(l)});S.audit=mg.sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,200)}
-      if(S.settings.tiers)S.settings.tiers.forEach(t=>{if(t.max===null)t.max='INF'});
-      sL();if(CU){const u=S.users.find(x=>x.id===CU.id);if(u)CU=u}App.refreshAll();this.log('⬇ Données synchronisées','success')
-    });this.log('Écoute temps réel activée')
-  },
+
+  /* ── Push on every save ── */
   push(){
-    if(!this.db||!this.on)return;this._mute=true;
-    const d=JSON.parse(JSON.stringify(S));if(d.settings.tiers)d.settings.tiers.forEach(t=>{if(t.max===Infinity||t.max===null)t.max='INF'});
-    this.db.ref('crm_data').set(d).then(()=>{this._mute=false;this.log('⬆ Envoyé','success')}).catch(e=>{this._mute=false;this.log('Erreur push: '+e.message,'error')})
+    if(!this.on)return;
+    this._pushing=true;
+    this.ui('syncing');
+    this._write()
+      .then(()=>{this._pushing=false;this.ui('online');this.log('⬆ Données envoyées','success');})
+      .catch(e=>{this._pushing=false;this.ui('online');this.log('Erreur envoi : '+e.message,'error');});
   },
-  pushAll(){if(!this.db||!this.on){Toast.s('Non connecté','error');return}if(!confirm('Envoyer toutes les données locales vers Firebase ?'))return;this.push();Toast.s('Données envoyées','info')},
-  auto(){const c=this.loadCfg();if(c&&c.apiKey&&c.databaseURL&&c.projectId){this.log('Config trouvée, connexion auto...');this.connect()}}
+
+  /* ── Manual full push ── */
+  pushAll(){
+    if(!this.on){Toast.s('Non connecté','error');return;}
+    if(!confirm('Envoyer toutes les données locales vers JSONBin ?'))return;
+    this.push();Toast.s('Envoi en cours...','info');
+  },
+
+  /* ── Auto-reconnect on load ── */
+  auto(){
+    const c=this.loadCfg();
+    if(c&&c.masterKey&&c.binId){this.log('Configuration JSONBin trouvée — reconnexion...');this.connect();}
+  }
 };
 
 /* ══ AUTH ══ */
@@ -308,7 +433,7 @@ const Auth={
     }
     if(usr.role==='Lecture seule'){document.querySelector('[data-view="admin"]').parentElement.style.display='none';document.querySelectorAll('.btn-primary').forEach(b=>{if(b.textContent.includes('Nouvelle')||b.textContent.includes('affaire'))b.style.display='none'})}
     App.init()}else{e.style.display='block'}},
-  logout(){aA('Déconnexion');Sync._offPresence();save();CU=null;location.reload()}
+  logout(){aA('Déconnexion');save();CU=null;location.reload()}
 };
 const Toast={s(m,t='success'){const c=document.getElementById('toasts'),e=document.createElement('div');e.className='toast toast-'+t;e.innerHTML=`<i class="fas fa-${t==='success'?'check-circle':t==='error'?'exclamation-circle':'info-circle'}"></i> ${m}`;c.appendChild(e);setTimeout(()=>{e.style.opacity='0';setTimeout(()=>e.remove(),300)},3500)}};
 const Modal={open(id){document.getElementById(id).classList.add('open')},close(id){document.getElementById(id).classList.remove('open')}};
