@@ -441,14 +441,12 @@ code{font-family:'JetBrains Mono',monospace}
       <div id="tab-sync" class="admin-panel" style="display:none">
         <div class="card">
           <div class="card-header"><h3><i class="fas fa-cloud" style="color:var(--primary);margin-right:.4rem"></i> Configuration JSONBin.io</h3></div>
-          <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:1rem">Synchronise les données en temps réel entre tous les postes connectés.</p>
-          <div class="form-group"><label>X-Master-Key</label><input type="password" class="form-control" id="jb-key" placeholder="$2a$10$…"></div>
-          <div class="form-group"><label>BIN ID</label>
-            <div style="display:flex;gap:.5rem"><input type="text" class="form-control" id="jb-bin" placeholder="ID du Bin existant"><button class="btn btn-outline" onclick="Sync.createBin()" style="white-space:nowrap"><i class="fas fa-magic"></i> Créer le Bin</button></div>
-          </div>
+          <p style="font-size:.85rem;color:var(--success);margin-bottom:1rem;font-weight:600"><i class="fas fa-check-circle"></i> La synchronisation est configurée en dur et se lance automatiquement au démarrage.</p>
+          <div class="form-group"><label>X-Master-Key</label><input type="password" class="form-control" id="jb-key" value="$2a$10$.99yO.fKI.GUEblo/fL5R.e6krb65NCNMrWgvzd.tP.bSGq52vTLq" disabled></div>
+          <div class="form-group"><label>BIN ID</label><input type="text" class="form-control" id="jb-bin" value="69c59d43b7ec241ddca8b69a" disabled></div>
           <div style="display:flex;gap:.5rem;margin-top:1rem">
-            <button class="btn btn-primary" onclick="Sync.connect()"><i class="fas fa-plug"></i> Connecter</button>
-            <button class="btn btn-outline" onclick="Sync.disconnect()"><i class="fas fa-unlink"></i> Déconnecter</button>
+            <button class="btn btn-outline" onclick="Sync.connect()"><i class="fas fa-rotate"></i> Forcer la synchro</button>
+            <button class="btn btn-outline" onclick="Sync.disconnect()"><i class="fas fa-unlink"></i> Déconnecter temporairement</button>
           </div>
         </div>
       </div>
@@ -544,10 +542,10 @@ code{font-family:'JetBrains Mono',monospace}
 
 <script>
 /* ══════════════════════════════════════════════════════════
-   CRM TERA EVENTS v6 — MODULE COMPLET
+   CRM TERA EVENTS v6 — MODULE COMPLET (SYNC AUTO)
    ══════════════════════════════════════════════════════════ */
 
-const DB = 'crm_tera_v6', JB_KEY = 'tera_jb_cfg';
+const DB = 'crm_tera_v6';
 
 const DSTG = {
   1:{name:'Prospection', prob:10,  color:'#94a3b8'},
@@ -809,18 +807,22 @@ const Modal = {
 
 const Sync = {
   on:false,_timer:null,
+  // Clés codées en dur pour la synchronisation automatique
+  hardcoded: {
+    k: '$2a$10$.99yO.fKI.GUEblo/fL5R.e6krb65NCNMrWgvzd.tP.bSGq52vTLq',
+    b: '69c59d43b7ec241ddca8b69a'
+  },
   ui(s){
     const b=$('sb-sync'),t=$('sb-sync-text'),tb=$('topbar-sync');
     if(s==='online'){b.className='sync-badge online';t.textContent='En ligne';if(tb)tb.innerHTML='<span class="sync-badge online" style="font-size:.7rem"><span class="sync-dot"></span>Sync live</span>'}
     else if(s==='syncing'){b.className='sync-badge syncing';t.textContent='Sync…';if(tb)tb.innerHTML='<span class="sync-badge syncing" style="font-size:.7rem"><span class="sync-dot"></span>Sync…</span>'}
     else{b.className='sync-badge offline';t.textContent='Hors ligne';if(tb)tb.innerHTML=''}
   },
-  cfg(){try{return JSON.parse(localStorage.getItem(JB_KEY))}catch(e){return null}},
-  saveCfg(c){localStorage.setItem(JB_KEY,JSON.stringify(c))},
+  cfg(){ return this.hardcoded; },
   connect(){
-    const k=$('jb-key').value.trim(), b=$('jb-bin').value.trim();
-    if(!k||!b){Toast.s('Clés manquantes','error');return}
-    this.saveCfg({k,b});this.ui('syncing');
+    const c = this.cfg();
+    if(!c.k||!c.b){Toast.s('Clés manquantes dans le code','error');return}
+    this.ui('syncing');
     this._r().then(r=>{
       if(r){S=r;sL();App.refreshAll();}else{this._w();}
       this.on=true;this.ui('online');Toast.s('Synchronisation activée');
@@ -830,13 +832,11 @@ const Sync = {
   disconnect(){clearInterval(this._timer);this.on=false;this.ui('offline');Toast.s('Sync désactivée','info')},
   async _r(){const c=this.cfg();if(!c)return null;const r=await fetch(`https://api.jsonbin.io/v3/b/${c.b}/latest`,{headers:{'X-Master-Key':c.k,'X-Bin-Meta':false}});return r.status===200?(await r.json()).record:null},
   async _w(){const c=this.cfg();if(!c)return;await fetch(`https://api.jsonbin.io/v3/b/${c.b}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':c.k},body:JSON.stringify(S)})},
-  async _poll(){if(!this.on)return;try{const r=await this._r();if(r&&JSON.stringify(r)!==JSON.stringify(S)){S=r;sL();App.refreshAll();Toast.s('Données synchronisées','info')}}catch(e){}},
+  async _poll(){if(!this.on)return;try{const r=await this._r();if(r&&JSON.stringify(r)!==JSON.stringify(S)){S=r;sL();App.refreshAll();Toast.s('Données synchronisées automatiquement','info')}}catch(e){}},
   push(){if(this.on){this.ui('syncing');this._w().then(()=>this.ui('online')).catch(()=>this.ui('online'))}},
-  async createBin(){
-    const k=$('jb-key').value.trim();if(!k){Toast.s('Entrez la Master Key d\'abord','error');return}
-    try{const r=await fetch('https://api.jsonbin.io/v3/b',{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':k,'X-Bin-Name':'TERA-CRM'},body:JSON.stringify(S)});const j=await r.json();$('jb-bin').value=j.metadata.id;Toast.s('Bin créé ! Vous pouvez maintenant vous connecter.')}catch(e){Toast.s('Erreur création Bin','error')}
-  },
-  auto(){const c=this.cfg();if(c&&c.k&&c.b){if($('jb-key'))$('jb-key').value=c.k;if($('jb-bin'))$('jb-bin').value=c.b;this.connect()}}
+  auto(){
+    this.connect();
+  }
 };
 
 let chartPipe=null, chartMonth=null;
@@ -868,7 +868,7 @@ const App = {
       }
     });
     this.refreshAll();
-    Sync.auto();
+    Sync.auto(); // Lancement de la synchronisation automatique
   },
   buildPF(){
     const s=$('filter-period');s.innerHTML='';
@@ -1523,23 +1523,27 @@ const Quotes = {
     copy.id=UID();copy.ref='DEV-'+Date.now().toString().slice(-6);
     copy.createdAt=new Date().toISOString();copy.updatedAt=new Date().toISOString();
     copy.status='brouillon';copy.statusHistory=[{status:'brouillon',date:new Date().toISOString(),note:'Copie de '+d.ref}];
+    // On retire l'ID de l'affaire pour qu'elle en crée une nouvelle à l'enregistrement
     delete copy.dealId;
     S.devis.unshift(copy);save();this.renderList();Toast.s('Devis dupliqué : '+copy.ref);
   },
 
   del(id){
-    Modal.confirm('Supprimer ce devis', 'Cette action est irréversible et supprimera l\'affaire associée.', () => {
-      const d = S.devis.find(x => x.id === id);
-      if (d && d.dealId) {
-        // Supprime l'affaire associée pour mettre à jour les compteurs
+    const d = S.devis.find(x=>x.id===id);
+    if(!d) return;
+    Modal.confirm('Supprimer ce devis','Cette action est irréversible et supprimera également l\'affaire liée au devis.',()=>{
+      // 1. Supprimer l'affaire liée si elle existe
+      if(d.dealId) {
         S.deals = S.deals.filter(x => x.id !== d.dealId);
       }
-      S.devis = S.devis.filter(x => x.id !== id);
+      // 2. Supprimer le devis
+      S.devis = S.devis.filter(x=>x.id!==id);
+      
       save();
       this.renderList();
-      App.refreshAll(); // Rafraîchit tout (y compris le dashboard et le pipeline)
-      Toast.s('Devis et affaire supprimés', 'error');
-    }, true);
+      App.refreshAll(); // Rafraîchit les KPI et le Pipeline instantanément
+      Toast.s('Devis et affaire liée supprimés','error');
+    },true);
   },
 
   lineTotal(l){
@@ -1775,12 +1779,14 @@ const Quotes = {
     const dealName = (qEdit.event.type ? qEdit.event.type + ' - ' : 'Devis ') + contactName;
 
     // Détermination de l'étape du pipeline en fonction du statut du devis
-    let newStage = 3; // Proposition (par défaut pour Brouillon)
-    if (qEdit.status === 'envoye') newStage = 4; // Négociation
-    if (qEdit.status === 'accepte') newStage = 5; // Gagné
-    if (qEdit.status === 'refuse') newStage = 6; // Perdu
+    let dealStage = 3; // Proposition par défaut
+    if (qEdit.status === 'brouillon') dealStage = 2; // Qualification
+    else if (qEdit.status === 'envoye') dealStage = 3; // Proposition
+    else if (qEdit.status === 'accepte') dealStage = 5; // Gagné
+    else if (qEdit.status === 'refuse') dealStage = 6; // Perdu
 
     if (!qEdit.dealId) {
+      // Nouveau devis : Création de la nouvelle affaire
       const newDeal = {
         id: Date.now() + 1,
         ref: 'AF-' + qEdit.ref.replace('DEV-', ''),
@@ -1788,19 +1794,26 @@ const Quotes = {
         amount: total,
         contactId: contact.id,
         userId: CU?.id || 1,
-        stage: newStage,
+        stage: dealStage,
         closeDate: qEdit.event.date || new Date().toISOString().split('T')[0],
         notes: 'Créée automatiquement depuis le devis ' + qEdit.ref
       };
       S.deals.push(newDeal);
-      qEdit.dealId = newDeal.id; // On lie l'affaire au devis
+      qEdit.dealId = newDeal.id; // Liaison
     } else {
+      // Devis existant : Mise à jour de l'affaire liée
       let existingDeal = S.deals.find(d => d.id === qEdit.dealId);
       if (existingDeal) {
         existingDeal.amount = total;
         existingDeal.name = dealName;
-        existingDeal.stage = newStage; // Mise à jour de l'étape
+        existingDeal.stage = dealStage; // Mise à jour de l'étape (Pipeline Sync)
+        
         if (qEdit.event.date) existingDeal.closeDate = qEdit.event.date;
+        
+        // Si accepté ou refusé, on date la clôture à aujourd'hui si la date de l'event n'est pas remplie
+        if (dealStage === 5 || dealStage === 6) {
+           existingDeal.closeDate = new Date().toISOString().split('T')[0];
+        }
       }
     }
 
@@ -1812,7 +1825,7 @@ const Quotes = {
     save();
     Toast.s('Devis, Contact et Affaire enregistrés avec succès ✓');
     this.renderList();
-    App.refreshAll(); // Met à jour tous les tableaux, le Kanban et le dashboard
+    App.refreshAll(); // Rafraîchit les vues pour que le pipeline et les stats s'actualisent
   },
 
   generatePDF(id,temp=false){
