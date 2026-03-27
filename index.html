@@ -1523,13 +1523,23 @@ const Quotes = {
     copy.id=UID();copy.ref='DEV-'+Date.now().toString().slice(-6);
     copy.createdAt=new Date().toISOString();copy.updatedAt=new Date().toISOString();
     copy.status='brouillon';copy.statusHistory=[{status:'brouillon',date:new Date().toISOString(),note:'Copie de '+d.ref}];
+    delete copy.dealId;
     S.devis.unshift(copy);save();this.renderList();Toast.s('Devis dupliqué : '+copy.ref);
   },
 
   del(id){
-    Modal.confirm('Supprimer ce devis','Cette action est irréversible.',()=>{
-      S.devis=S.devis.filter(x=>x.id!==id);save();this.renderList();Toast.s('Devis supprimé','error');
-    },true);
+    Modal.confirm('Supprimer ce devis', 'Cette action est irréversible et supprimera l\'affaire associée.', () => {
+      const d = S.devis.find(x => x.id === id);
+      if (d && d.dealId) {
+        // Supprime l'affaire associée pour mettre à jour les compteurs
+        S.deals = S.deals.filter(x => x.id !== d.dealId);
+      }
+      S.devis = S.devis.filter(x => x.id !== id);
+      save();
+      this.renderList();
+      App.refreshAll(); // Rafraîchit tout (y compris le dashboard et le pipeline)
+      Toast.s('Devis et affaire supprimés', 'error');
+    }, true);
   },
 
   lineTotal(l){
@@ -1733,9 +1743,76 @@ const Quotes = {
   save(){
     if(!qEdit.client.nom.trim()){Toast.s('Le nom du client est obligatoire','error');return}
     qEdit.updatedAt=new Date().toISOString();
+
+    // --- 1. GESTION DU CONTACT ---
+    let contactName = (qEdit.client.nom + ' ' + (qEdit.client.prenom || '')).trim();
+    let contact = S.contacts.find(c =>
+      (c.name || '').toLowerCase() === contactName.toLowerCase() ||
+      (c.email && c.email.toLowerCase() === (qEdit.client.email || '').toLowerCase())
+    );
+
+    if (!contact) {
+      contact = {
+        id: Date.now(),
+        name: contactName,
+        type: 'Prospect',
+        tel: qEdit.client.tel || '',
+        email: qEdit.client.email || '',
+        contact: qEdit.client.prenom || '',
+        city: qEdit.client.ville || '',
+        userId: CU?.id || 1,
+        notes: 'Contact généré automatiquement depuis le devis ' + qEdit.ref
+      };
+      S.contacts.push(contact);
+    } else {
+      if (qEdit.client.tel && !contact.tel) contact.tel = qEdit.client.tel;
+      if (qEdit.client.email && !contact.email) contact.email = qEdit.client.email;
+      if (qEdit.client.ville && !contact.city) contact.city = qEdit.client.ville;
+    }
+
+    // --- 2. GESTION DE L'AFFAIRE (PIPELINE) ---
+    const {total} = this.calcTotals(qEdit);
+    const dealName = (qEdit.event.type ? qEdit.event.type + ' - ' : 'Devis ') + contactName;
+
+    // Détermination de l'étape du pipeline en fonction du statut du devis
+    let newStage = 3; // Proposition (par défaut pour Brouillon)
+    if (qEdit.status === 'envoye') newStage = 4; // Négociation
+    if (qEdit.status === 'accepte') newStage = 5; // Gagné
+    if (qEdit.status === 'refuse') newStage = 6; // Perdu
+
+    if (!qEdit.dealId) {
+      const newDeal = {
+        id: Date.now() + 1,
+        ref: 'AF-' + qEdit.ref.replace('DEV-', ''),
+        name: dealName,
+        amount: total,
+        contactId: contact.id,
+        userId: CU?.id || 1,
+        stage: newStage,
+        closeDate: qEdit.event.date || new Date().toISOString().split('T')[0],
+        notes: 'Créée automatiquement depuis le devis ' + qEdit.ref
+      };
+      S.deals.push(newDeal);
+      qEdit.dealId = newDeal.id; // On lie l'affaire au devis
+    } else {
+      let existingDeal = S.deals.find(d => d.id === qEdit.dealId);
+      if (existingDeal) {
+        existingDeal.amount = total;
+        existingDeal.name = dealName;
+        existingDeal.stage = newStage; // Mise à jour de l'étape
+        if (qEdit.event.date) existingDeal.closeDate = qEdit.event.date;
+      }
+    }
+
+    // --- 3. SAUVEGARDE DU DEVIS ---
     const idx=S.devis.findIndex(x=>x.id===qEdit.id);
-    if(idx>=0)S.devis[idx]=qEdit;else S.devis.unshift(qEdit);
-    save();Toast.s('Devis enregistré avec succès ✓');this.renderList();
+    if(idx>=0) S.devis[idx]=qEdit;
+    else S.devis.unshift(qEdit);
+
+    save();
+    Toast.s('Devis, Contact et Affaire enregistrés avec succès ✓');
+    this.renderList();
+    App.refreshAll(); // Met à jour tous les tableaux, le Kanban et le dashboard
   },
 
   generatePDF(id,temp=false){
