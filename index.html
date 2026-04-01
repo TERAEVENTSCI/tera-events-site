@@ -3,1955 +3,487 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRM & Devis — TERA EVENTS</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<style>
+<title>Tera events — Agence d'Event Planning à Abidjan | Corporate & Privé</title>
+<meta name="description" content="Tera events, agence d'event planning à Abidjan. Événements corporate et privés dans notre espace ou dans le lieu de votre choix.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>/* TERA EVENTS — Design System v2
+   Palette extraite du logo :
+   Bleu marine  #152060
+   Or champagne #C4916E
+   Blanc        #FFFFFF
+*/
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
 :root{
-  --sidebar-w:264px;--topbar-h:64px;
-  --primary:#6366f1;--primary-light:#818cf8;--primary-bg:rgba(99,102,241,.07);
-  --accent:#f59e0b;--accent-light:#fbbf24;
-  --bg:#f8f9fc;--bg-card:#fff;
-  --sidebar-bg:#111827;--sidebar-hover:rgba(255,255,255,.06);--sidebar-active:rgba(99,102,241,.18);
-  --text:#1e1b4b;--text-secondary:#6b7280;--text-muted:#9ca3af;
-  --border:#e5e7eb;--border-light:#f3f4f6;
-  --success:#10b981;--success-light:#d1fae5;
-  --warning:#f59e0b;--warning-light:#fef3c7;
-  --danger:#ef4444;--danger-light:#fee2e2;
-  --info:#8b5cf6;--info-light:#ede9fe;
-  --radius:12px;--radius-lg:16px;
-  --shadow-sm:0 1px 3px rgba(0,0,0,.04),0 1px 2px rgba(0,0,0,.02);
-  --shadow-md:0 4px 12px rgba(0,0,0,.06),0 2px 4px rgba(0,0,0,.03);
-  --shadow-lg:0 12px 40px rgba(0,0,0,.1),0 4px 12px rgba(0,0,0,.04);
-  --shadow-card:0 1px 3px rgba(0,0,0,.03),0 0 0 1px rgba(0,0,0,.03);
-  --tr:0.25s cubic-bezier(.4,0,.2,1);
-  --glow:0 0 20px rgba(99,102,241,.15)
+  /* Bleus */
+  --b1:#0E1847;        /* très profond */
+  --b2:#152060;        /* bleu logo principal */
+  --b3:#1C2B78;        /* légèrement plus clair */
+  --b4:#253490;        /* hover / accent */
+  --b-pale:#EEF0F8;    /* fond sections claires */
+  --b-tint:#DDE1F3;    /* bordures douces côté bleu */
+
+  /* Or */
+  --or:#C4916E;        /* rose-or du logo */
+  --or2:#D9AF93;       /* or clair hover */
+  --or3:#EDD5C2;       /* or très pâle */
+  --or4:#8B5E3C;       /* or foncé */
+
+  /* Blanc / neutres */
+  --blanc:#FFFFFF;
+  --off:#FAFAF8;
+  --gris:#6B7080;
+  --gris2:#9CA4B0;
+
+  /* Borders */
+  --bor-or:rgba(196,145,110,0.25);
+  --bor-or-h:rgba(196,145,110,0.55);
+  --bor-b:rgba(255,255,255,0.12);
+  --bor-b-h:rgba(255,255,255,0.25);
+
+  --r:2px; --r2:6px; --r3:12px;
+  --t:0.30s cubic-bezier(.4,0,.2,1);
+  --shadow:0 20px 60px rgba(14,24,71,0.18);
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:9px}::-webkit-scrollbar-thumb:hover{background:#9ca3af}
 
-/* ── LOGIN ── */
-#login-screen{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#111827;overflow:hidden}
-#login-screen::before{content:'';position:absolute;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.15),transparent 60%);top:-200px;right:-200px;animation:floatOrb 12s ease-in-out infinite}
-#login-screen::after{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.1),transparent 60%);bottom:-150px;left:-150px;animation:floatOrb 15s ease-in-out infinite reverse}
-@keyframes floatOrb{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-20px) scale(1.05)}66%{transform:translate(-20px,15px) scale(.95)}}
-.login-box{position:relative;z-index:1;background:rgba(255,255,255,.98);border-radius:24px;padding:3rem 2.5rem;width:420px;box-shadow:0 40px 80px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.1);animation:slideUp .6s cubic-bezier(.16,1,.3,1);backdrop-filter:blur(20px)}
-.login-logo{text-align:center;margin-bottom:1.5rem}
-.login-logo .icon{width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,var(--primary),#4f46e5);display:inline-flex;align-items:center;justify-content:center;margin-bottom:.75rem;box-shadow:0 8px 30px rgba(99,102,241,.4)}
-.login-box h2{font-family:'DM Serif Display',serif;font-size:1.6rem;font-weight:400;text-align:center;margin-bottom:.25rem;color:#1e1b4b;letter-spacing:-.02em}
-.login-box .sub{color:var(--text-secondary);font-size:.85rem;text-align:center;margin-bottom:2rem;letter-spacing:.02em}
-.login-error{color:var(--danger);font-size:.8rem;margin-bottom:1rem;display:none;padding:.6rem;background:var(--danger-light);border-radius:var(--radius);font-weight:500}
+html{scroll-behavior:smooth}
+body{background:var(--blanc);color:var(--b2);font-family:'DM Sans',sans-serif;font-weight:300;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:400;line-height:1.1;color:var(--b2)}
+a{text-decoration:none}
+img{display:block;max-width:100%}
 
-/* ── SIDEBAR ── */
-.sidebar{width:var(--sidebar-w);background:var(--sidebar-bg);display:flex;flex-direction:column;flex-shrink:0;border-right:1px solid rgba(255,255,255,.04);position:relative;z-index:10}
-.sidebar::before{content:'';position:absolute;top:0;right:0;bottom:0;width:1px;background:linear-gradient(to bottom,rgba(99,102,241,.3),transparent 40%,transparent 60%,rgba(245,158,11,.2))}
-.sidebar-brand{padding:1.35rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:.75rem}
-.logo-circle{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--primary),#4f46e5);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:.9rem;flex-shrink:0;box-shadow:0 4px 12px rgba(99,102,241,.3)}
-.brand-text{font-weight:700;color:#fff;font-size:.92rem;letter-spacing:-.01em}.brand-sub{font-size:.65rem;color:rgba(255,255,255,.35);letter-spacing:.04em}
-.nav-section{padding:.85rem 1.5rem .4rem;font-size:.6rem;font-weight:700;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:1.2px}
-.nav-links{list-style:none;flex-grow:1;overflow-y:auto;padding:.25rem 0}
-.nav-links li a{display:flex;align-items:center;gap:.75rem;padding:.72rem 1.5rem;color:rgba(255,255,255,.5);text-decoration:none;font-size:.84rem;font-weight:500;cursor:pointer;transition:all .2s ease;border-left:3px solid transparent;position:relative}
-.nav-links li a:hover{background:var(--sidebar-hover);color:rgba(255,255,255,.85)}
-.nav-links li a.active{background:var(--sidebar-active);color:#fff;border-left-color:var(--primary);font-weight:600}
-.nav-links li a.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--primary);border-radius:0 3px 3px 0;box-shadow:0 0 8px rgba(99,102,241,.5)}
-.nav-links li a i{width:18px;text-align:center;font-size:.85rem}
-.nav-badge{margin-left:auto;background:var(--primary);color:#fff;font-size:.6rem;font-weight:800;padding:.1rem .45rem;border-radius:99px;min-width:18px;text-align:center}
-.sidebar-footer{padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,.06)}
-.user-pill{display:flex;align-items:center;gap:.6rem;padding:.6rem;border-radius:var(--radius);cursor:pointer;transition:var(--tr)}
-.user-pill:hover{background:var(--sidebar-hover)}
-.user-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.75rem;flex-shrink:0;box-shadow:0 2px 8px rgba(99,102,241,.25)}
-.uname{color:#e2e8f0;font-size:.8rem;font-weight:600}.urole{color:rgba(255,255,255,.3);font-size:.65rem}
+.container{max-width:1180px;margin:0 auto;padding:0 clamp(1.5rem,5vw,3.5rem)}
+section{padding:clamp(4rem,8vw,8rem) 0}
 
-/* ── SYNC ── */
-.sync-badge{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .7rem;border-radius:99px;font-size:.7rem;font-weight:700}
-.sync-badge.online{background:rgba(16,185,129,.1);color:#059669}.sync-badge.offline{background:rgba(239,68,68,.1);color:#dc2626}.sync-badge.syncing{background:rgba(99,102,241,.1);color:#6366f1}
-.sync-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.sync-badge.online .sync-dot{background:#10b981;animation:pulseDot 2s infinite}
-.sync-badge.offline .sync-dot{background:#ef4444}
-.sync-badge.syncing .sync-dot{background:#6366f1;animation:spinDot .8s linear infinite}
-@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.3}}
-@keyframes spinDot{0%,100%{transform:scale(1)}50%{transform:scale(1.6)}}
+/* Typographie */
+.eyebrow{font-family:'DM Sans',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.26em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:0.9rem}
+.eyebrow-w{font-family:'DM Sans',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.26em;text-transform:uppercase;color:var(--or3);display:block;margin-bottom:0.9rem}
 
-/* ── LAYOUT ── */
-.main{flex-grow:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-.topbar{height:var(--topbar-h);background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;justify-content:space-between;flex-shrink:0;gap:1rem;position:relative;z-index:5}
-.topbar h1{font-family:'DM Serif Display',serif;font-size:1.15rem;font-weight:400;white-space:nowrap;color:var(--text);letter-spacing:-.01em}
-.topbar-actions{display:flex;gap:.75rem;align-items:center;flex-wrap:nowrap}
-.topbar-search{position:relative;display:flex;align-items:center}
-.topbar-search input{padding:.5rem .9rem .5rem 2.2rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:.82rem;font-family:inherit;width:220px;background:var(--bg);transition:var(--tr)}
-.topbar-search input:focus{outline:none;border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px var(--primary-bg),var(--glow)}
-.topbar-search i{position:absolute;left:.75rem;color:var(--text-muted);font-size:.8rem}
-.container{padding:1.75rem 2rem;overflow-y:auto;flex-grow:1}
-.view{display:none;animation:fadeIn .3s cubic-bezier(.16,1,.3,1)}.view.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+/* Boutons */
+.btn{display:inline-flex;align-items:center;gap:0.55rem;font-family:'DM Sans',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;padding:0.9rem 2rem;border-radius:var(--r);transition:all var(--t);cursor:pointer;border:1px solid transparent;white-space:nowrap}
+.btn-or{background:var(--or);color:var(--blanc);border-color:var(--or)}
+.btn-or:hover{background:var(--or2);border-color:var(--or2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,145,110,0.35)}
+.btn-bleu{background:var(--b2);color:var(--blanc);border-color:var(--b2)}
+.btn-bleu:hover{background:var(--b3);border-color:var(--b3);transform:translateY(-2px)}
+.btn-outline-w{background:transparent;color:var(--blanc);border-color:rgba(255,255,255,0.45)}
+.btn-outline-w:hover{border-color:var(--or);color:var(--or3)}
+.btn-outline-b{background:transparent;color:var(--b2);border-color:var(--bor-or-h)}
+.btn-outline-b:hover{border-color:var(--or);color:var(--or4)}
+.btn-ghost{background:transparent;color:var(--or);border:none;padding-left:0;padding-right:0;gap:0.5rem}
+.btn-ghost:hover{color:var(--or2);gap:0.9rem}
 
-/* ── CARDS ── */
-.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem;box-shadow:var(--shadow-card);transition:box-shadow .3s ease}
-.card:hover{box-shadow:var(--shadow-sm)}
-.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:.5rem}
-.card-header h3{font-family:'DM Serif Display',serif;font-size:1.05rem;font-weight:400;letter-spacing:-.01em}
-.card-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+/* Navigation */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.4rem clamp(1.5rem,5vw,3.5rem);display:flex;align-items:center;justify-content:space-between;transition:all var(--t)}
+.nav.scrolled{background:rgba(14,24,71,0.96);backdrop-filter:blur(20px);padding:0.9rem clamp(1.5rem,5vw,3.5rem);border-bottom:1px solid var(--bor-b)}
+.nav-logo{display:flex;align-items:center;gap:0.9rem;text-decoration:none}
+.nav-logo-mark{width:36px;height:36px;background:rgba(255,255,255,0.08);border:1px solid var(--bor-or);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:500;color:var(--or3);letter-spacing:0.05em;transition:all var(--t)}
+.nav.scrolled .nav-logo-mark{background:rgba(196,145,110,0.15)}
+.nav-logo-text{display:flex;flex-direction:column}
+.nav-logo-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:500;letter-spacing:0.14em;color:var(--blanc);line-height:1}
+.nav-logo-tag{font-size:0.55rem;font-weight:400;letter-spacing:0.28em;text-transform:uppercase;color:var(--or);margin-top:1px}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
+.nav-links a{font-size:0.7rem;font-weight:400;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.75);transition:color var(--t)}
+.nav-links a:hover,.nav-links a.active{color:var(--blanc)}
+.nav-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.nav-toggle span{width:22px;height:1px;background:var(--blanc);display:block;transition:var(--t)}
 
-/* ── KPI ── */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
-.kpi-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;box-shadow:var(--shadow-card);transition:all .3s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
-.kpi-card:hover{box-shadow:var(--shadow-md);transform:translateY(-3px)}
-.kpi-card::after{content:'';position:absolute;right:-15px;bottom:-15px;width:70px;height:70px;border-radius:50%;opacity:.03;background:currentColor}
-.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--primary),transparent);opacity:0;transition:opacity .3s ease}
-.kpi-card:hover::before{opacity:.6}
-.kpi-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem;font-size:1rem}
-.kpi-label{font-size:.68rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.3rem}
-.kpi-value{font-family:'DM Serif Display',serif;font-size:1.45rem;font-weight:400;line-height:1.2;letter-spacing:-.02em}
-.kpi-sub{font-size:.72rem;color:var(--text-muted);margin-top:.3rem;display:flex;align-items:center;gap:.3rem}
-.kpi-trend-up{color:var(--success)}.kpi-trend-down{color:var(--danger)}
-.progress-bar{height:4px;background:var(--border);border-radius:2px;margin-top:.6rem;overflow:hidden}
-.progress-fill{height:100%;border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+@media(max-width:960px){
+  .nav-links{display:none}
+  .nav-toggle{display:flex}
+  .nav.open .nav-links{display:flex;flex-direction:column;position:fixed;inset:0;background:var(--b1);justify-content:center;align-items:center;gap:2.5rem;z-index:-1}
+  .nav.open .nav-links a{font-size:1.1rem}
+}
 
-/* ── TABLES ── */
-.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
-table{width:100%;border-collapse:collapse}
-thead th{text-align:left;padding:.75rem 1rem;font-size:.68rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.7px;background:#fafbfd;border-bottom:2px solid var(--border)}
-thead th.sortable{cursor:pointer;user-select:none}
-thead th.sortable:hover{color:var(--primary)}
-tbody td{padding:.8rem 1rem;font-size:.84rem;border-bottom:1px solid var(--border-light);vertical-align:middle}
-tbody tr{transition:all .15s ease}tbody tr:last-child td{border-bottom:none}
-tbody tr:hover{background:rgba(99,102,241,.025)}
-.empty-row td{text-align:center;padding:3rem 1rem;color:var(--text-muted)}
-.empty-row .empty-icon{font-size:2rem;margin-bottom:.5rem;display:block;opacity:.3}
+/* Sections */
+.section-bleu{background:var(--b2);color:var(--blanc)}
+.section-bleu h1,.section-bleu h2,.section-bleu h3,.section-bleu h4{color:var(--blanc)}
+.section-dark{background:var(--b1);color:var(--blanc)}
+.section-dark h1,.section-dark h2,.section-dark h3,.section-dark h4{color:var(--blanc)}
+.section-pale{background:var(--b-pale)}
+.section-off{background:var(--off)}
 
-/* ── BADGES ── */
-.badge{display:inline-flex;align-items:center;padding:.22rem .65rem;border-radius:8px;font-size:.7rem;font-weight:600;letter-spacing:.02em}
-.badge-prospect{background:#eef2ff;color:#4338ca}.badge-client{background:#ecfdf5;color:#047857}
-.badge-partenaire{background:#f5f3ff;color:#6d28d9}.badge-inactif{background:#f3f4f6;color:#6b7280}
-.badge-attente{background:#fffbeb;color:#b45309}.badge-validee{background:#ecfdf5;color:#047857}
-.badge-payee{background:#eef2ff;color:#4338ca}
-.badge-brouillon{background:#f3f4f6;color:#6b7280}.badge-envoye{background:#eef2ff;color:#4338ca}
-.badge-accepte{background:#ecfdf5;color:#047857}.badge-refuse{background:#fef2f2;color:#b91c1c}
-.stage-badge{display:inline-flex;align-items:center;padding:.25rem .7rem;border-radius:8px;font-size:.72rem;font-weight:600}
-.badge-active{background:#ecfdf5;color:#047857}.badge-inactive{background:#f3f4f6;color:#6b7280}
+/* Cards */
+.card-w{background:var(--blanc);border:1px solid var(--bor-or);border-radius:var(--r3);padding:2rem;transition:border-color var(--t),transform var(--t),box-shadow var(--t)}
+.card-w:hover{border-color:var(--bor-or-h);transform:translateY(-4px);box-shadow:var(--shadow)}
+.card-b{background:rgba(255,255,255,0.07);border:1px solid var(--bor-b);border-radius:var(--r3);padding:2rem;transition:border-color var(--t),background var(--t)}
+.card-b:hover{background:rgba(255,255,255,0.11);border-color:var(--bor-b-h)}
 
-/* ── BUTTONS ── */
-.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.15rem;border-radius:var(--radius);border:none;font-weight:600;cursor:pointer;transition:all .2s ease;font-size:.82rem;font-family:inherit;white-space:nowrap;letter-spacing:.01em}
-.btn:hover{transform:translateY(-1px)}.btn:active{transform:translateY(0)}
-.btn-primary{background:linear-gradient(135deg,var(--primary),#4f46e5);color:#fff;box-shadow:0 2px 8px rgba(99,102,241,.3)}.btn-primary:hover{box-shadow:0 4px 16px rgba(99,102,241,.4);background:linear-gradient(135deg,var(--primary-light),#6366f1)}
-.btn-outline{border:1.5px solid var(--border);background:var(--bg-card);color:var(--text)}.btn-outline:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-bg)}
-.btn-ghost{background:transparent;color:var(--text-secondary);padding:.4rem .6rem}.btn-ghost:hover{background:var(--bg);color:var(--text)}
-.btn-danger{background:rgba(239,68,68,.08);color:var(--danger);border:1px solid rgba(239,68,68,.15)}.btn-danger:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
-.btn-success{background:rgba(16,185,129,.08);color:var(--success);border:1px solid rgba(16,185,129,.15)}.btn-success:hover{background:var(--success);color:#fff;border-color:var(--success)}
-.btn-warning{background:rgba(245,158,11,.08);color:var(--warning);border:1px solid rgba(245,158,11,.15)}.btn-warning:hover{background:var(--warning);color:#fff;border-color:var(--warning)}
-.btn-sm{padding:.35rem .7rem;font-size:.75rem}
-.btn-icon{width:34px;height:34px;padding:0;justify-content:center;border-radius:10px}
-.btn-lg{padding:.75rem 1.5rem;font-size:.9rem}
+/* Ligne or décorative */
+.or-line{width:36px;height:1px;background:var(--or);display:inline-block;vertical-align:middle;margin-right:0.8rem}
 
-/* ── FORMS ── */
-.form-group{margin-bottom:1.1rem}
-.form-group label{display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.4px}
-.form-control{width:100%;padding:.7rem .95rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:.85rem;font-family:inherit;transition:var(--tr);background:#fff;color:var(--text)}
-.form-control:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-bg),var(--glow)}
-.form-control:disabled{background:var(--bg);cursor:not-allowed;opacity:.7}
-select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center;padding-right:2rem}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
-textarea.form-control{resize:vertical;min-height:80px}
-.form-hint{font-size:.72rem;color:var(--text-muted);margin-top:.25rem}
+/* Dividers */
+.div-or{border:none;height:1px;background:var(--bor-or);margin:2.5rem 0}
+.div-bw{border:none;height:1px;background:var(--bor-b)}
 
-/* ── MODALS ── */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(17,24,39,.65);backdrop-filter:blur(8px);z-index:9999;align-items:center;justify-content:center;padding:1rem;overflow-y:auto}
-.modal-overlay.open{display:flex}
-.modal-box{background:#fff;border-radius:20px;width:540px;max-width:100%;box-shadow:0 30px 60px rgba(0,0,0,.2),0 0 0 1px rgba(0,0,0,.05);animation:slideUp .3s cubic-bezier(.16,1,.3,1);margin:auto}
-.modal-box.modal-lg{width:700px}
-.modal-header{padding:1.5rem 1.75rem 0;display:flex;justify-content:space-between;align-items:center}
-.modal-header h3{font-family:'DM Serif Display',serif;font-size:1.1rem;font-weight:400}
-.modal-body{padding:1.25rem 1.75rem;max-height:calc(100vh - 150px);overflow-y:auto}
-.modal-footer{padding:0 1.75rem 1.5rem;display:flex;gap:.5rem;justify-content:flex-end}
-.modal-section{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin:1.25rem 0 .75rem;padding-top:1rem;border-top:1px solid var(--border-light)}
+/* Reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.65s ease,transform 0.65s ease}
+.reveal.in{opacity:1;transform:none}
+.d1{transition-delay:0.1s}.d2{transition-delay:0.2s}.d3{transition-delay:0.3s}.d4{transition-delay:0.4s}
 
-/* ── KANBAN ── */
-.kanban{display:flex;gap:.75rem;overflow-x:auto;padding-bottom:1rem;min-height:calc(100vh - 220px)}
-.kanban-col{min-width:275px;max-width:295px;background:#fafbfd;border-radius:var(--radius-lg);display:flex;flex-direction:column;flex-shrink:0;border:1px solid var(--border)}
-.kanban-col-header{padding:.9rem 1rem;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid transparent}
-.kanban-col-header h4{font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
-.col-count{background:rgba(0,0,0,.06);padding:.15rem .5rem;border-radius:99px;font-size:.68rem;font-weight:700}
-.col-total{font-size:.72rem;color:var(--text-secondary);font-weight:700;font-family:'JetBrains Mono',monospace;font-size:.7rem}
-.kanban-col-body{padding:.5rem;flex-grow:1;overflow-y:auto}
-.kanban-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;margin-bottom:.5rem;cursor:pointer;transition:all .2s ease;box-shadow:var(--shadow-sm)}
-.kanban-card:hover{box-shadow:var(--shadow-md);border-color:var(--primary);transform:translateY(-2px)}
-.kc-header{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem}
-.kc-ref{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--text-muted);font-weight:600;background:var(--bg);padding:2px 6px;border-radius:5px}
-.kc-name{font-weight:700;font-size:.84rem;margin:.3rem 0;line-height:1.35;color:var(--text)}
-.kc-client{font-size:.78rem;color:var(--text-secondary);display:flex;align-items:center;gap:.3rem}
-.kc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:.6rem}
-.kc-amount{font-family:'JetBrains Mono',monospace;font-size:.88rem;font-weight:700;color:var(--primary)}
-.kc-user{font-size:.65rem;color:var(--text-muted);background:var(--bg);padding:.15rem .45rem;border-radius:5px}
+/* Footer */
+footer{background:var(--b1);color:rgba(255,255,255,0.7);padding:4.5rem 0 2rem}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid var(--bor-b);margin-bottom:2rem}
+.footer-logo-name{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:500;letter-spacing:0.14em;color:var(--blanc);display:block;line-height:1;margin-bottom:4px}
+.footer-logo-tag{font-size:0.58rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:1.2rem}
+.footer-desc{font-size:0.82rem;line-height:1.7;margin-bottom:1.5rem;color:rgba(255,255,255,0.55)}
+.footer-socials{display:flex;gap:0.65rem}
+.footer-socials a{width:32px;height:32px;border:1px solid var(--bor-b);border-radius:var(--r);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.55);transition:all var(--t)}
+.footer-socials a:hover{border-color:var(--or);color:var(--or)}
+.footer-col-title{font-size:0.62rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--or);margin-bottom:1.1rem;display:block}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:0.55rem}
+.footer-links a{font-size:0.82rem;color:rgba(255,255,255,0.5);transition:color var(--t)}
+.footer-links a:hover{color:var(--blanc)}
+.footer-ci{display:flex;gap:0.65rem;align-items:flex-start;margin-bottom:0.65rem}
+.footer-ci-text{font-size:0.8rem;color:rgba(255,255,255,0.5);line-height:1.55}
+.footer-ci-text a{color:rgba(255,255,255,0.5)}
+.footer-ci-text a:hover{color:var(--or)}
+.footer-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.75rem}
+.footer-bottom p,.footer-bottom a{font-size:0.72rem;color:rgba(255,255,255,0.35);text-decoration:none}
+.footer-bottom a:hover{color:var(--or)}
+@media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr;gap:2rem}}
+@media(max-width:550px){.footer-grid{grid-template-columns:1fr}}
 
-/* ── CHARTS ── */
-.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
-.chart-container{position:relative;height:260px}
+/* Hero */
+.hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;padding-bottom:clamp(4rem,8vh,6rem);background:var(--b2);overflow:hidden}
+.hero-bg{position:absolute;inset:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:0.22;mix-blend-mode:luminosity}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(155deg,rgba(14,24,71,0.55) 0%,rgba(21,32,96,0.90) 55%,var(--b1) 100%)}
+.hero-deco{position:absolute;top:-100px;right:-100px;width:600px;height:600px;border-radius:50%;border:1px solid rgba(196,145,110,0.10);pointer-events:none}
+.hero-deco2{position:absolute;top:-50px;right:-50px;width:450px;height:450px;border-radius:50%;border:1px solid rgba(196,145,110,0.07);pointer-events:none}
+.hero-content{position:relative;z-index:2;width:100%}
+.hero-pill{display:inline-flex;align-items:center;gap:0.6rem;border:1px solid var(--bor-b);background:rgba(255,255,255,0.05);padding:0.38rem 1.1rem;border-radius:40px;margin-bottom:2rem;font-size:0.65rem;font-weight:400;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.7)}
+.hero-pill-dot{width:5px;height:5px;background:var(--or);border-radius:50%}
+.hero h1{font-size:clamp(3rem,7.5vw,7rem);font-weight:300;letter-spacing:-0.03em;line-height:0.97;color:var(--blanc);margin-bottom:0.15em}
+.hero h1 em{font-style:italic;color:var(--or3)}
+.hero-sub{font-size:clamp(0.95rem,1.6vw,1.12rem);color:rgba(255,255,255,0.68);line-height:1.7;max-width:520px;margin:1.4rem 0 2.4rem}
+.hero-sub strong{color:var(--blanc)}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:0.9rem;margin-bottom:3.5rem}
+.hero-stats{border-top:1px solid var(--bor-b);padding-top:2rem;display:flex;gap:3rem;flex-wrap:wrap}
+.hstat-n{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:300;color:var(--blanc);line-height:1;display:block}
+.hstat-n span{color:var(--or)}
+.hstat-l{font-size:0.65rem;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.45)}
+.hero-scroll-ind{position:absolute;right:clamp(1.5rem,5vw,3.5rem);bottom:2rem;z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px}
+.hero-scroll-ind span{font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.35);writing-mode:vertical-lr}
+.scroll-line{width:1px;height:45px;background:linear-gradient(to bottom,var(--or),transparent);animation:sl 2s ease-in-out infinite}
+@keyframes sl{0%,100%{opacity:1}50%{opacity:0.3}}
 
-/* ── COMMISSIONS ── */
-.commission-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem}
-.cs-card{text-align:center;padding:1.35rem;background:var(--bg-card);border-radius:var(--radius-lg);border:1px solid var(--border);box-shadow:var(--shadow-card)}
-.cs-value{font-family:'DM Serif Display',serif;font-size:1.35rem;font-weight:400;margin:.3rem 0;letter-spacing:-.02em}
-.cs-label{font-size:.7rem;color:var(--text-secondary);text-transform:uppercase;font-weight:600;letter-spacing:.5px}
-.comm-bar{height:6px;background:var(--border);border-radius:3px;margin-top:.4rem;overflow:hidden}
-.comm-bar-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+/* Dual offer strip */
+.duo{display:grid;grid-template-columns:1fr 1fr}
+.duo-col{padding:clamp(3rem,6vw,5rem);display:flex;flex-direction:column;gap:1.5rem;position:relative;transition:background var(--t)}
+.duo-col:first-child{background:var(--blanc);border-right:1px solid var(--bor-or)}
+.duo-col:last-child{background:var(--b-pale)}
+.duo-col:hover{background:var(--or3)}
+.duo-num{font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:300;color:var(--bor-or);line-height:1;position:absolute;top:1.5rem;right:2rem}
+.duo-icon{width:44px;height:44px;border:1px solid var(--bor-or);border-radius:var(--r);display:flex;align-items:center;justify-content:center}
+.duo-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,2.5vw,2.2rem);font-weight:400;color:var(--b2);line-height:1.15}
+.duo-desc{font-size:0.88rem;color:var(--gris);line-height:1.72;flex:1}
+.duo-note{font-size:0.75rem;color:var(--b4);font-weight:500;letter-spacing:0.04em}
+@media(max-width:640px){.duo{grid-template-columns:1fr}.duo-col:first-child{border-right:none;border-bottom:1px solid var(--bor-or)}}
 
-/* ── REPORTS ── */
-.report-card{border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;display:flex;align-items:center;gap:1.25rem;cursor:pointer;transition:all .25s ease;background:var(--bg-card);margin-bottom:.75rem;box-shadow:var(--shadow-card)}
-.report-card:hover{border-color:var(--primary);box-shadow:var(--shadow-md);transform:translateY(-2px)}
-.report-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
-.report-info h4{font-family:'DM Serif Display',serif;font-weight:400;font-size:.95rem;margin-bottom:.2rem}
-.report-info p{font-size:.78rem;color:var(--text-secondary)}
+/* Singularité */
+.singu{display:grid;grid-template-columns:1fr 1.1fr;gap:0;border:1px solid var(--bor-or);border-radius:var(--r3);overflow:hidden;margin-top:clamp(3rem,6vw,6rem)}
+.singu-text{padding:clamp(2.5rem,5vw,4rem);border-right:1px solid var(--bor-or)}
+.singu-visual{position:relative;min-height:400px;overflow:hidden}
+.singu-visual img{width:100%;height:100%;object-fit:cover;opacity:0.85;transition:opacity var(--t);display:block}
+.singu-visual:hover img{opacity:1}
+.singu-list{list-style:none;margin-top:1.8rem;display:flex;flex-direction:column;gap:0.85rem}
+.singu-list li{display:flex;gap:0.9rem;align-items:flex-start;font-size:0.88rem;color:var(--gris);line-height:1.6}
+.singu-list li::before{content:'';width:5px;height:5px;background:var(--or);border-radius:50%;flex-shrink:0;margin-top:7px}
+@media(max-width:760px){.singu{grid-template-columns:1fr}.singu-text{border-right:none;border-bottom:1px solid var(--bor-or)}.singu-visual{min-height:280px}}
 
-/* ── ADMIN ── */
-.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
-.admin-tabs{display:flex;gap:.25rem;margin-bottom:1.5rem;background:#fff;padding:.3rem;border-radius:var(--radius);border:1px solid var(--border);flex-wrap:wrap;box-shadow:var(--shadow-card)}
-.admin-tab{padding:.6rem 1.25rem;border-radius:10px;font-size:.82rem;font-weight:600;cursor:pointer;transition:var(--tr);border:none;background:transparent;color:var(--text-secondary);font-family:inherit}
-.admin-tab:hover{color:var(--text);background:var(--bg)}
-.admin-tab.active{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(99,102,241,.25)}
+/* Services */
+.svcs{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--bor-or);border-radius:var(--r3);overflow:hidden}
+.svc{padding:2rem 1.75rem;border-right:1px solid var(--bor-or);background:var(--blanc);transition:background var(--t)}
+.svc:last-child{border-right:none}
+.svc:hover{background:var(--b-pale)}
+.svc svg{opacity:0.6;margin-bottom:1.1rem}
+.svc h4{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--b2);margin-bottom:0.5rem}
+.svc p{font-size:0.8rem;color:var(--gris);line-height:1.6}
+@media(max-width:900px){.svcs{grid-template-columns:1fr 1fr}.svc{border-right:none;border-bottom:1px solid var(--bor-or)}.svc:nth-child(odd){border-right:1px solid var(--bor-or)}}
+@media(max-width:480px){.svcs{grid-template-columns:1fr}.svc{border-right:none}}
 
-/* ── DEVIS ── */
-.editor-layout{display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start}
-@media(max-width:1100px){.editor-layout{grid-template-columns:1fr}}
-.lines-table{width:100%;border-collapse:collapse;margin-top:8px}
-.lines-table th{font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-secondary);padding:8px 10px;text-align:left;border-bottom:2px solid var(--border);font-weight:700;background:#fafbfd}
-.lines-table td{padding:6px 8px;border-bottom:1px solid var(--border-light);vertical-align:middle;font-size:.8rem}
-.line-input{padding:7px;border:1px solid transparent;border-radius:8px;width:100%;background:transparent;color:var(--text);font-size:.82rem;outline:none;transition:var(--tr);font-family:inherit}
-.line-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 2px var(--primary-bg)}
-.line-input-num{text-align:right;width:85px;font-family:'JetBrains Mono',monospace;font-size:.8rem}
-.line-del{width:28px;height:28px;border:none;background:transparent;cursor:pointer;color:var(--text-muted);font-size:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:var(--tr)}
-.line-del:hover{background:var(--danger-light);color:var(--danger)}
-.catalog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding-right:4px}
-@media(max-width:900px){.catalog-grid{grid-template-columns:1fr 1fr}}
-.cat-item{padding:12px;border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all .2s ease;background:#fff}
-.cat-item:hover{border-color:var(--primary);background:var(--primary-bg);transform:translateY(-1px)}
-.cat-item.picked{border-color:var(--primary);background:var(--primary-bg);box-shadow:0 0 0 2px var(--primary-bg),inset 0 0 0 1px var(--primary)}
-.cat-group{font-size:.73rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:700;margin:16px 0 8px;grid-column:1/-1}
-.cat-name{font-size:.84rem;font-weight:600;color:var(--text);line-height:1.3}
-.cat-price{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700;color:var(--primary);margin-top:6px}
-.cat-unit{font-size:.7rem;color:var(--text-muted)}
-.timeline{padding:0;list-style:none}
-.tl-item{display:flex;gap:12px;padding-bottom:16px;position:relative}
-.tl-item:not(:last-child)::before{content:'';position:absolute;left:9px;top:22px;bottom:0;width:2px;background:var(--border)}
-.tl-dot{width:20px;height:20px;border-radius:50%;background:var(--bg);border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;z-index:1}
-.tl-dot.active{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 0 0 3px var(--primary-bg)}
-.tl-content{flex:1;padding-top:1px}
-.tl-action{font-size:.8rem;font-weight:600;color:var(--text)}
-.tl-date{font-size:.7rem;color:var(--text-muted);margin-top:2px}
+/* Clients */
+.clients-belt{border-top:1px solid var(--bor-or);border-bottom:1px solid var(--bor-or);padding:1.6rem 0;overflow:hidden}
+.clients-track{display:flex;gap:3rem;align-items:center;animation:mq 22s linear infinite;width:max-content}
+.clients-belt:hover .clients-track{animation-play-state:paused}
+@keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.clogo{font-family:'Cormorant Garamond',serif;font-size:0.8rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--gris2);padding:0.45rem 1.3rem;border:1px solid var(--bor-or);white-space:nowrap;transition:all var(--t)}
+.clogo:hover{color:var(--or4);border-color:var(--bor-or-h)}
 
-/* ── MISC ── */
-.filters-bar{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-bottom:1.25rem}
-.search-box{position:relative}.search-box input{padding-left:2.2rem}.search-box i{position:absolute;left:.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:.8rem}
-.toast-container{position:fixed;bottom:1.5rem;right:1.5rem;z-index:99999;display:flex;flex-direction:column;gap:.5rem}
-.toast{padding:.8rem 1.3rem;border-radius:var(--radius);font-size:.84rem;font-weight:600;box-shadow:0 12px 40px rgba(0,0,0,.15);animation:toastIn .4s cubic-bezier(.16,1,.3,1);display:flex;align-items:center;gap:.5rem;color:#fff;min-width:280px;backdrop-filter:blur(8px)}
-@keyframes toastIn{from{opacity:0;transform:translateX(40px) scale(.95)}to{opacity:1;transform:translateX(0) scale(1)}}
-.toast-success{background:linear-gradient(135deg,#10b981,#059669)}.toast-error{background:linear-gradient(135deg,#ef4444,#dc2626)}.toast-info{background:linear-gradient(135deg,#6366f1,#4f46e5)}.toast-warning{background:linear-gradient(135deg,#f59e0b,#d97706)}
-.confirm-dialog{position:fixed;inset:0;background:rgba(17,24,39,.65);backdrop-filter:blur(8px);z-index:99999;display:flex;align-items:center;justify-content:center}
-.confirm-box{background:#fff;border-radius:20px;padding:2rem;width:380px;text-align:center;box-shadow:0 30px 60px rgba(0,0,0,.2);animation:slideUp .25s cubic-bezier(.16,1,.3,1)}
-.confirm-box h4{font-family:'DM Serif Display',serif;font-size:1.1rem;font-weight:400;margin-bottom:.5rem}
-.confirm-box p{font-size:.85rem;color:var(--text-secondary);margin-bottom:1.5rem}
-.confirm-actions{display:flex;gap:.5rem;justify-content:center}
-.lines-total{display:flex;justify-content:space-between;align-items:center;padding:12px 10px 4px;border-top:2px solid var(--border)}
-.stat-row{display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border-light);font-size:.84rem}
-.stat-row:last-child{border-bottom:none}
-.tag-list{display:flex;flex-wrap:wrap;gap:.35rem}
-.tag{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.2rem .5rem;font-size:.72rem;font-weight:600;color:var(--text-secondary)}
+/* Testimonials */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.testi{background:var(--blanc);border:1px solid var(--bor-or);border-radius:var(--r3);padding:2rem;position:relative}
+.testi::before{content:'"';font-family:'Cormorant Garamond',serif;font-size:5.5rem;font-weight:300;color:var(--or);opacity:0.15;position:absolute;top:-4px;left:1.5rem;line-height:1}
+.testi-cat{font-size:0.62rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--or);margin-bottom:0.9rem;display:block}
+.testi-txt{font-size:0.88rem;color:var(--gris);line-height:1.7;font-style:italic;position:relative;z-index:1;margin-bottom:1.4rem}
+.testi-auth strong{display:block;font-size:0.85rem;font-weight:500;color:var(--b2)}
+.testi-auth span{font-size:0.76rem;color:var(--gris2)}
+@media(max-width:760px){.testi-grid{grid-template-columns:1fr}}
 
-/* ── CODE/REF STYLES ── */
-code{font-family:'JetBrains Mono',monospace}
-
-@media print{.sidebar,.topbar,.btn,.no-print{display:none!important}.main{width:100%}.container{padding:0}}
+/* CTA Banner */
+.cta-band{background:var(--b2);border-radius:var(--r3);padding:clamp(3rem,6vw,5rem);text-align:center;position:relative;overflow:hidden}
+.cta-band::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:400px;height:400px;background:radial-gradient(circle,rgba(196,145,110,0.10) 0%,transparent 65%);pointer-events:none}
+.cta-band h2{color:var(--blanc);font-size:clamp(2rem,4vw,3.5rem)}
+.cta-band p{color:rgba(255,255,255,0.65);max-width:500px;margin:1rem auto 0;line-height:1.72}
+.cta-band-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2.5rem}
 </style>
 </head>
 <body>
-
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">
-      <div class="icon"><i class="fas fa-chart-line" style="color:#fff;font-size:1.4rem"></i></div>
+<nav class="nav" id="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-mark"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="17" cy="17" r="16.5" stroke="rgba(196,145,110,0.45)" stroke-width="0.5"/>
+  <g opacity="0.8">
+    <line x1="17" y1="1" x2="17" y2="6" stroke="#C4916E" stroke-width="0.8"/>
+    <line x1="17" y1="28" x2="17" y2="33" stroke="#C4916E" stroke-width="0.8"/>
+    <line x1="1" y1="17" x2="6" y2="17" stroke="#C4916E" stroke-width="0.8"/>
+    <line x1="28" y1="17" x2="33" y2="17" stroke="#C4916E" stroke-width="0.8"/>
+    <line x1="4.5" y1="4.5" x2="7.5" y2="7.5" stroke="#C4916E" stroke-width="0.8"/>
+    <line x1="26.5" y1="26.5" x2="29.5" y2="29.5" stroke="#C4916E" stroke-width="0.8"/>
+    <line x1="29.5" y1="4.5" x2="26.5" y2="7.5" stroke="#C4916E" stroke-width="0.8"/>
+    <line x1="7.5" y1="26.5" x2="4.5" y2="29.5" stroke="#C4916E" stroke-width="0.8"/>
+    <line x1="10.3" y1="1.8" x2="11.5" y2="5.1" stroke="#C4916E" stroke-width="0.7"/>
+    <line x1="22.5" y1="28.9" x2="23.7" y2="32.2" stroke="#C4916E" stroke-width="0.7"/>
+    <line x1="1.8" y1="23.7" x2="5.1" y2="22.5" stroke="#C4916E" stroke-width="0.7"/>
+    <line x1="28.9" y1="11.5" x2="32.2" y2="10.3" stroke="#C4916E" stroke-width="0.7"/>
+  </g>
+  <text x="17" y="21.5" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="13" font-weight="500" fill="#C4916E">T</text>
+</svg></div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-name">Tera events</span>
+      <span class="nav-logo-tag">Event Planning · Abidjan</span>
     </div>
-    <h2>CRM TERA EVENTS</h2>
-    <p class="sub">Direction Commerciale &amp; Devis</p>
-    <div id="login-error" class="login-error"><i class="fas fa-exclamation-circle"></i> Identifiants incorrects.</div>
-    <div class="form-group"><label>Identifiant</label><input type="text" id="login-user" class="form-control" placeholder="Votre identifiant" autofocus></div>
-    <div class="form-group"><label>Mot de passe</label><input type="password" id="login-pass" class="form-control" placeholder="••••••••" onkeydown="if(event.key==='Enter')Auth.login()"></div>
-    <button class="btn btn-primary btn-lg" style="width:100%" onclick="Auth.login()"><i class="fas fa-arrow-right-to-bracket"></i> Se connecter</button>
-  </div>
-</div>
-
-<nav class="sidebar" id="sidebar">
-  <div class="sidebar-brand">
-    <div class="logo-circle" id="sb-logo">T</div>
-    <div><div class="brand-text" id="sb-company">TERA EVENTS</div><div class="brand-sub">CRM &amp; Devis v6</div></div>
-  </div>
-  <div style="padding:.75rem 1.5rem"><div class="sync-badge offline" id="sb-sync"><span class="sync-dot"></span><span id="sb-sync-text">Hors ligne</span></div></div>
-  <div class="nav-section">Navigation</div>
-  <ul class="nav-links">
-    <li><a data-view="dashboard" class="active"><i class="fas fa-chart-pie"></i> Tableau de bord</a></li>
-    <li><a data-view="pipeline"><i class="fas fa-layer-group"></i> Pipeline</a></li>
-    <li><a data-view="contacts"><i class="fas fa-building"></i> Contacts</a></li>
-    <li><a data-view="devis"><i class="fas fa-file-invoice-dollar"></i> Devis Pro Forma</a></li>
-    <li><a data-view="commissions"><i class="fas fa-coins"></i> Commissions</a></li>
-    <li><a data-view="reports"><i class="fas fa-file-lines"></i> Rapports</a></li>
+  </a>
+  <ul class="nav-links" id="nav-links"><li><a href="corporate.html">Corporate</a></li><li><a href="evenements-prives.html">Privé</a></li><li><a href="notre-espace.html">Notre espace</a></li><li><a href="nos-realisations.html">Réalisations</a></li><li><a href="equipe.html">L'équipe</a></li>
+    <li><a href="contact.html" class="btn btn-or" style="margin-left:0.5rem;padding:0.65rem 1.5rem">Devis gratuit</a></li>
   </ul>
-  <div class="nav-section">Système</div>
-  <ul class="nav-links" id="admin-nav"><li><a data-view="admin"><i class="fas fa-gear"></i> Administration</a></li></ul>
-  <div class="sidebar-footer">
-    <div class="user-pill" onclick="Auth.logout()">
-      <div class="user-avatar" id="sb-avatar">A</div>
-      <div><div class="uname" id="sb-uname">Admin</div><div class="urole" id="sb-urole">Super Admin</div></div>
-      <i class="fas fa-right-from-bracket" style="margin-left:auto;color:rgba(255,255,255,.3);font-size:.8rem"></i>
-    </div>
-  </div>
+  <button class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
 </nav>
 
-<main class="main">
-  <header class="topbar">
-    <div style="display:flex;align-items:center;gap:.75rem">
-      <h1 id="page-title">Tableau de bord</h1>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <img src="https://static.wixstatic.com/media/d3492f_778d329bf1fa466cbafbd77d90ae9339~mv2.jpeg/v1/fill/w_1920,h_1080/IMG_2923.jpg" alt="Tera events — Abidjan">
+    <div class="hero-overlay"></div>
+  </div>
+  <div class="hero-deco"></div><div class="hero-deco2"></div>
+  <div class="container hero-content" style="padding-top:120px">
+    <div class="hero-pill"><span class="hero-pill-dot"></span>Agence d'event planning · Abidjan</div>
+    <h1>L'art de créer<br>des <em>moments</em><br>d'exception</h1>
+    <p class="hero-sub">Nous concevons et organisons vos événements — <strong>dans notre espace</strong> ou <strong>dans le lieu de votre choix.</strong> Corporate &amp; privé.</p>
+    <div class="hero-ctas">
+      <a href="corporate.html" class="btn btn-or">Notre offre corporate</a>
+      <a href="contact.html" class="btn btn-outline-w">Demander un devis</a>
     </div>
-    <div class="topbar-actions">
-      <div id="topbar-sync"></div>
-      <div class="topbar-search"><i class="fas fa-search"></i><input type="text" id="global-search" placeholder="Recherche globale…" oninput="GlobalSearch.run(this.value)" autocomplete="off"></div>
-      <select class="form-control" id="filter-period" style="width:170px;margin:0;padding:.5rem .75rem" onchange="App.refreshAll()"></select>
-      <button class="btn btn-primary" onclick="Deals.openNew()"><i class="fas fa-plus"></i> Nouvelle affaire</button>
+    <div class="hero-stats">
+      <div><span class="hstat-n">7<span>+</span></span><span class="hstat-l">Années d'expérience</span></div>
+      <div><span class="hstat-n">200<span>+</span></span><span class="hstat-l">Événements organisés</span></div>
+      <div><span class="hstat-n">100<span>%</span></span><span class="hstat-l">Satisfaction client</span></div>
     </div>
-  </header>
+  </div>
+  <div class="hero-scroll-ind"><span>Découvrir</span><div class="scroll-line"></div></div>
+</section>
 
-  <div id="global-search-results" style="position:absolute;top:var(--topbar-h);left:0;right:0;z-index:8888;display:none;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:2px solid var(--border);box-shadow:var(--shadow-lg);padding:1rem 2rem;max-height:280px;overflow-y:auto"></div>
+<!-- DOUBLE OFFRE -->
+<div class="duo reveal">
+  <div class="duo-col">
+    <span class="duo-num">01</span>
+    <div class="duo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.3"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+    <span class="eyebrow">Expertise 01</span>
+    <h2 class="duo-title">Événements Corporate</h2>
+    <p class="duo-desc">Séminaires, conférences, lancements de produit, soirées d'entreprise, team buildings… Nous accompagnons les entreprises, institutions et ONG dans la création d'expériences professionnelles marquantes.</p>
+    <p class="duo-note">Dans notre espace ou sur site de votre choix</p>
+    <a href="corporate.html" class="btn btn-ghost">Découvrir l'offre <span>→</span></a>
+  </div>
+  <div class="duo-col">
+    <span class="duo-num">02</span>
+    <div class="duo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.3"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+    <span class="eyebrow">Expertise 02</span>
+    <h2 class="duo-title">Événements Privés</h2>
+    <p class="duo-desc">Mariages, anniversaires, baptêmes, soirées de gala… Chaque célébration est unique. Nous créons des univers personnalisés qui traduisent vos envies en décors, ambiances et émotions inoubliables.</p>
+    <p class="duo-note">Chez vous, chez nous, ou partout ailleurs</p>
+    <a href="evenements-prives.html" class="btn btn-ghost">Découvrir l'offre <span>→</span></a>
+  </div>
+</div>
 
+<!-- SINGULARITÉ -->
+<section>
   <div class="container">
-
-    <section id="view-dashboard" class="view active">
-      <div class="kpi-grid" id="kpi-grid"></div>
-      <div class="chart-grid">
-        <div class="card"><div class="card-header"><h3><i class="fas fa-funnel-dollar" style="color:var(--primary);margin-right:.4rem"></i>Pipeline par étape</h3></div><div class="chart-container"><canvas id="chart-pipe"></canvas></div></div>
-        <div class="card"><div class="card-header"><h3><i class="fas fa-chart-bar" style="color:var(--success);margin-right:.4rem"></i>CA mensuel (6 mois)</h3></div><div class="chart-container"><canvas id="chart-month"></canvas></div></div>
+    <div class="reveal" style="margin-bottom:1rem"><span class="eyebrow">Notre singularité</span></div>
+    <div class="singu reveal">
+      <div class="singu-text">
+        <h2 style="font-size:clamp(1.8rem,3vw,2.8rem);margin-bottom:1.2rem">Votre vision.<br>Nos solutions.<br><em style="color:var(--or);font-style:italic">N'importe où.</em></h2>
+        <p style="font-size:0.9rem;color:var(--gris);line-height:1.75">TERA EVENTS est avant tout une agence d'event planning. Nous disposons de notre propre espace à Cocody — mais notre expertise ne s'arrête pas là. Nous vous accompagnons où vous avez besoin de nous.</p>
+        <ul class="singu-list">
+          <li>Dans <strong>notre espace</strong> à Cocody 2 Plateaux — jusqu'à 100 personnes, tout inclus si souhaité</li>
+          <li>Dans <strong>vos bureaux</strong>, un rooftop, un hôtel ou tout lieu que vous choisissez</li>
+          <li>Dans des <strong>espaces partenaires</strong> — proposés en packages complets (lieu + déco + traiteur + médias)</li>
+          <li>Prise en charge <strong>complète ou partielle</strong> selon votre niveau de besoin</li>
+        </ul>
+        <div style="margin-top:2.2rem"><a href="contact.html" class="btn btn-or">Parlons de votre projet</a></div>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <h3><i class="fas fa-briefcase" style="color:var(--primary);margin-right:.4rem"></i> Affaires en cours</h3>
-          <div class="card-actions">
-            <div class="search-box"><i class="fas fa-search"></i><input class="form-control btn-sm" placeholder="Filtrer…" id="dash-search" oninput="Dashboard.render()" style="width:180px"></div>
-          </div>
-        </div>
-        <div class="table-wrap"><table id="tbl-dash"><thead><tr><th>Réf.</th><th>Affaire</th><th>Client</th><th>Montant</th><th>Étape</th><th>Commercial</th><th>Clôture</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+      <div class="singu-visual">
+        <img src="https://static.wixstatic.com/media/d3492f_c947843c043c49b29ad0bbb04adfc834~mv2.jpeg" alt="Événement Tera events">
       </div>
-    </section>
-
-    <section id="view-pipeline" class="view">
-      <div class="filters-bar no-print">
-        <div class="search-box"><i class="fas fa-search"></i><input class="form-control" placeholder="Rechercher…" id="pipe-search" oninput="Pipeline.render()" style="width:240px"></div>
-        <select class="form-control" id="pipe-user" onchange="Pipeline.render()" style="width:200px;margin:0"><option value="">— Tous commerciaux —</option></select>
-        <select class="form-control" id="pipe-stage" onchange="Pipeline.render()" style="width:180px;margin:0"><option value="">— Toutes étapes —</option></select>
-      </div>
-      <div class="kanban" id="kanban"></div>
-    </section>
-
-    <section id="view-contacts" class="view">
-      <div class="card">
-        <div class="card-header">
-          <h3><i class="fas fa-building" style="color:var(--primary);margin-right:.4rem"></i> Contacts <span id="ct-count" style="font-size:.8rem;font-weight:500;color:var(--text-muted)"></span></h3>
-          <div class="card-actions">
-            <div class="search-box"><i class="fas fa-search"></i><input class="form-control btn-sm" placeholder="Rechercher…" id="ct-search" oninput="Contacts.render()" style="width:200px"></div>
-            <select class="form-control btn-sm" id="ct-filter-type" onchange="Contacts.render()" style="margin:0;padding:.35rem .75rem;width:160px">
-              <option value="">— Tous types —</option>
-              <option>Prospect</option><option>Client actif</option><option>Partenaire</option>
-            </select>
-            <button class="btn btn-primary" onclick="Contacts.openNew()"><i class="fas fa-plus"></i> Contact</button>
-          </div>
-         </div>
-         <div class="table-wrap"><table id="tbl-ct"><thead><tr><th>Raison sociale</th><th>Type</th><th>Secteur</th><th>Interlocuteur</th><th>Tél</th><th>Email</th><th>Commercial</th><th>Affaires</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
-      </div>
-    </section>
-
-    <section id="view-devis" class="view">
-      <div id="devis-root"></div>
-    </section>
-
-    <section id="view-commissions" class="view">
-      <div class="commission-summary" id="comm-sum"></div>
-      <div class="card">
-        <div class="card-header">
-          <h3><i class="fas fa-coins" style="color:var(--warning);margin-right:.4rem"></i> Détail des Commissions</h3>
-          <button class="btn btn-outline btn-sm" onclick="Reports.exportCommCSV()"><i class="fas fa-download"></i> Export CSV</button>
-        </div>
-        <div class="table-wrap"><table id="tbl-comm"><thead><tr><th>Commercial</th><th>CA Réalisé</th><th>Objectif</th><th>Atteinte</th><th>Taux %</th><th>Commission</th><th>Bonus</th><th>Total à payer</th><th>Statut</th></tr></thead><tbody></tbody></table></div>
-      </div>
-    </section>
-
-    <section id="view-reports" class="view">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-        <div class="report-card" onclick="Reports.printDashboard()"><div class="report-icon" style="background:var(--primary-bg);color:var(--primary)"><i class="fas fa-chart-pie"></i></div><div class="report-info"><h4>Rapport Activité Commerciale</h4><p>KPI, pipeline, affaires — version imprimable</p></div></div>
-        <div class="report-card" onclick="Reports.exportDevisCSV()"><div class="report-icon" style="background:#ecfdf5;color:#16a34a"><i class="fas fa-file-csv"></i></div><div class="report-info"><h4>Export Devis (CSV)</h4><p>Liste complète des devis en tableur</p></div></div>
-        <div class="report-card" onclick="Reports.exportDealsCSV()"><div class="report-icon" style="background:#fffbeb;color:var(--warning)"><i class="fas fa-table"></i></div><div class="report-info"><h4>Export Affaires (CSV)</h4><p>Toutes les affaires avec étapes et montants</p></div></div>
-        <div class="report-card" onclick="App.exportJSON()"><div class="report-icon" style="background:var(--info-light);color:var(--info)"><i class="fas fa-database"></i></div><div class="report-info"><h4>Sauvegarde complète (JSON)</h4><p>Export de toutes les données CRM</p></div></div>
-        <div class="report-card" onclick="App.importJSON()"><div class="report-icon" style="background:#fff7ed;color:#c2410c"><i class="fas fa-upload"></i></div><div class="report-info"><h4>Restaurer une sauvegarde</h4><p>Importer un fichier JSON de sauvegarde</p></div></div>
-      </div>
-      <input type="file" id="import-file" accept=".json" style="display:none" onchange="App.doImport(this)">
-    </section>
-
-    <section id="view-admin" class="view">
-      <div class="admin-tabs">
-        <button class="admin-tab active" data-tab="tab-settings">Entreprise</button>
-        <button class="admin-tab" data-tab="tab-users">Équipe</button>
-        <button class="admin-tab" data-tab="tab-sync">JSONBin Sync</button>
-      </div>
-
-      <div id="tab-settings" class="admin-panel">
-        <div class="admin-grid">
-          <div class="card">
-            <div class="card-header"><h3>Paramètres Commerciaux</h3></div>
-            <div class="form-group"><label>Nom entreprise</label><input type="text" class="form-control" id="cfg-co"></div>
-            <div class="form-group"><label>Devise</label><input type="text" class="form-control" id="cfg-cur" value="FCFA"></div>
-            <div class="form-group"><label>Objectif mensuel par commercial (FCFA)</label><input type="number" class="form-control" id="cfg-tgt"></div>
-            <div class="form-group"><label>Taux de commission par défaut (%)</label><input type="number" class="form-control" id="cfg-comm-rate" placeholder="ex: 5"></div>
-            <button class="btn btn-primary" onclick="Admin.saveSettings()"><i class="fas fa-check"></i> Enregistrer</button>
-          </div>
-          <div class="card">
-            <div class="card-header"><h3>En-tête PDF Devis</h3></div>
-            <div class="form-group"><label>Adresse</label><input type="text" class="form-control" id="cfg-e-adr"></div>
-            <div class="form-row">
-              <div class="form-group"><label>Email</label><input type="text" class="form-control" id="cfg-e-em"></div>
-              <div class="form-group"><label>Téléphone</label><input type="text" class="form-control" id="cfg-e-tel"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>N° IDU</label><input type="text" class="form-control" id="cfg-e-idu"></div>
-              <div class="form-group"><label>N° RCCM</label><input type="text" class="form-control" id="cfg-e-rccm"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>N° CC</label><input type="text" class="form-control" id="cfg-e-cc"></div>
-              <div class="form-group"><label>Capital social</label><input type="text" class="form-control" id="cfg-e-capital"></div>
-            </div>
-            <button class="btn btn-primary" onclick="Admin.saveEmitter()"><i class="fas fa-check"></i> Enregistrer En-tête</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="tab-users" class="admin-panel" style="display:none">
-        <div class="card">
-          <div class="card-header"><h3>Équipe Commerciale</h3><button class="btn btn-primary" onclick="Users.openNew()"><i class="fas fa-user-plus"></i> Ajouter</button></div>
-          <div class="table-wrap"><table id="tbl-users"><thead><tr><th>Nom</th><th>Login</th><th>Rôle</th><th>Comm. %</th><th>Statut</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
-        </div>
-      </div>
-
-      <div id="tab-sync" class="admin-panel" style="display:none">
-        <div class="card">
-          <div class="card-header"><h3><i class="fas fa-cloud" style="color:var(--primary);margin-right:.4rem"></i> Configuration JSONBin.io</h3></div>
-          <p style="font-size:.85rem;color:var(--success);margin-bottom:1rem;font-weight:600"><i class="fas fa-check-circle"></i> La synchronisation est configurée en dur et se lance automatiquement au démarrage.</p>
-          <div class="form-group"><label>X-Master-Key</label><input type="password" class="form-control" id="jb-key" value="$2a$10$.99yO.fKI.GUEblo/fL5R.e6krb65NCNMrWgvzd.tP.bSGq52vTLq" disabled></div>
-          <div class="form-group"><label>BIN ID</label><input type="text" class="form-control" id="jb-bin" value="69c59d43b7ec241ddca8b69a" disabled></div>
-          <div style="display:flex;gap:.5rem;margin-top:1rem">
-            <button class="btn btn-outline" onclick="Sync.connect()"><i class="fas fa-rotate"></i> Forcer la synchro</button>
-            <button class="btn btn-outline" onclick="Sync.disconnect()"><i class="fas fa-unlink"></i> Déconnecter temporairement</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </div></main>
-
-<div class="modal-overlay" id="m-deal">
-  <div class="modal-box">
-    <div class="modal-header"><h3 id="m-deal-t">Nouvelle affaire</h3><button class="btn btn-ghost btn-icon" onclick="Modal.close('m-deal')"><i class="fas fa-xmark"></i></button></div>
-    <div class="modal-body">
-      <input type="hidden" id="d-id">
-      <div class="form-group"><label>Nom de l'affaire *</label><input type="text" class="form-control" id="d-name" placeholder="Ex: Mariage Dupont – Juin 2026"></div>
-      <div class="form-row">
-        <div class="form-group"><label>Client *</label><select class="form-control" id="d-ct"></select></div>
-        <div class="form-group"><label>Interlocuteur</label><input type="text" class="form-control" id="d-inter"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Montant estimé *</label><input type="number" class="form-control" id="d-amt" placeholder="0"></div>
-        <div class="form-group"><label>Étape</label><select class="form-control" id="d-stg"></select></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Commercial</label><select class="form-control" id="d-usr"></select></div>
-        <div class="form-group"><label>Date de clôture estimée</label><input type="date" class="form-control" id="d-date"></div>
-      </div>
-      <div class="form-group"><label>Notes / Contexte</label><textarea class="form-control" id="d-notes" style="min-height:60px"></textarea></div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-danger btn-sm" id="d-del-btn" style="margin-right:auto;display:none" onclick="Deals.del()"><i class="fas fa-trash"></i> Supprimer</button>
-      <button class="btn btn-outline" onclick="Modal.close('m-deal')">Annuler</button>
-      <button class="btn btn-primary" onclick="Deals.save()"><i class="fas fa-save"></i> Enregistrer</button>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section-off">
+  <div class="container">
+    <div class="reveal" style="margin-bottom:2.5rem;text-align:center">
+      <span class="eyebrow">Ce que nous faisons</span>
+      <h2 style="font-size:clamp(2rem,3.5vw,3rem)">Une prise en charge à 360°</h2>
     </div>
+    <div class="svcs reveal">
+      <div class="svc">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.3"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <h4>Décoration &amp; Scénographie</h4>
+        <p>Des créations visuelles uniques qui subliment chaque espace et reflètent votre identité.</p>
+      </div>
+      <div class="svc">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.3"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        <h4>Traiteur &amp; Bar</h4>
+        <p>Buffets, cocktails, service à table — 3 chefs partenaires pour des expériences gustatives d'exception.</p>
+      </div>
+      <div class="svc">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.3"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <h4>Communication &amp; Médias</h4>
+        <p>Supports visuels, couverture photo &amp; vidéo, communication digitale de votre événement.</p>
+      </div>
+      <div class="svc">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.3"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <h4>Coordination Jour J</h4>
+        <p>Une équipe dédiée pour gérer le timing, les prestataires et chaque imprévu avec sang-froid.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTS DÉFILANT -->
+<div class="clients-belt reveal" style="background:var(--blanc)">
+  <div class="clients-track">
+    <span class="clogo">CIRAD</span><span class="clogo">Entreprises &amp; PME</span><span class="clogo">ONG &amp; Ambassades</span><span class="clogo">Institutions</span><span class="clogo">Startups</span><span class="clogo">Agences de communication</span>
+    <span class="clogo">CIRAD</span><span class="clogo">Entreprises &amp; PME</span><span class="clogo">ONG &amp; Ambassades</span><span class="clogo">Institutions</span><span class="clogo">Startups</span><span class="clogo">Agences de communication</span>
   </div>
 </div>
 
-<div class="modal-overlay" id="m-ct">
-  <div class="modal-box modal-lg">
-    <div class="modal-header"><h3 id="m-ct-t">Nouveau contact</h3><button class="btn btn-ghost btn-icon" onclick="Modal.close('m-ct')"><i class="fas fa-xmark"></i></button></div>
-    <div class="modal-body">
-      <input type="hidden" id="c-id">
-      <div class="form-group"><label>Raison sociale *</label><input type="text" class="form-control" id="c-name" placeholder="Nom de l'entreprise ou du client"></div>
-      <div class="form-row">
-        <div class="form-group"><label>Type</label><select class="form-control" id="c-type"><option>Prospect</option><option>Client actif</option><option>Partenaire</option></select></div>
-        <div class="form-group"><label>Secteur</label><input type="text" class="form-control" id="c-sector" placeholder="Ex: Banque, Industrie…"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Interlocuteur principal</label><input type="text" class="form-control" id="c-contact" placeholder="Prénom Nom"></div>
-        <div class="form-group"><label>Poste</label><input type="text" class="form-control" id="c-post" placeholder="DG, Responsable comm…"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Téléphone</label><input type="tel" class="form-control" id="c-tel"></div>
-        <div class="form-group"><label>Email</label><input type="email" class="form-control" id="c-email"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Ville</label><input type="text" class="form-control" id="c-city" placeholder="Abidjan, Bouaké…"></div>
-        <div class="form-group"><label>Commercial référent</label><select class="form-control" id="c-usr"></select></div>
-      </div>
-      <div class="form-group"><label>Notes</label><textarea class="form-control" id="c-notes" style="min-height:60px"></textarea></div>
+<!-- RÉALISATIONS APERÇU -->
+<section>
+  <div class="container">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:2.5rem" class="reveal">
+      <div><span class="eyebrow">Nos réalisations</span><h2 style="font-size:clamp(2rem,3.5vw,3rem)">Des moments<br>qui marquent</h2></div>
+      <a href="nos-realisations.html" class="btn btn-outline-b" style="flex-shrink:0">Tout voir</a>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-danger btn-sm" id="c-del-btn" style="margin-right:auto;display:none" onclick="Contacts.del()"><i class="fas fa-trash"></i> Supprimer</button>
-      <button class="btn btn-outline" onclick="Modal.close('m-ct')">Annuler</button>
-      <button class="btn btn-primary" onclick="Contacts.save()"><i class="fas fa-save"></i> Enregistrer</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="m-usr">
-  <div class="modal-box">
-    <div class="modal-header"><h3 id="m-usr-t">Utilisateur</h3><button class="btn btn-ghost btn-icon" onclick="Modal.close('m-usr')"><i class="fas fa-xmark"></i></button></div>
-    <div class="modal-body">
-      <input type="hidden" id="u-id">
-      <div class="form-group"><label>Nom complet *</label><input type="text" class="form-control" id="u-name"></div>
-      <div class="form-row">
-        <div class="form-group"><label>Identifiant de connexion *</label><input type="text" class="form-control" id="u-login"></div>
-        <div class="form-group"><label>Mot de passe <span id="u-pass-hint" style="font-weight:400;text-transform:none;font-size:.7rem">(laisser vide = inchangé)</span></label><input type="password" class="form-control" id="u-pass"></div>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:3px;border-radius:var(--r3);overflow:hidden;height:460px" class="reveal">
+      <div style="position:relative;overflow:hidden">
+        <img src="https://static.wixstatic.com/media/d3492f_f218848499c544b495a61c974fe362f0~mv2.png" alt="" style="width:100%;height:100%;object-fit:cover;opacity:0.82;transition:all 0.6s ease">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(14,24,71,0.85) 0%,transparent 50%);padding:1.5rem;display:flex;flex-direction:column;justify-content:flex-end">
+          <span style="font-size:0.6rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--or);background:rgba(196,145,110,0.12);border:1px solid rgba(196,145,110,0.3);padding:0.2rem 0.6rem;display:inline-block;margin-bottom:0.4rem;width:fit-content">Corporate</span>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--blanc)">Séminaire institutionnel</p>
+        </div>
       </div>
-      <div class="form-row">
-        <div class="form-group"><label>Rôle</label><select class="form-control" id="u-role"><option>Commercial</option><option>Admin</option></select></div>
-        <div class="form-group"><label>Taux de commission (%)</label><input type="number" class="form-control" id="u-comm" placeholder="ex: 5" min="0" max="100" step="0.5"></div>
+      <div style="position:relative;overflow:hidden">
+        <img src="https://static.wixstatic.com/media/d3492f_3a0591e2b5924c898ff28347c6e7a710~mv2.jpg" alt="" style="width:100%;height:100%;object-fit:cover;opacity:0.82;transition:all 0.6s ease">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(14,24,71,0.85) 0%,transparent 50%);padding:1.5rem;display:flex;flex-direction:column;justify-content:flex-end">
+          <span style="font-size:0.6rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--or);background:rgba(196,145,110,0.12);border:1px solid rgba(196,145,110,0.3);padding:0.2rem 0.6rem;display:inline-block;margin-bottom:0.4rem;width:fit-content">Privé</span>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--blanc)">Anniversaire haut de gamme</p>
+        </div>
       </div>
-      <div class="form-group"><label>Statut</label><select class="form-control" id="u-active"><option value="1">Actif</option><option value="0">Inactif</option></select></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-danger btn-sm" id="u-del-btn" style="margin-right:auto;display:none" onclick="Users.del()"><i class="fas fa-trash"></i> Supprimer</button>
-      <button class="btn btn-outline" onclick="Modal.close('m-usr')">Annuler</button>
-      <button class="btn btn-primary" onclick="Users.save()"><i class="fas fa-save"></i> Enregistrer</button>
+      <div style="position:relative;overflow:hidden">
+        <img src="https://static.wixstatic.com/media/d3492f_ee85abe7dc3748bf87d0f03b5790073b~mv2.jpeg" alt="" style="width:100%;height:100%;object-fit:cover;opacity:0.82;transition:all 0.6s ease">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(14,24,71,0.85) 0%,transparent 50%);padding:1.5rem;display:flex;flex-direction:column;justify-content:flex-end">
+          <span style="font-size:0.6rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--or);background:rgba(196,145,110,0.12);border:1px solid rgba(196,145,110,0.3);padding:0.2rem 0.6rem;display:inline-block;margin-bottom:0.4rem;width:fit-content">Décoration</span>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--blanc)">Scénographie sur mesure</p>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="toast-container" id="toasts"></div>
+<!-- TÉMOIGNAGES -->
+<section class="section-pale">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:3rem" class="reveal">
+      <span class="eyebrow">Témoignages</span>
+      <h2 style="font-size:clamp(2rem,3.5vw,3rem)">Ce que disent nos clients</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi reveal"><span class="testi-cat">Corporate</span><p class="testi-txt">L'équipe a parfaitement compris nos attentes et livré un séminaire au-delà de nos espérances. Professionnalisme et créativité au rendez-vous.</p><div class="testi-auth"><strong>Direction RH</strong><span>Institution partenaire, Abidjan</span></div></div>
+      <div class="testi reveal d2"><span class="testi-cat">Événement privé</span><p class="testi-txt">Merci merci merci ! La fête fut belle et c'est aussi grâce à vous et votre équipe. Tout était comme je l'avais imaginé.</p><div class="testi-auth"><strong>Madame Essombo</strong><span>Anniversaire, Abidjan</span></div></div>
+      <div class="testi reveal d3"><span class="testi-cat">Coordination complète</span><p class="testi-txt">La fête s'est très bien passée, tout le monde était content. Vos équipes ont vraiment assuré. On n'a rien eu à faire — que profiter.</p><div class="testi-auth"><strong>Madame Silué</strong><span>Célébration familiale</span></div></div>
+    </div>
+  </div>
+</section>
 
+<!-- CTA FINAL -->
+<section>
+  <div class="container">
+    <div class="cta-band reveal">
+      <span class="eyebrow-w" style="display:block;margin-bottom:0.8rem">Commençons ensemble</span>
+      <h2>Votre prochain événement<br>mérite <em style="color:var(--or3);font-style:italic">l'exception</em></h2>
+      <p>Prenons le temps d'un échange. Dites-nous votre projet — nous vous proposons une solution sur mesure, dans notre espace ou dans le vôtre.</p>
+      <div class="cta-band-btns">
+        <a href="contact.html" class="btn btn-or">Planifier notre rencontre</a>
+        <a href="nos-realisations.html" class="btn btn-outline-w">Voir nos réalisations</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <span class="footer-logo-name">Tera events</span>
+        <span class="footer-logo-tag">Event Planning · Abidjan, Côte d'Ivoire</span>
+        <p class="footer-desc">Agence d'event planning à Abidjan. Nous concevons et organisons vos événements corporate et privés — dans notre espace ou dans le lieu de votre choix.</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/tera.events.ci/" target="_blank" title="Instagram"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://www.facebook.com/tera.events.ci" target="_blank" title="Facebook"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="https://www.linkedin.com/company/tera-events-ci" target="_blank" title="LinkedIn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <span class="footer-col-title">Expertises</span>
+        <ul class="footer-links">
+          <li><a href="corporate.html">Événements corporate</a></li>
+          <li><a href="evenements-prives.html">Événements privés</a></li>
+          <li><a href="notre-espace.html">Notre espace</a></li>
+          <li><a href="nos-realisations.html">Nos réalisations</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="footer-col-title">Tera events</span>
+        <ul class="footer-links">
+          <li><a href="equipe.html">L'équipe</a></li>
+          <li><a href="contact.html">Demander un devis</a></li>
+          <li><a href="contact.html#faq">FAQ</a></li>
+          <li><a href="cgl.html">Conditions générales</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="footer-col-title">Contact</span>
+        <div class="footer-ci"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.5" style="flex-shrink:0;margin-top:3px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.7a16 16 0 0 0 6 6l.91-1.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 15z"/></svg><span class="footer-ci-text">+225 05 66 22 10 10<br>+225 07 06 83 99 57</span></div>
+        <div class="footer-ci"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.5" style="flex-shrink:0;margin-top:3px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span class="footer-ci-text"><a href="mailto:reservations@tera.events">reservations@tera.events</a></span></div>
+        <div class="footer-ci"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.5" style="flex-shrink:0;margin-top:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="footer-ci-text">Cocody 2 Plateaux, 7ème tranche<br>Abidjan, Côte d'Ivoire</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 NATERALIA SARL — Tera events. Tous droits réservés.</p>
+      <p><a href="cgl.html">Conditions générales</a> &nbsp;·&nbsp; <a href="contact.html">Contact</a></p>
+    </div>
+  </div>
+</footer>
 <script>
-/* ══════════════════════════════════════════════════════════
-   CRM TERA EVENTS v6 — MODULE COMPLET (SYNC AUTO)
-   ══════════════════════════════════════════════════════════ */
-
-const DB = 'crm_tera_v6';
-
-const DSTG = {
-  1:{name:'Prospection', prob:10,  color:'#94a3b8'},
-  2:{name:'Qualification', prob:25, color:'#6366f1'},
-  3:{name:'Proposition', prob:50,  color:'#f59e0b'},
-  4:{name:'Négociation', prob:75,  color:'#8b5cf6'},
-  5:{name:'Gagné',       prob:100, color:'#059669'},
-  6:{name:'Perdu',       prob:0,   color:'#dc2626'}
-};
-
-const CATALOG = [
-  {group:'🏛️ Salle & Espace — Événements',items:[
-    {id:'salle_seule',name:'Salle seule',basePrice:800000,unit:'forfait'},
-    {id:'salle_logis',name:'Salle + Logistique',basePrice:1000000,unit:'forfait'},
-    {id:'salle_presta',name:'Salle + Services inclus (−20%)',basePrice:800000,unit:'forfait'}
-  ]},
-  {group:'🏢 Salle Corporate — Séminaire & Formation',items:[
-    {id:'salle_semi_dj',name:'Séminaire/Formation — Demi-journée (5h max)',basePrice:650000,unit:'forfait'},
-    {id:'salle_semi_jj',name:'Séminaire/Formation — Journée complète (10h max)',basePrice:1000000,unit:'forfait'}
-  ]},
-  {group:'🍹 Cocktail Dinatoire — DÉCOUVERTE',items:[
-    {id:'ckt_dec_s',name:'Cocktail Découverte — 30 à 100 pers.',basePrice:10500,unit:'/personne'},
-    {id:'ckt_dec_m',name:'Cocktail Découverte — 101 à 200 pers.',basePrice:9975,unit:'/personne'},
-    {id:'ckt_dec_l',name:'Cocktail Découverte — +200 pers.',basePrice:9450,unit:'/personne'},
-    {id:'ckt_dec_sd',name:'Soft drinks supplément',basePrice:3500,unit:'/personne'}
-  ]},
-  {group:'🌟 Cocktail Dinatoire — ÉVÉNEMENT',items:[
-    {id:'ckt_evt_s',name:'Cocktail Événement — 30 à 100 pers.',basePrice:15500,unit:'/personne'},
-    {id:'ckt_evt_m',name:'Cocktail Événement — 101 à 200 pers.',basePrice:14725,unit:'/personne'},
-    {id:'ckt_evt_l',name:'Cocktail Événement — +200 pers.',basePrice:13950,unit:'/personne'},
-    {id:'ckt_evt_sd',name:'Soft drinks supplément',basePrice:3500,unit:'/personne'}
-  ]},
-  {group:'👑 Cocktail Dinatoire — PRESTIGE',items:[
-    {id:'ckt_pre_s',name:'Cocktail Prestige — 30 à 100 pers.',basePrice:27000,unit:'/personne'},
-    {id:'ckt_pre_m',name:'Cocktail Prestige — 101 à 200 pers.',basePrice:25650,unit:'/personne'},
-    {id:'ckt_pre_l',name:'Cocktail Prestige — +200 pers.',basePrice:24300,unit:'/personne'}
-  ]},
-  {group:'🍽️ Repas Assis — RAPIDE',items:[
-    {id:'rep_rap_s',name:'Repas Rapide — 30 à 100 pers.',basePrice:19000,unit:'/personne'},
-    {id:'rep_rap_m',name:'Repas Rapide — 101 à 200 pers.',basePrice:18050,unit:'/personne'},
-    {id:'rep_rap_l',name:'Repas Rapide — +200 pers.',basePrice:17100,unit:'/personne'}
-  ]},
-  {group:"🍽️ Repas Assis — L'ESSENTIEL",items:[
-    {id:'rep_ess_s',name:"L'Essentiel — 30 à 100 pers.",basePrice:25000,unit:'/personne'},
-    {id:'rep_ess_m',name:"L'Essentiel — 101 à 200 pers.",basePrice:23750,unit:'/personne'},
-    {id:'rep_ess_l',name:"L'Essentiel — +200 pers.",basePrice:22500,unit:'/personne'}
-  ]},
-  {group:'🍽️ Repas Assis — PRESTIGE',items:[
-    {id:'rep_pre_s',name:'Repas Prestige — 30 à 100 pers.',basePrice:31000,unit:'/personne'},
-    {id:'rep_pre_m',name:'Repas Prestige — 101 à 200 pers.',basePrice:29450,unit:'/personne'},
-    {id:'rep_pre_l',name:'Repas Prestige — +200 pers.',basePrice:27900,unit:'/personne'}
-  ]},
-  {group:'🍽️ Repas Assis — GALA',items:[
-    {id:'rep_gal_s',name:'Repas Gala — 30 à 100 pers.',basePrice:50000,unit:'/personne'},
-    {id:'rep_gal_m',name:'Repas Gala — 101 à 200 pers.',basePrice:47500,unit:'/personne'},
-    {id:'rep_gal_l',name:'Repas Gala — +200 pers.',basePrice:45000,unit:'/personne'}
-  ]},
-  {group:'🍹 Bar à Cocktail',items:[
-    {id:'bar_dec',name:'Bar Découverte',basePrice:9500,unit:'/personne'},
-    {id:'bar_exp',name:'Bar Expérience',basePrice:12000,unit:'/personne'},
-    {id:'bar_pre',name:'Bar Premium',basePrice:13500,unit:'/personne'},
-    {id:'bar_moc',name:'Bar Mocktail',basePrice:8500,unit:'/personne'}
-  ]},
-  {group:'🥂 Open Bar — DELUXE (3h)',items:[
-    {id:'ob_del_s',name:'Open Bar Deluxe — 30 à 100 pers.',basePrice:12500,unit:'/personne'},
-    {id:'ob_del_m',name:'Open Bar Deluxe — 101 à 200 pers.',basePrice:11875,unit:'/personne'},
-    {id:'ob_del_l',name:'Open Bar Deluxe — +200 pers.',basePrice:11250,unit:'/personne'}
-  ]},
-  {group:'🥂 Open Bar — PRESTIGE (3h)',items:[
-    {id:'ob_pre_s',name:'Open Bar Prestige — 30 à 100 pers.',basePrice:22500,unit:'/personne'},
-    {id:'ob_pre_m',name:'Open Bar Prestige — 101 à 200 pers.',basePrice:21375,unit:'/personne'},
-    {id:'ob_pre_l',name:'Open Bar Prestige — +200 pers.',basePrice:20250,unit:'/personne'}
-  ]},
-  {group:'🥂 Open Bar — ELITE (4h)',items:[
-    {id:'ob_eli_s',name:'Open Bar Elite — 30 à 100 pers.',basePrice:35000,unit:'/personne'},
-    {id:'ob_eli_m',name:'Open Bar Elite — 101 à 200 pers.',basePrice:33250,unit:'/personne'},
-    {id:'ob_eli_l',name:'Open Bar Elite — +200 pers.',basePrice:31500,unit:'/personne'}
-  ]},
-  {group:'✨ Décoration — Welcome',items:[
-    {id:'deco_tb',name:'Tableau de bienvenue',basePrice:80000,unit:'forfait'},
-    {id:'deco_ep_s',name:'Espace photo Standard',basePrice:150000,unit:'forfait'},
-    {id:'deco_ep_v',name:'Mur photo VIP',basePrice:350000,unit:'forfait'},
-    {id:'deco_bp_s',name:'Backdrop Standard',basePrice:150000,unit:'forfait'},
-    {id:'deco_bp_p',name:'Backdrop Prestige',basePrice:350000,unit:'forfait'}
-  ]},
-  {group:'✨ Décoration — Site',items:[
-    {id:'deco_pil_s',name:'Piliers + Bouquets Standard (4–6)',basePrice:200000,unit:'forfait'},
-    {id:'deco_pil_v',name:'Piliers + Bouquets VIP (6–8)',basePrice:300000,unit:'forfait'},
-    {id:'deco_ct_b',name:'Centres de table bas — naturels',basePrice:35000,unit:'/table'},
-    {id:'deco_ct_h',name:'Centres de table haut — naturels',basePrice:45000,unit:'/table'},
-    {id:'deco_ct_v',name:'Centres de table VIP',basePrice:100000,unit:'/table'}
-  ]},
-  {group:'✨ Décoration — Dressage',items:[
-    {id:'deco_bou_b',name:'Bougeoirs bas + bougies (lot 3)',basePrice:3000,unit:'/table'},
-    {id:'deco_bou_p',name:'Bougeoirs à pieds + bougies (lot 3)',basePrice:5000,unit:'/table'},
-    {id:'deco_chan',name:'Chandeliers + bougies',basePrice:6000,unit:'/table'},
-    {id:'deco_cv',name:'Chandeliers haut VIP + bougies',basePrice:35000,unit:'/table'},
-    {id:'deco_che',name:'Chemin de tables',basePrice:5000,unit:'/table'},
-    {id:'deco_nap',name:'Nappes de couleurs',basePrice:5000,unit:'/table'},
-    {id:'deco_char',name:'Charger plates',basePrice:500,unit:'/personne'},
-    {id:'deco_couv',name:'Couverts dorés',basePrice:1000,unit:'/personne'},
-    {id:'deco_men',name:'Menus personnalisés',basePrice:1000,unit:'/personne'},
-    {id:'deco_men_v',name:'Menus VIP en plexi',basePrice:5000,unit:'/personne'},
-    {id:'deco_nom_s',name:'Noms de tables standard',basePrice:1500,unit:'/table'},
-    {id:'deco_nom_v',name:'Noms de tables VIP en plexi',basePrice:5000,unit:'/table'},
-    {id:'deco_ser',name:'Serviettes de tables',basePrice:600,unit:'/personne'}
-  ]},
-  {group:'💡 Éclairage & Piste',items:[
-    {id:'ecl_plum',name:'Piste de danse lumineuse 3×3m',basePrice:250000,unit:'forfait'},
-    {id:'ecl_pvin',name:'Piste de danse vinyle 3×3m',basePrice:100000,unit:'forfait'},
-    {id:'ecl_km',name:'Kit lumineux M',basePrice:250000,unit:'forfait'},
-    {id:'ecl_kl',name:'Kit lumineux L',basePrice:300000,unit:'forfait'},
-    {id:'ecl_kxl',name:'Kit lumineux XL',basePrice:500000,unit:'forfait'}
-  ]},
-  {group:'🎂 Espace Gâteau',items:[
-    {id:'gat_s',name:'Espace gâteau Standard',basePrice:80000,unit:'forfait'},
-    {id:'gat_d',name:'Espace gâteau Deluxe',basePrice:150000,unit:'forfait'},
-    {id:'gat_v',name:'Espace gâteau VIP',basePrice:250000,unit:'forfait'}
-  ]},
-  {group:'💍 Spécial Mariage',items:[
-    {id:'mar_vmar',name:'Décoration voiture mariée',basePrice:80000,unit:'forfait'},
-    {id:'mar_vmre',name:'Décoration voiture marié',basePrice:70000,unit:'forfait'},
-    {id:'mar_bqn',name:'Bouquet mariée naturel',basePrice:100000,unit:'forfait'},
-    {id:'mar_bqa',name:'Bouquet mariée artificiel',basePrice:50000,unit:'forfait'},
-    {id:'mar_oeil',name:'Œillets marié + best man',basePrice:5000,unit:'forfait'},
-    {id:'mar_tr',name:'Table rectangle drapée + vaisselle',basePrice:200000,unit:'forfait'},
-    {id:'mar_tv',name:'Table vitrée + vaisselle',basePrice:250000,unit:'forfait'},
-    {id:'mar_tvip',name:'Table VIP or/argent + vaisselle',basePrice:300000,unit:'forfait'}
-  ]},
-  {group:'🎯 Event Planner',items:[
-    {id:'ep_chef',name:'Chef de Projet (journée)',basePrice:250000,unit:'forfait'},
-    {id:'ep_coord',name:'Coordination Jour J',basePrice:500000,unit:'forfait'},
-    {id:'ep_full',name:'Coordination Complète',basePrice:1500000,unit:'à partir de'}
-  ]},
-  {group:'🎁 Honoraires Décoration',items:[
-    {id:'hon_s',name:"Honoraires déco — jusqu'à 30 pers.",basePrice:350000,unit:'forfait'},
-    {id:'hon_m',name:'Honoraires déco — 31 à 50 pers.',basePrice:450000,unit:'forfait'},
-    {id:'hon_l',name:'Honoraires déco — plus de 50 pers.',basePrice:500000,unit:'forfait'}
-  ]}
-];
-
-const SECTIONS = [
-  {id:'salle',label:'SALLE'},
-  {id:'traiteur',label:'SERVICE TRAITEUR'},
-  {id:'bar',label:'BAR À COCKTAILS'},
-  {id:'open_bar',label:'OPEN BAR'},
-  {id:'decoration',label:'DÉCORATION'},
-  {id:'hon_deco',label:'HONORAIRES DÉCORATION'},
-  {id:'mariage',label:'SPÉCIAL MARIAGE'},
-  {id:'coordination',label:'EVENT COORDINATION'},
-  {id:'autres',label:'AUTRES PRESTATIONS'}
-];
-
-const SECTION_MAP = {};
-CATALOG.forEach(g => {
-  const n = g.group; let sec = 'autres';
-  if (n.includes('Salle')) sec = 'salle';
-  else if (n.includes('Cocktail Dinatoire') || n.includes('Repas Assis')) sec = 'traiteur';
-  else if (n.includes('Open Bar')) sec = 'open_bar';
-  else if (n.includes('Bar')) sec = 'bar';
-  else if (n.includes('Spécial Mariage')) sec = 'mariage';
-  else if (n.includes('Décoration') || n.includes('Éclairage') || n.includes('Espace Gâteau')) sec = 'decoration';
-  else if (n.includes('Honoraires')) sec = 'hon_deco';
-  else if (n.includes('Event Planner')) sec = 'coordination';
-  g.items.forEach(i => { SECTION_MAP[i.id] = sec; });
-});
-
-const STATUSES = {
-  brouillon:{label:'Brouillon',cls:'badge-brouillon'},
-  envoye:{label:'Envoyé',cls:'badge-envoye'},
-  accepte:{label:'Accepté',cls:'badge-accepte'},
-  refuse:{label:'Refusé',cls:'badge-refuse'}
-};
-
-/* ── UTILS ── */
-function hp(p){let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0}return'h_'+Math.abs(h).toString(36)}
-const UID = () => Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-function $(id){return document.getElementById(id)}
-function fmt(n){return(!n&&n!==0)?'0':Math.round(n).toLocaleString('fr-FR')}
-function fc(n){return fmt(n)+' '+(S.settings?.currency||'FCFA')}
-function gC(id){return S.contacts.find(c=>c.id==id)}
-function gU(id){return S.users.find(u=>u.id==id)}
-function escHTML(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-
-/* ── DATA ── */
-function ds(){
-  return{
-    settings:{company:'NATERALIA SARL',currency:'FCFA',target:50000000,commRate:5},
-    emitter:{entete_adresse:'Centre Commercial TERA - 7ème tranche, 2 Plateaux',entete_ville:'Cocody, Abidjan',entete_idu:'CI-2023-0051435 K',entete_rccm:'CI-ABJ-03-2023-B12-02911',entete_cc:'230 241 4X',entete_capital:'1 000 000 F CFA',entete_tel:'+225 0566 221 010',entete_email:'reservations@tera.events',emetteur_nom:'NATERALIA SARL'},
-    users:[
-      {id:1,name:'Administrateur',login:'superadmin',role:'Admin',active:true,pass:hp('Admin2026Secure'),commRate:0},
-      {id:2,name:'Eric',login:'eric',role:'Commercial',active:true,pass:hp('Eric2026Secure'),commRate:5}
-    ],
-    contacts:[],deals:[],devis:[]
-  };
-}
-
-let S = (() => {
-  let raw = localStorage.getItem(DB) || localStorage.getItem('crm_tera_v5');
-  let data = raw ? JSON.parse(raw) : ds();
-  if(!data.devis) data.devis = [];
-  if(!data.emitter) data.emitter = ds().emitter;
-  if(!data.settings.commRate) data.settings.commRate = 5;
-  data.settings.company = 'NATERALIA SARL';
-  data.emitter.emetteur_nom = 'NATERALIA SARL';
-  data.users.forEach(u=>{if(u.commRate===undefined)u.commRate=5;});
-  data.deals.forEach(d=>{
-    if(d.date && !d.closeDate){d.closeDate=d.date;delete d.date;}
-    if(!d.ref) d.ref='AF-'+String(d.id).slice(-4);
-  });
-  return data;
-})();
-
-let CU = null;
-function sL(){try{localStorage.setItem(DB,JSON.stringify(S))}catch(e){Toast.s('Stockage local plein','error')}}
-function save(){sL();Sync.push()}
-
-/* ── AUTH ── */
-const Auth = {
-  login(){
-    const u=$('login-user').value.trim().toLowerCase(), p=$('login-pass').value, e=$('login-error');
-    if(!u||!p){e.style.display='block';return}
-    const usr = S.users.find(x=>x.login.toLowerCase()===u&&x.pass===hp(p));
-    if(usr){
-      if(usr.active===false){e.innerHTML='<i class="fas fa-ban"></i> Compte inactif.';e.style.display='block';return}
-      CU=usr;$('login-screen').style.display='none';
-      $('sb-uname').textContent=usr.name;$('sb-urole').textContent=usr.role;$('sb-avatar').textContent=usr.name.charAt(0).toUpperCase();
-      if(usr.role==='Commercial') $('admin-nav').style.display='none';
-      App.init();
-    } else {
-      e.style.display='block';
-      setTimeout(()=>e.style.display='none',3000);
-    }
-  },
-  logout(){CU=null;location.reload()}
-};
-
-const Toast = {
-  s(msg, type='success'){
-    const c=$('toasts'), e=document.createElement('div');
-    e.className='toast toast-'+type;
-    const icons={success:'check-circle',error:'exclamation-circle',info:'info-circle',warning:'exclamation-triangle'};
-    e.innerHTML=`<i class="fas fa-${icons[type]||'info-circle'}"></i> ${msg}`;
-    c.appendChild(e);
-    setTimeout(()=>{e.style.opacity='0';e.style.transform='translateX(20px)';setTimeout(()=>e.remove(),400)},3500);
-  }
-};
-
-const Modal = {
-  open(id){$(id).classList.add('open')},
-  close(id){$(id).classList.remove('open')},
-  confirm(title, msg, onYes, danger=false){
-    const div=document.createElement('div');div.className='confirm-dialog';
-    div.innerHTML=`<div class="confirm-box"><h4>${title}</h4><p>${msg}</p><div class="confirm-actions"><button class="btn btn-outline" onclick="this.closest('.confirm-dialog').remove()">Annuler</button><button class="btn ${danger?'btn-danger':'btn-primary'}" id="yes-btn">${danger?'Supprimer':'Confirmer'}</button></div></div>`;
-    document.body.appendChild(div);
-    div.querySelector('#yes-btn').onclick=()=>{div.remove();onYes();};
-  }
-};
-
-const Sync = {
-  on:false,_timer:null,
-  // Clés codées en dur pour la synchronisation automatique
-  hardcoded: {
-    k: '$2a$10$.99yO.fKI.GUEblo/fL5R.e6krb65NCNMrWgvzd.tP.bSGq52vTLq',
-    b: '69c59d43b7ec241ddca8b69a'
-  },
-  ui(s){
-    const b=$('sb-sync'),t=$('sb-sync-text'),tb=$('topbar-sync');
-    if(s==='online'){b.className='sync-badge online';t.textContent='En ligne';if(tb)tb.innerHTML='<span class="sync-badge online" style="font-size:.7rem"><span class="sync-dot"></span>Sync live</span>'}
-    else if(s==='syncing'){b.className='sync-badge syncing';t.textContent='Sync…';if(tb)tb.innerHTML='<span class="sync-badge syncing" style="font-size:.7rem"><span class="sync-dot"></span>Sync…</span>'}
-    else{b.className='sync-badge offline';t.textContent='Hors ligne';if(tb)tb.innerHTML=''}
-  },
-  cfg(){ return this.hardcoded; },
-  connect(){
-    const c = this.cfg();
-    if(!c.k||!c.b){Toast.s('Clés manquantes dans le code','error');return}
-    this.ui('syncing');
-    this._r().then(r=>{
-      if(r){S=r;sL();App.refreshAll();}else{this._w();}
-      this.on=true;this.ui('online');Toast.s('Synchronisation activée');
-      clearInterval(this._timer);this._timer=setInterval(()=>this._poll(),30000);
-    }).catch(()=>{Toast.s('Erreur de connexion JSONBin','error');this.ui('offline')});
-  },
-  disconnect(){clearInterval(this._timer);this.on=false;this.ui('offline');Toast.s('Sync désactivée','info')},
-  async _r(){const c=this.cfg();if(!c)return null;const r=await fetch(`https://api.jsonbin.io/v3/b/${c.b}/latest`,{headers:{'X-Master-Key':c.k,'X-Bin-Meta':false}});return r.status===200?(await r.json()).record:null},
-  async _w(){const c=this.cfg();if(!c)return;await fetch(`https://api.jsonbin.io/v3/b/${c.b}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':c.k},body:JSON.stringify(S)})},
-  async _poll(){if(!this.on)return;try{const r=await this._r();if(r&&JSON.stringify(r)!==JSON.stringify(S)){S=r;sL();App.refreshAll();Toast.s('Données synchronisées automatiquement','info')}}catch(e){}},
-  push(){if(this.on){this.ui('syncing');this._w().then(()=>this.ui('online')).catch(()=>this.ui('online'))}},
-  auto(){
-    this.connect();
-  }
-};
-
-let chartPipe=null, chartMonth=null;
-
-const App = {
-  init(){
-    this.buildPF();
-    this.buildPipeFilters();
-    document.querySelectorAll('.nav-links a[data-view]').forEach(a=>{
-      a.addEventListener('click',()=>{
-        document.querySelectorAll('.nav-links a').forEach(x=>x.classList.remove('active'));
-        document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-        a.classList.add('active');
-        $('view-'+a.dataset.view).classList.add('active');
-        $('page-title').textContent=a.textContent.trim();
-        if(a.dataset.view==='devis') Quotes.renderList();
-      });
-    });
-    document.querySelectorAll('.admin-tab').forEach(tab=>{
-      tab.addEventListener('click',()=>{
-        document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
-        document.querySelectorAll('.admin-panel').forEach(p=>p.style.display='none');
-        tab.classList.add('active');$(tab.dataset.tab).style.display='block';
-      });
-    });
-    document.addEventListener('click',e=>{
-      if(!e.target.closest('#global-search')&&!e.target.closest('#global-search-results')){
-        $('global-search-results').style.display='none';
-      }
-    });
-    this.refreshAll();
-    Sync.auto(); // Lancement de la synchronisation automatique
-  },
-  buildPF(){
-    const s=$('filter-period');s.innerHTML='';
-    const n=new Date();
-    for(let i=5;i>=-6;i--){
-      const d=new Date(n.getFullYear(),n.getMonth()-i,1);
-      const v=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-      const l=d.toLocaleString('fr-FR',{month:'long',year:'numeric'});
-      const o=document.createElement('option');o.value=v;o.textContent=l.charAt(0).toUpperCase()+l.slice(1);
-      if(i===0)o.selected=true;
-      s.appendChild(o);
-    }
-    const a=document.createElement('option');a.value='ALL';a.textContent='— Toutes périodes —';s.appendChild(a);
-  },
-  buildPipeFilters(){
-    const pu=$('pipe-user');
-    pu.innerHTML='<option value="">— Tous commerciaux —</option>';
-    S.users.filter(u=>u.active!==false).forEach(u=>{
-      pu.innerHTML+=`<option value="${u.id}">${u.name}</option>`;
-    });
-    const ps=$('pipe-stage');
-    ps.innerHTML='<option value="">— Toutes étapes —</option>';
-    Object.entries(DSTG).forEach(([k,v])=>{
-      ps.innerHTML+=`<option value="${k}">${v.name}</option>`;
-    });
-  },
-  refreshAll(){
-    Dashboard.render();
-    Pipeline.render();
-    Contacts.render();
-    Commissions.render();
-    Admin.render();
-    Users.render();
-    if($('view-devis').classList.contains('active')) Quotes.renderList();
-  },
-  exportJSON(){
-    const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
-    const u=URL.createObjectURL(b),a=document.createElement('a');
-    a.href=u;a.download='CRM_TERA_'+new Date().toISOString().split('T')[0]+'.json';
-    a.click();URL.revokeObjectURL(u);Toast.s('Sauvegarde téléchargée');
-  },
-  importJSON(){$('import-file').click()},
-  doImport(input){
-    const f=input.files[0];if(!f)return;
-    const r=new FileReader();
-    r.onload=e=>{
-      Modal.confirm('Restaurer la sauvegarde','Ceci remplacera TOUTES les données actuelles. Continuer ?',()=>{
-        try{S=JSON.parse(e.target.result);save();App.refreshAll();Toast.s('Sauvegarde restaurée avec succès');}
-        catch(err){Toast.s('Fichier JSON invalide','error')}
-      },true);
-    };
-    r.readAsText(f);input.value='';
-  }
-};
-
-function fP(items){
-  const p=$('filter-period').value;
-  if(p==='ALL') return items;
-  return items.filter(d=>(d.closeDate||'').startsWith(p));
-}
-
-const Dashboard = {
-  render(){
-    const q=$('dash-search')?.value?.toLowerCase()||'';
-    let deals=S.deals.filter(d=>d.stage!=6);
-    const allDeals=fP(S.deals);
-    const won=allDeals.filter(d=>d.stage==5);
-    const active=allDeals.filter(d=>d.stage>0&&d.stage<5);
-    const ca=won.reduce((a,b)=>a+(b.amount||0),0);
-    const pipe=active.reduce((a,b)=>a+((b.amount||0)*DSTG[b.stage].prob/100),0);
-    const conv=allDeals.length>0?Math.round(won.length/allDeals.length*100):0;
-    const devisPending=S.devis.filter(d=>d.status==='envoye').length;
-
-    $('kpi-grid').innerHTML=`
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:var(--success-light);color:var(--success)"><i class="fas fa-trophy"></i></div>
-        <div class="kpi-label">CA Réalisé</div>
-        <div class="kpi-value" style="color:var(--success)">${fc(ca)}</div>
-        <div class="kpi-sub"><i class="fas fa-check-circle kpi-trend-up"></i> ${won.length} affaire${won.length>1?'s':''} gagnée${won.length>1?'s':''}</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:var(--primary-bg);color:var(--primary)"><i class="fas fa-scale-balanced"></i></div>
-        <div class="kpi-label">Pipeline pondéré</div>
-        <div class="kpi-value" style="color:var(--primary)">${fc(pipe)}</div>
-        <div class="kpi-sub"><i class="fas fa-hourglass-half" style="color:var(--text-muted)"></i> ${active.length} en cours</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:var(--warning-light);color:var(--warning)"><i class="fas fa-percent"></i></div>
-        <div class="kpi-label">Taux de conversion</div>
-        <div class="kpi-value" style="color:var(--warning)">${conv}%</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${conv}%;background:var(--warning)"></div></div>
-        <div class="kpi-sub">${allDeals.length} affaires total</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:var(--info-light);color:var(--info)"><i class="fas fa-file-invoice-dollar"></i></div>
-        <div class="kpi-label">Devis en attente</div>
-        <div class="kpi-value" style="color:var(--info)">${devisPending}</div>
-        <div class="kpi-sub">${S.devis.length} devis total</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:#ecfdf5;color:#16a34a"><i class="fas fa-users"></i></div>
-        <div class="kpi-label">Contacts actifs</div>
-        <div class="kpi-value" style="color:#16a34a">${S.contacts.filter(c=>c.type==='Client actif').length}</div>
-        <div class="kpi-sub">${S.contacts.length} contacts total</div>
-      </div>`;
-
-    this.renderCharts(allDeals);
-
-    let filtered=deals.filter(d=>d.stage<5);
-    if(q) filtered=filtered.filter(d=>
-      (d.name||'').toLowerCase().includes(q)||
-      (gC(d.contactId)?.name||'').toLowerCase().includes(q)||
-      (d.ref||'').toLowerCase().includes(q)
-    );
-    filtered.sort((a,b)=>(b.amount||0)-(a.amount||0));
-
-    const tbody=$('tbl-dash').querySelector('tbody');
-    if(!filtered.length){
-      tbody.innerHTML=`<tr class="empty-row"><td colspan="8"><span class="empty-icon">📋</span>Aucune affaire trouvée.</td></tr>`;return;
-    }
-    tbody.innerHTML=filtered.slice(0,15).map(d=>{
-      const st=DSTG[d.stage];
-      return `<tr>
-        <td><code style="background:var(--bg);padding:2px 6px;border-radius:6px;font-size:.72rem">${d.ref||''}</code></td>
-        <td><strong>${escHTML(d.name)}</strong></td>
-        <td>${escHTML(gC(d.contactId)?.name||'—')}</td>
-        <td style="font-weight:700;color:var(--primary);font-family:'JetBrains Mono',monospace;font-size:.82rem">${fc(d.amount)}</td>
-        <td><span class="stage-badge" style="background:${st.color}14;color:${st.color}">${st.name}</span></td>
-        <td>${escHTML(gU(d.userId)?.name||'—')}</td>
-        <td style="font-size:.78rem;color:var(--text-muted)">${d.closeDate||'—'}</td>
-        <td>
-          <button class="btn btn-ghost btn-icon btn-sm" title="Éditer" onclick="Deals.edit(${d.id})"><i class="fas fa-pen"></i></button>
-          <button class="btn btn-ghost btn-icon btn-sm" title="Marquer Gagné" onclick="Deals.markWon(${d.id})" style="color:var(--success)"><i class="fas fa-check-circle"></i></button>
-        </td>
-      </tr>`;
-    }).join('');
-  },
-
-  renderCharts(deals){
-    const stageData = Object.entries(DSTG).map(([k,v])=>({
-      label:v.name, value:deals.filter(d=>d.stage==k).reduce((s,d)=>s+(d.amount||0),0), color:v.color
-    })).filter(x=>x.value>0);
-
-    if(chartPipe) chartPipe.destroy();
-    chartPipe = new Chart($('chart-pipe'),{
-      type:'doughnut',
-      data:{labels:stageData.map(x=>x.label),datasets:[{data:stageData.map(x=>x.value),backgroundColor:stageData.map(x=>x.color+'cc'),borderColor:stageData.map(x=>x.color),borderWidth:2}]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{family:'Outfit',size:11},padding:12}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fc(ctx.raw)}`}}},cutout:'65%'}
-    });
-
-    const now=new Date();
-    const months=[];
-    for(let i=5;i>=0;i--){
-      const d=new Date(now.getFullYear(),now.getMonth()-i,1);
-      months.push({key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,label:d.toLocaleString('fr-FR',{month:'short'}).toUpperCase()});
-    }
-    const wonData=months.map(m=>S.deals.filter(d=>d.stage==5&&(d.closeDate||'').startsWith(m.key)).reduce((s,d)=>s+(d.amount||0),0));
-    const pipeData=months.map(m=>S.deals.filter(d=>d.stage>0&&d.stage<5&&(d.closeDate||'').startsWith(m.key)).reduce((s,d)=>s+(d.amount||0)*DSTG[d.stage].prob/100,0));
-
-    if(chartMonth) chartMonth.destroy();
-    chartMonth = new Chart($('chart-month'),{
-      type:'bar',
-      data:{labels:months.map(m=>m.label),datasets:[
-        {label:'CA Gagné',data:wonData,backgroundColor:'#10b981cc',borderRadius:8},
-        {label:'Pipeline pondéré',data:pipeData,backgroundColor:'#6366f1cc',borderRadius:8}
-      ]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{family:'Outfit',size:11}}}},scales:{y:{ticks:{callback:v=>fmt(v),font:{family:'JetBrains Mono',size:10}},grid:{color:'rgba(0,0,0,.03)'}},x:{grid:{display:false},ticks:{font:{family:'Outfit',size:11}}}}}
-    });
-  }
-};
-
-const Pipeline = {
-  render(){
-    const s=($('pipe-search').value||'').toLowerCase();
-    const uf=$('pipe-user').value;
-    const sf=$('pipe-stage').value;
-    let dl=fP(S.deals);
-    if(s) dl=dl.filter(d=>(d.name||'').toLowerCase().includes(s)||(gC(d.contactId)?.name||'').toLowerCase().includes(s));
-    if(uf) dl=dl.filter(d=>d.userId==uf);
-    if(sf) dl=dl.filter(d=>d.stage==sf);
-
-    $('kanban').innerHTML=Object.entries(DSTG).map(([k,v])=>{
-      if(sf&&sf!=k) return '';
-      const sd=dl.filter(d=>d.stage==k);
-      const total=sd.reduce((a,b)=>a+(b.amount||0),0);
-      return `<div class="kanban-col">
-        <div class="kanban-col-header" style="border-bottom-color:${v.color}">
-          <h4><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${v.color}"></span> ${v.name} <span class="col-count">${sd.length}</span></h4>
-          <span class="col-total">${fmt(total)} F</span>
-        </div>
-        <div class="kanban-col-body">
-          ${sd.length===0?`<div style="text-align:center;padding:2rem 1rem;color:var(--text-muted);font-size:.78rem">Aucune affaire</div>`:''}
-          ${sd.map(d=>`
-            <div class="kanban-card" ondblclick="Deals.edit(${d.id})">
-              <div class="kc-header">
-                <span class="kc-ref">${d.ref||''}</span>
-                ${k!=5&&k!=6?`<button class="btn btn-ghost btn-icon" style="width:24px;height:24px;font-size:.7rem;color:var(--success)" title="Marquer Gagné" onclick="event.stopPropagation();Deals.markWon(${d.id})"><i class="fas fa-check"></i></button>`:''}
-              </div>
-              <div class="kc-name">${escHTML(d.name)}</div>
-              <div class="kc-client"><i class="fas fa-building" style="font-size:.7rem"></i> ${escHTML(gC(d.contactId)?.name||'—')}</div>
-              <div class="kc-footer">
-                <span class="kc-amount">${fc(d.amount)}</span>
-                <span class="kc-user">${escHTML(gU(d.userId)?.name||'—')}</span>
-              </div>
-            </div>`).join('')}
-        </div>
-      </div>`;
-    }).join('');
-  }
-};
-
-const Deals = {
-  openNew(){
-    $('d-id').value='';$('m-deal-t').textContent='Nouvelle affaire';
-    $('d-name').value='';$('d-amt').value='';$('d-notes').value='';$('d-inter').value='';
-    $('d-date').value=new Date().toISOString().split('T')[0];
-    $('d-del-btn').style.display='none';
-    $('d-ct').innerHTML='<option value="">— Choisir —</option>'+S.contacts.map(c=>`<option value="${c.id}">${escHTML(c.name)}</option>`).join('');
-    $('d-usr').innerHTML=S.users.filter(u=>u.active!==false).map(u=>`<option value="${u.id}"${u.id==CU?.id?' selected':''}>${escHTML(u.name)}</option>`).join('');
-    $('d-stg').innerHTML=Object.entries(DSTG).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');
-    Modal.open('m-deal');
-  },
-  edit(id){
-    const d=S.deals.find(x=>x.id==id);if(!d)return;
-    $('d-id').value=d.id;$('m-deal-t').textContent='Modifier l\'affaire';
-    $('d-name').value=d.name||'';$('d-amt').value=d.amount||'';
-    $('d-date').value=d.closeDate||'';$('d-notes').value=d.notes||'';$('d-inter').value=d.inter||'';
-    $('d-del-btn').style.display='inline-flex';
-    $('d-ct').innerHTML='<option value="">— Choisir —</option>'+S.contacts.map(c=>`<option value="${c.id}"${c.id==d.contactId?' selected':''}>${escHTML(c.name)}</option>`).join('');
-    $('d-usr').innerHTML=S.users.filter(u=>u.active!==false).map(u=>`<option value="${u.id}"${u.id==d.userId?' selected':''}>${escHTML(u.name)}</option>`).join('');
-    $('d-stg').innerHTML=Object.entries(DSTG).map(([k,v])=>`<option value="${k}"${k==d.stage?' selected':''}>${v.name}</option>`).join('');
-    Modal.open('m-deal');
-  },
-  save(){
-    const name=$('d-name').value.trim();
-    if(!name){Toast.s('Le nom est obligatoire','error');return}
-    const id=$('d-id').value;
-    const data={
-      name, amount:parseFloat($('d-amt').value)||0,
-      contactId:$('d-ct').value, userId:$('d-usr').value,
-      stage:parseInt($('d-stg').value), closeDate:$('d-date').value,
-      notes:$('d-notes').value, inter:$('d-inter').value
-    };
-    if(id){
-      Object.assign(S.deals.find(x=>x.id==id),data);
-      Toast.s('Affaire mise à jour');
-    } else {
-      data.id=Date.now();data.ref='AF-'+Math.floor(Math.random()*9000+1000);
-      S.deals.push(data);Toast.s('Affaire créée');
-    }
-    save();Modal.close('m-deal');App.refreshAll();
-  },
-  del(){
-    const id=$('d-id').value;if(!id)return;
-    Modal.close('m-deal');
-    Modal.confirm('Supprimer l\'affaire','Cette action est irréversible.',()=>{
-      S.deals=S.deals.filter(x=>x.id!=id);save();App.refreshAll();Toast.s('Affaire supprimée','error');
-    },true);
-  },
-  markWon(id){
-    const d=S.deals.find(x=>x.id==id);if(!d)return;
-    Modal.confirm('Marquer comme Gagné',`Confirmer la victoire de "${d.name}" ?`,()=>{
-      d.stage=5;d.closeDate=d.closeDate||new Date().toISOString().split('T')[0];
-      save();App.refreshAll();Toast.s('🏆 Affaire gagnée ! '+fc(d.amount),'success');
-    });
-  }
-};
-
-const Contacts = {
-  openNew(){
-    $('c-id').value='';$('m-ct-t').textContent='Nouveau contact';
-    ['c-name','c-tel','c-email','c-contact','c-post','c-sector','c-city','c-notes'].forEach(id=>$(id).value='');
-    $('c-del-btn').style.display='none';
-    $('c-usr').innerHTML=S.users.filter(u=>u.active!==false).map(u=>`<option value="${u.id}"${u.id==CU?.id?' selected':''}>${escHTML(u.name)}</option>`).join('');
-    Modal.open('m-ct');
-  },
-  edit(id){
-    const c=S.contacts.find(x=>x.id==id);if(!c)return;
-    $('c-id').value=c.id;$('m-ct-t').textContent='Modifier le contact';
-    $('c-name').value=c.name||'';$('c-tel').value=c.tel||'';$('c-email').value=c.email||'';
-    $('c-contact').value=c.contact||'';$('c-post').value=c.post||'';$('c-sector').value=c.sector||'';
-    $('c-city').value=c.city||'';$('c-notes').value=c.notes||'';$('c-type').value=c.type||'Prospect';
-    $('c-del-btn').style.display='inline-flex';
-    $('c-usr').innerHTML=S.users.filter(u=>u.active!==false).map(u=>`<option value="${u.id}"${u.id==c.userId?' selected':''}>${escHTML(u.name)}</option>`).join('');
-    Modal.open('m-ct');
-  },
-  save(){
-    const name=$('c-name').value.trim();
-    if(!name){Toast.s('La raison sociale est obligatoire','error');return}
-    const id=$('c-id').value;
-    const data={
-      name, type:$('c-type').value, tel:$('c-tel').value, email:$('c-email').value,
-      contact:$('c-contact').value, post:$('c-post').value, sector:$('c-sector').value,
-      city:$('c-city').value, notes:$('c-notes').value, userId:$('c-usr').value
-    };
-    if(id){Object.assign(S.contacts.find(x=>x.id==id),data);Toast.s('Contact mis à jour');}
-    else{data.id=Date.now();S.contacts.push(data);Toast.s('Contact créé');}
-    save();Modal.close('m-ct');App.refreshAll();
-  },
-  del(){
-    const id=$('c-id').value;if(!id)return;
-    const hasDeals=S.deals.some(d=>d.contactId==id);
-    if(hasDeals){Toast.s('Ce contact a des affaires liées. Supprimez-les d\'abord.','error');return}
-    Modal.close('m-ct');
-    Modal.confirm('Supprimer le contact','Cette action est irréversible.',()=>{
-      S.contacts=S.contacts.filter(x=>x.id!=id);save();App.refreshAll();Toast.s('Contact supprimé','error');
-    },true);
-  },
-  render(){
-    const q=($('ct-search')?.value||'').toLowerCase();
-    const tf=$('ct-filter-type')?.value||'';
-    let list=S.contacts;
-    if(q) list=list.filter(c=>(c.name||'').toLowerCase().includes(q)||(c.tel||'').includes(q)||(c.sector||'').toLowerCase().includes(q)||(c.contact||'').toLowerCase().includes(q));
-    if(tf) list=list.filter(c=>c.type===tf);
-    $('ct-count').textContent=`(${list.length})`;
-    const tbody=$('tbl-ct').querySelector('tbody');
-    if(!list.length){tbody.innerHTML=`<tr class="empty-row"><td colspan="9"><span class="empty-icon">🏢</span>Aucun contact${q?' correspondant':''}.<br><small>Cliquez sur "+ Contact" pour commencer.</small></td></tr>`;return}
-    const clsMap={'Prospect':'badge-prospect','Client actif':'badge-client','Partenaire':'badge-partenaire'};
-    const nbDeals=id=>S.deals.filter(d=>d.contactId==id).length;
-    tbody.innerHTML=list.map(c=>`<tr>
-      <td><strong>${escHTML(c.name)}</strong>${c.city?`<div style="font-size:.72rem;color:var(--text-muted)">${escHTML(c.city)}</div>`:''}</td>
-      <td><span class="badge ${clsMap[c.type]||'badge-prospect'}">${c.type}</span></td>
-      <td style="font-size:.82rem">${escHTML(c.sector||'—')}</td>
-      <td style="font-size:.82rem">${escHTML(c.contact||'—')}${c.post?`<div style="font-size:.7rem;color:var(--text-muted)">${escHTML(c.post)}</div>`:''}</td>
-      <td style="font-size:.82rem">${c.tel?`<a href="tel:${c.tel}" style="color:inherit;text-decoration:none">${escHTML(c.tel)}</a>`:'—'}</td>
-      <td style="font-size:.82rem">${c.email?`<a href="mailto:${c.email}" style="color:var(--primary);text-decoration:none">${escHTML(c.email)}</a>`:'—'}</td>
-      <td style="font-size:.82rem">${escHTML(gU(c.userId)?.name||'—')}</td>
-      <td><span class="badge" style="background:var(--primary-bg);color:var(--primary)">${nbDeals(c.id)} affaire${nbDeals(c.id)!==1?'s':''}</span></td>
-      <td><button class="btn btn-ghost btn-icon btn-sm" onclick="Contacts.edit(${c.id})"><i class="fas fa-pen"></i></button></td>
-    </tr>`).join('');
-  }
-};
-
-const Commissions = {
-  calc(userId){
-    const user=gU(userId);if(!user)return null;
-    const dl=fP(S.deals).filter(d=>d.userId==userId&&d.stage==5);
-    const ca=dl.reduce((s,d)=>s+(d.amount||0),0);
-    const target=S.settings.target||50000000;
-    const rate=(user.commRate!==undefined?user.commRate:S.settings.commRate)||5;
-    const pct=target>0?ca/target*100:0;
-    const commission=ca*rate/100;
-    const bonus=pct>=100?commission*0.1:0;
-    return{ca,target,pct,rate,commission,bonus,total:commission+bonus,nbDeals:dl.length};
-  },
-  render(){
-    const commercials=S.users.filter(u=>u.active!==false&&u.role==='Commercial');
-    const allCA=commercials.reduce((s,u)=>s+(this.calc(u.id)?.ca||0),0);
-    const allComm=commercials.reduce((s,u)=>s+(this.calc(u.id)?.total||0),0);
-
-    $('comm-sum').innerHTML=`
-      <div class="cs-card"><div class="cs-value" style="color:var(--success)">${fc(allCA)}</div><div class="cs-label">CA Total Équipe</div></div>
-      <div class="cs-card"><div class="cs-value" style="color:var(--warning)">${fc(allComm)}</div><div class="cs-label">Commissions à payer</div></div>
-      <div class="cs-card"><div class="cs-value" style="color:var(--primary)">${commercials.length}</div><div class="cs-label">Commerciaux actifs</div></div>`;
-
-    const tbody=$('tbl-comm').querySelector('tbody');
-    if(!S.users.filter(u=>u.active!==false).length){tbody.innerHTML=`<tr class="empty-row"><td colspan="9"><span class="empty-icon">👥</span>Aucun commercial configuré.</td></tr>`;return}
-
-    tbody.innerHTML=S.users.filter(u=>u.active!==false).map(u=>{
-      const c=this.calc(u.id);if(!c)return '';
-      const pctCapped=Math.min(c.pct,100);
-      const statusKey='comm_paid_'+u.id+'_'+($('filter-period').value||'all');
-      const paid=localStorage.getItem(statusKey)==='1';
-      return `<tr>
-        <td><strong>${escHTML(u.name)}</strong><div style="font-size:.72rem;color:var(--text-muted)">${u.role}</div></td>
-        <td style="font-weight:700;color:var(--success);font-family:'JetBrains Mono',monospace;font-size:.82rem">${fc(c.ca)}</td>
-        <td style="font-family:'JetBrains Mono',monospace;font-size:.82rem">${fc(c.target)}</td>
-        <td>
-          <div style="font-size:.85rem;font-weight:700;color:${c.pct>=100?'var(--success)':c.pct>=50?'var(--warning)':'var(--danger)'}">${c.pct.toFixed(1)}%</div>
-          <div class="comm-bar"><div class="comm-bar-fill" style="width:${pctCapped}%;background:${c.pct>=100?'var(--success)':c.pct>=50?'var(--warning)':'var(--danger)'}"></div></div>
-        </td>
-        <td>${c.rate}%</td>
-        <td style="font-family:'JetBrains Mono',monospace;font-size:.82rem">${fc(c.commission)}</td>
-        <td style="color:var(--warning);font-weight:600">${c.bonus>0?'+'+fc(c.bonus):'—'}</td>
-        <td style="font-weight:800;color:var(--primary);font-family:'JetBrains Mono',monospace;font-size:.85rem">${fc(c.total)}</td>
-        <td>
-          <button class="btn btn-sm ${paid?'btn-success':'btn-warning'}" onclick="Commissions.togglePaid('${statusKey}', this)">
-            ${paid?'<i class="fas fa-check"></i> Payée':'<i class="fas fa-clock"></i> À payer'}
-          </button>
-        </td>
-      </tr>`;
-    }).join('');
-  },
-  togglePaid(key, btn){
-    const was=localStorage.getItem(key)==='1';
-    localStorage.setItem(key,was?'0':'1');
-    btn.className='btn btn-sm '+(was?'btn-warning':'btn-success');
-    btn.innerHTML=was?'<i class="fas fa-clock"></i> À payer':'<i class="fas fa-check"></i> Payée';
-    Toast.s(was?'Commission marquée non payée':'Commission marquée comme payée','info');
-  }
-};
-
-const Reports = {
-  exportCSV(rows, filename){
-    const csv=rows.map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
-    const b=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
-    const u=URL.createObjectURL(b),a=document.createElement('a');
-    a.href=u;a.download=filename+'.csv';a.click();URL.revokeObjectURL(u);
-    Toast.s('Export CSV téléchargé');
-  },
-  exportDealsCSV(){
-    const header=['Réf','Affaire','Client','Commercial','Montant','Étape','Date clôture','Notes'];
-    const rows=S.deals.map(d=>[d.ref,d.name,gC(d.contactId)?.name||'',gU(d.userId)?.name||'',d.amount,DSTG[d.stage]?.name||'',d.closeDate||'',d.notes||'']);
-    this.exportCSV([header,...rows],'TERA_Affaires_'+new Date().toISOString().split('T')[0]);
-  },
-  exportDevisCSV(){
-    const header=['Réf','Client','Événement','Date évent.','Invités','Total TTC','Statut','Créé le'];
-    const rows=S.devis.map(d=>{
-      const t=Quotes.calcTotals(d).total;
-      return[d.ref,`${d.client.prenom} ${d.client.nom}`,d.event.type||'',d.event.date||'',d.event.nbGuests||0,t,STATUSES[d.status]?.label||d.status,d.createdAt?.split('T')[0]||''];
-    });
-    this.exportCSV([header,...rows],'TERA_Devis_'+new Date().toISOString().split('T')[0]);
-  },
-  exportCommCSV(){
-    const header=['Commercial','Rôle','CA Réalisé','Objectif','Atteinte %','Taux %','Commission','Bonus','Total'];
-    const rows=S.users.filter(u=>u.active!==false).map(u=>{
-      const c=Commissions.calc(u.id);if(!c)return null;
-      return[u.name,u.role,c.ca,c.target,c.pct.toFixed(1),c.rate,c.commission,c.bonus,c.total];
-    }).filter(Boolean);
-    this.exportCSV([header,...rows],'TERA_Commissions_'+new Date().toISOString().split('T')[0]);
-  },
-  printDashboard(){
-    const period=$('filter-period').options[$('filter-period').selectedIndex]?.text||'Toutes périodes';
-    const allDeals=fP(S.deals);
-    const won=allDeals.filter(d=>d.stage==5);
-    const ca=won.reduce((a,b)=>a+(b.amount||0),0);
-    const active=allDeals.filter(d=>d.stage>0&&d.stage<5);
-    const pipe=active.reduce((a,b)=>a+((b.amount||0)*DSTG[b.stage].prob/100),0);
-
-    const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Rapport TERA EVENTS</title>
-    <style>body{font-family:Arial,sans-serif;padding:2rem;color:#0f172a}h1{font-size:1.5rem;margin-bottom:.25rem}
-    .sub{color:#64748b;font-size:.9rem;margin-bottom:2rem}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
-    .kpi{background:#f8fafc;padding:1.25rem;border-radius:8px;border:1px solid #e2e8f0}
-    .kpi-v{font-size:1.4rem;font-weight:800;margin:.25rem 0}.kpi-l{font-size:.72rem;color:#64748b;text-transform:uppercase}
-    table{width:100%;border-collapse:collapse;font-size:.9rem}th{background:#0f172a;color:#fff;padding:.6rem .8rem;text-align:left}
-    td{padding:.6rem .8rem;border-bottom:1px solid #f1f5f9}tr:nth-child(even) td{background:#f8fafc}
-    @page{margin:1.5cm}</style></head><body>
-    <h1>TERA EVENTS — Rapport Activité Commerciale</h1>
-    <p class="sub">Période : ${period} &nbsp;·&nbsp; Généré le ${new Date().toLocaleDateString('fr-FR')}</p>
-    <div class="kpis">
-      <div class="kpi"><div class="kpi-l">CA Réalisé</div><div class="kpi-v">${fc(ca)}</div><div style="font-size:.75rem;color:#059669">${won.length} affaires gagnées</div></div>
-      <div class="kpi"><div class="kpi-l">Pipeline pondéré</div><div class="kpi-v">${fc(pipe)}</div><div style="font-size:.75rem;color:#2563eb">${active.length} en cours</div></div>
-      <div class="kpi"><div class="kpi-l">Contacts</div><div class="kpi-v">${S.contacts.length}</div></div>
-      <div class="kpi"><div class="kpi-l">Devis</div><div class="kpi-v">${S.devis.length}</div></div>
-    </div>
-    <h2 style="font-size:1rem;margin-bottom:.75rem">Affaires</h2>
-    <table><thead><tr><th>Réf</th><th>Affaire</th><th>Client</th><th>Commercial</th><th>Montant</th><th>Étape</th><th>Clôture</th></tr></thead>
-    <tbody>${allDeals.map(d=>`<tr><td>${d.ref}</td><td>${escHTML(d.name)}</td><td>${escHTML(gC(d.contactId)?.name||'—')}</td><td>${escHTML(gU(d.userId)?.name||'—')}</td><td><strong>${fc(d.amount)}</strong></td><td>${DSTG[d.stage]?.name}</td><td>${d.closeDate||'—'}</td></tr>`).join('')}</tbody></table>
-    <script>window.print();<\/script></body></html>`;
-    const w=window.open('','_blank','width=1000,height=700');
-    w.document.write(html);w.document.close();
-  }
-};
-
-const Admin = {
-  render(){
-    $('cfg-co').value=S.settings.company||'';
-    $('cfg-cur').value=S.settings.currency||'FCFA';
-    $('cfg-tgt').value=S.settings.target||'';
-    $('cfg-comm-rate').value=S.settings.commRate||5;
-    const e=S.emitter;
-    $('cfg-e-adr').value=e.entete_adresse||'';
-    $('cfg-e-em').value=e.entete_email||'';
-    $('cfg-e-tel').value=e.entete_tel||'';
-    $('cfg-e-idu').value=e.entete_idu||'';
-    $('cfg-e-rccm').value=e.entete_rccm||'';
-    $('cfg-e-cc').value=e.entete_cc||'';
-    $('cfg-e-capital').value=e.entete_capital||'';
-  },
-  saveSettings(){
-    S.settings.company=$('cfg-co').value.trim();
-    S.settings.currency=$('cfg-cur').value.trim()||'FCFA';
-    S.settings.target=parseFloat($('cfg-tgt').value)||0;
-    S.settings.commRate=parseFloat($('cfg-comm-rate').value)||5;
-    save();Toast.s('Paramètres enregistrés');
-  },
-  saveEmitter(){
-    S.emitter.entete_adresse=$('cfg-e-adr').value;
-    S.emitter.entete_email=$('cfg-e-em').value;
-    S.emitter.entete_tel=$('cfg-e-tel').value;
-    S.emitter.entete_idu=$('cfg-e-idu').value;
-    S.emitter.entete_rccm=$('cfg-e-rccm').value;
-    S.emitter.entete_cc=$('cfg-e-cc').value;
-    S.emitter.entete_capital=$('cfg-e-capital').value;
-    save();Toast.s('En-tête PDF enregistré');
-  }
-};
-
-const Users = {
-  openNew(){
-    $('u-id').value='';$('m-usr-t').textContent='Nouvel utilisateur';
-    $('u-name').value='';$('u-login').value='';$('u-pass').value='';
-    $('u-comm').value=S.settings.commRate||5;
-    $('u-role').value='Commercial';$('u-active').value='1';
-    $('u-del-btn').style.display='none';
-    $('u-pass-hint').style.display='none';
-    Modal.open('m-usr');
-  },
-  edit(id){
-    const u=S.users.find(x=>x.id==id);if(!u)return;
-    $('u-id').value=u.id;$('m-usr-t').textContent='Modifier '+u.name;
-    $('u-name').value=u.name||'';$('u-login').value=u.login||'';$('u-pass').value='';
-    $('u-comm').value=u.commRate!==undefined?u.commRate:5;
-    $('u-role').value=u.role||'Commercial';$('u-active').value=u.active===false?'0':'1';
-    $('u-del-btn').style.display=u.id==CU?.id?'none':'inline-flex';
-    $('u-pass-hint').style.display='inline';
-    Modal.open('m-usr');
-  },
-  save(){
-    const name=$('u-name').value.trim(), login=$('u-login').value.trim().toLowerCase();
-    if(!name||!login){Toast.s('Nom et identifiant obligatoires','error');return}
-    const id=$('u-id').value, pass=$('u-pass').value;
-    if(!id&&!pass){Toast.s('Mot de passe obligatoire pour un nouvel utilisateur','error');return}
-    const dup=S.users.find(x=>x.login.toLowerCase()===login&&x.id!=id);
-    if(dup){Toast.s('Cet identifiant est déjà utilisé','error');return}
-    if(id){
-      const u=S.users.find(x=>x.id==id);
-      u.name=name;u.login=login;u.role=$('u-role').value;
-      u.active=$('u-active').value==='1';
-      u.commRate=parseFloat($('u-comm').value)||0;
-      if(pass) u.pass=hp(pass);
-      Toast.s('Utilisateur mis à jour');
-    } else {
-      S.users.push({id:Date.now(),name,login,role:$('u-role').value,active:true,pass:hp(pass),commRate:parseFloat($('u-comm').value)||0});
-      Toast.s('Utilisateur créé');
-    }
-    save();Modal.close('m-usr');App.buildPipeFilters();this.render();
-  },
-  del(){
-    const id=$('u-id').value;if(!id||id==CU?.id)return;
-    const hasDeals=S.deals.some(d=>d.userId==id);
-    if(hasDeals){Toast.s('Ce commercial a des affaires assignées. Reasignez-les d\'abord.','error');return}
-    Modal.close('m-usr');
-    Modal.confirm('Supprimer l\'utilisateur','Cette action est irréversible.',()=>{
-      S.users=S.users.filter(x=>x.id!=id);save();this.render();Toast.s('Utilisateur supprimé','error');
-    },true);
-  },
-  render(){
-    const tbody=$('tbl-users')?.querySelector('tbody');if(!tbody)return;
-    if(!S.users.length){tbody.innerHTML=`<tr class="empty-row"><td colspan="6">Aucun utilisateur.</td></tr>`;return}
-    tbody.innerHTML=S.users.map(u=>`<tr>
-      <td><strong>${escHTML(u.name)}</strong></td>
-      <td><code style="background:var(--bg);padding:2px 6px;border-radius:6px;font-size:.78rem">${escHTML(u.login)}</code></td>
-      <td><span class="badge ${u.role==='Admin'?'badge-client':'badge-prospect'}">${u.role}</span></td>
-      <td>${u.commRate||0}%</td>
-      <td><span class="badge ${u.active===false?'badge-inactive':'badge-active'}">${u.active===false?'Inactif':'Actif'}</span></td>
-      <td>
-        <button class="btn btn-ghost btn-icon btn-sm" onclick="Users.edit(${u.id})"><i class="fas fa-pen"></i></button>
-        ${u.id!=CU?.id?`<button class="btn btn-ghost btn-icon btn-sm" onclick="Users.edit(${u.id});setTimeout(()=>Users.del(),50)" style="color:var(--danger)"><i class="fas fa-trash"></i></button>`:'<span style="font-size:.72rem;color:var(--text-muted);padding:0 .5rem">vous</span>'}
-      </td>
-    </tr>`).join('');
-  }
-};
-
-const GlobalSearch = {
-  run(q){
-    const res=$('global-search-results');
-    if(!q||q.length<2){res.style.display='none';return}
-    const ql=q.toLowerCase();
-    const deals=S.deals.filter(d=>(d.name||'').toLowerCase().includes(ql)||(d.ref||'').toLowerCase().includes(ql)).slice(0,5);
-    const contacts=S.contacts.filter(c=>(c.name||'').toLowerCase().includes(ql)).slice(0,5);
-    const devis=S.devis.filter(d=>`${d.client.prenom} ${d.client.nom}`.toLowerCase().includes(ql)||(d.ref||'').toLowerCase().includes(ql)).slice(0,5);
-
-    let html='';
-    if(deals.length) html+=`<div style="font-size:.68rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:.5rem;letter-spacing:.5px">Affaires</div>`+
-      deals.map(d=>`<div onclick="Deals.edit(${d.id});$('global-search-results').style.display='none'" style="padding:.6rem .75rem;border-radius:10px;cursor:pointer;margin-bottom:2px;display:flex;justify-content:space-between" onmouseover="this.style.background='var(--primary-bg)'" onmouseout="this.style.background=''">`+
-        `<span><strong>${escHTML(d.name)}</strong> <span style="color:var(--text-muted);font-size:.8rem">${escHTML(d.ref)}</span></span>`+
-        `<span style="color:var(--primary);font-weight:700;font-size:.82rem;font-family:'JetBrains Mono',monospace">${fc(d.amount)}</span></div>`).join('');
-    if(contacts.length) html+=`<div style="font-size:.68rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin:.75rem 0 .5rem;letter-spacing:.5px">Contacts</div>`+
-      contacts.map(c=>`<div onclick="Contacts.edit(${c.id});$('global-search-results').style.display='none'" style="padding:.6rem .75rem;border-radius:10px;cursor:pointer;margin-bottom:2px" onmouseover="this.style.background='var(--primary-bg)'" onmouseout="this.style.background=''">`+
-        `<strong>${escHTML(c.name)}</strong> <span style="color:var(--text-muted);font-size:.8rem">${c.type}</span></div>`).join('');
-    if(devis.length) html+=`<div style="font-size:.68rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin:.75rem 0 .5rem;letter-spacing:.5px">Devis</div>`+
-      devis.map(d=>`<div onclick="Quotes.edit('${d.id}');document.querySelectorAll('.nav-links a[data-view]').forEach(a=>{a.classList.remove('active');if(a.dataset.view==='devis'){a.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$('view-devis').classList.add('active')}});$('global-search-results').style.display='none'" style="padding:.6rem .75rem;border-radius:10px;cursor:pointer;margin-bottom:2px;display:flex;justify-content:space-between" onmouseover="this.style.background='var(--primary-bg)'" onmouseout="this.style.background=''">`+
-        `<span><strong>${escHTML(d.ref)}</strong> <span style="color:var(--text-muted);font-size:.8rem">${escHTML(d.client.prenom+' '+d.client.nom)}</span></span>`+
-        `<span class="badge ${STATUSES[d.status]?.cls}">${STATUSES[d.status]?.label}</span></div>`).join('');
-    if(!html) html=`<div style="text-align:center;padding:1.5rem;color:var(--text-muted)">Aucun résultat pour "${escHTML(q)}"</div>`;
-    res.innerHTML=html;res.style.display='block';
-  }
-};
-
-/* ══════════════════════════════════════════════════════════
-   MODULE DEVIS COMPLET
-   ══════════════════════════════════════════════════════════ */
-let qEdit=null, qPicked={};
-
-const Quotes = {
-  renderList(){
-    const dl=[...S.devis].sort((a,b)=>b.updatedAt>a.updatedAt?-1:1);
-    const byStatus=k=>dl.filter(d=>d.status===k).length;
-    let html=`
-    <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:1.25rem">
-      <div class="kpi-card"><div class="kpi-icon" style="background:#f3f4f6;color:#6b7280"><i class="fas fa-pencil"></i></div><div class="kpi-label">Brouillons</div><div class="kpi-value">${byStatus('brouillon')}</div></div>
-      <div class="kpi-card"><div class="kpi-icon" style="background:#eef2ff;color:#4338ca"><i class="fas fa-paper-plane"></i></div><div class="kpi-label">Envoyés</div><div class="kpi-value" style="color:#4338ca">${byStatus('envoye')}</div></div>
-      <div class="kpi-card"><div class="kpi-icon" style="background:#ecfdf5;color:#047857"><i class="fas fa-check-circle"></i></div><div class="kpi-label">Acceptés</div><div class="kpi-value" style="color:var(--success)">${byStatus('accepte')}</div></div>
-      <div class="kpi-card"><div class="kpi-icon" style="background:#fef2f2;color:#b91c1c"><i class="fas fa-times-circle"></i></div><div class="kpi-label">Refusés</div><div class="kpi-value" style="color:var(--danger)">${byStatus('refuse')}</div></div>
-    </div>
-    <div class="card"><div class="card-header">
-      <h3><i class="fas fa-file-invoice-dollar" style="color:var(--primary);margin-right:.4rem"></i> Devis Pro Forma</h3>
-      <div class="card-actions">
-        <button class="btn btn-outline btn-sm" onclick="Reports.exportDevisCSV()"><i class="fas fa-download"></i> CSV</button>
-        <button class="btn btn-primary" onclick="Quotes.new()"><i class="fas fa-plus"></i> Nouveau Devis</button>
-      </div>
-    </div>
-    <div class="table-wrap"><table><thead><tr><th>Réf.</th><th>Client</th><th>Événement</th><th>Date évent.</th><th>Invités</th><th>Total TTC</th><th>Statut</th><th>Modifié</th><th>Actions</th></tr></thead><tbody>`;
-    if(!dl.length){
-      html+=`<tr class="empty-row"><td colspan="9"><span class="empty-icon">📄</span>Aucun devis créé.<br><small>Cliquez sur "+ Nouveau Devis" pour commencer.</small></td></tr>`;
-    } else {
-      html+=dl.map(d=>{
-        const t=this.calcTotals(d).total, st=STATUSES[d.status]||STATUSES.brouillon;
-        const dateEvt=d.event.date?new Date(d.event.date).toLocaleDateString('fr-FR'):'—';
-        return `<tr>
-          <td><code style="background:var(--bg);padding:2px 6px;border-radius:6px;font-size:.72rem">${d.ref}</code></td>
-          <td><strong>${escHTML(d.client.prenom)} ${escHTML(d.client.nom)}</strong></td>
-          <td style="font-size:.8rem;color:var(--text-secondary)">${escHTML(d.event.type||'—')}</td>
-          <td style="font-size:.78rem">${dateEvt}</td>
-          <td style="text-align:center">${d.event.nbGuests>0?d.event.nbGuests:'—'}</td>
-          <td style="font-weight:700;color:var(--primary);font-family:'JetBrains Mono',monospace;font-size:.82rem">${fc(t)}</td>
-          <td><span class="badge ${st.cls}">${st.label}</span></td>
-          <td style="font-size:.72rem;color:var(--text-muted)">${new Date(d.updatedAt).toLocaleDateString()}</td>
-          <td style="white-space:nowrap">
-            <button class="btn btn-ghost btn-icon btn-sm" onclick="Quotes.edit('${d.id}')" title="Éditer"><i class="fas fa-pen"></i></button>
-            <button class="btn btn-ghost btn-icon btn-sm" onclick="Quotes.duplicate('${d.id}')" title="Dupliquer"><i class="fas fa-copy"></i></button>
-            <button class="btn btn-ghost btn-icon btn-sm" onclick="Quotes.generatePDF('${d.id}')" title="PDF"><i class="fas fa-file-pdf" style="color:var(--danger)"></i></button>
-            <button class="btn btn-ghost btn-icon btn-sm" onclick="Quotes.sendWhatsApp('${d.id}')" title="WhatsApp"><i class="fab fa-whatsapp" style="color:#25D366"></i></button>
-            <button class="btn btn-ghost btn-icon btn-sm" onclick="Quotes.del('${d.id}')" title="Supprimer" style="color:var(--danger)"><i class="fas fa-trash"></i></button>
-          </td>
-        </tr>`;
-      }).join('');
-    }
-    html+=`</tbody></table></div></div>`;
-    $('devis-root').innerHTML=html;
-  },
-
-  new(){
-    qEdit={
-      id:UID(),ref:'DEV-'+Date.now().toString().slice(-6),
-      createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),
-      status:'brouillon',statusHistory:[{status:'brouillon',date:new Date().toISOString(),note:'Création'}],
-      client:{nom:'',prenom:'',tel:'',email:'',adresse:'',ville:''},
-      event:{type:'',date:'',lieu:'',nbGuests:0,notes:''},
-      lines:[],conditions:"Conditions de paiement :\nUn acompte de 60% du montant est requis par virement, par chèque ou en espèces pour confirmation.\nLe solde devra être réglé au plus tard dix (10) jours avant l'événement.\nTVA non applicable — Article 293 B du CGI.",
-      notes:'',discount:0,tva:0
-    };
-    this.renderEditor();
-  },
-
-  edit(id){const d=S.devis.find(x=>x.id===id);if(d){qEdit=JSON.parse(JSON.stringify(d));this.renderEditor();}},
-
-  duplicate(id){
-    const d=S.devis.find(x=>x.id===id);if(!d)return;
-    const copy=JSON.parse(JSON.stringify(d));
-    copy.id=UID();copy.ref='DEV-'+Date.now().toString().slice(-6);
-    copy.createdAt=new Date().toISOString();copy.updatedAt=new Date().toISOString();
-    copy.status='brouillon';copy.statusHistory=[{status:'brouillon',date:new Date().toISOString(),note:'Copie de '+d.ref}];
-    // On retire l'ID de l'affaire pour qu'elle en crée une nouvelle à l'enregistrement
-    delete copy.dealId;
-    S.devis.unshift(copy);save();this.renderList();Toast.s('Devis dupliqué : '+copy.ref);
-  },
-
-  del(id){
-    const d = S.devis.find(x=>x.id===id);
-    if(!d) return;
-    Modal.confirm('Supprimer ce devis','Cette action est irréversible et supprimera également l\'affaire liée au devis.',()=>{
-      // 1. Supprimer l'affaire liée si elle existe
-      if(d.dealId) {
-        S.deals = S.deals.filter(x => x.id !== d.dealId);
-      }
-      // 2. Supprimer le devis
-      S.devis = S.devis.filter(x=>x.id!==id);
-      
-      save();
-      this.renderList();
-      App.refreshAll(); // Rafraîchit les KPI et le Pipeline instantanément
-      Toast.s('Devis et affaire liée supprimés','error');
-    },true);
-  },
-
-  lineTotal(l){
-    const gross=(parseFloat(l.qty)||0)*(parseFloat(l.unitPrice)||0);
-    return gross*(1-(parseFloat(l.lineDiscount)||0)/100);
-  },
-
-  calcTotals(d){
-    const subtotal=d.lines.reduce((s,l)=>s+this.lineTotal(l),0);
-    const discountAmt=subtotal*((parseFloat(d.discount)||0)/100);
-    const afterDiscount=subtotal-discountAmt;
-    const tvaAmt=afterDiscount*((parseFloat(d.tva)||0)/100);
-    const total=afterDiscount+tvaAmt;
-    return{subtotal,discountAmt,afterDiscount,tvaAmt,total};
-  },
-
-  groupLinesBySection(lines){
-    const order=SECTIONS.map(s=>s.id),groups={};
-    lines.forEach(l=>{let sec=l.section||'autres';if(!order.includes(sec))sec='autres';if(!groups[sec])groups[sec]=[];groups[sec].push(l);});
-    const result=[];
-    order.forEach(secId=>{if(groups[secId])result.push({secId,label:SECTIONS.find(s=>s.id===secId)?.label||secId,lines:groups[secId]});});
-    return result;
-  },
-
-  renderEditor(){
-    const d=qEdit;
-    const html=`
-    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
-      <button class="btn btn-ghost btn-sm" onclick="Quotes.renderList()"><i class="fas fa-arrow-left"></i> Liste des devis</button>
-      <span style="color:var(--text-muted)">/</span>
-      <span style="font-size:.85rem;font-weight:600">${escHTML(d.ref)}</span>
-      <span class="badge ${STATUSES[d.status]?.cls||'badge-brouillon'}">${STATUSES[d.status]?.label||'Brouillon'}</span>
-    </div>
-    <div class="editor-layout">
-      <div>
-        <div class="card" style="margin-bottom:1rem">
-          <div class="card-header"><h3>1. Client &amp; Événement</h3></div>
-          <div class="form-row">
-            <div class="form-group"><label>Nom Client *</label><input class="form-control" value="${escHTML(d.client.nom)}" oninput="qEdit.client.nom=this.value"></div>
-            <div class="form-group"><label>Prénom / Entreprise</label><input class="form-control" value="${escHTML(d.client.prenom)}" oninput="qEdit.client.prenom=this.value"></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Téléphone Client</label><input type="tel" class="form-control" value="${escHTML(d.client.tel)}" oninput="qEdit.client.tel=this.value"></div>
-            <div class="form-group"><label>Email Client</label><input type="email" class="form-control" value="${escHTML(d.client.email||'')}" oninput="qEdit.client.email=this.value"></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Type d'événement</label><input class="form-control" value="${escHTML(d.event.type)}" oninput="qEdit.event.type=this.value" placeholder="Mariage, Séminaire, Gala…"></div>
-            <div class="form-group"><label>Date de l'événement</label><input type="date" class="form-control" value="${d.event.date}" oninput="qEdit.event.date=this.value"></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Lieu</label><input class="form-control" value="${escHTML(d.event.lieu||'')}" oninput="qEdit.event.lieu=this.value" placeholder="Salle, hôtel…"></div>
-            <div class="form-group"><label>Nombre d'invités</label><input type="number" class="form-control" value="${d.event.nbGuests||''}" oninput="qEdit.event.nbGuests=parseFloat(this.value)||0;Quotes.refreshTotals()"></div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-bottom:1rem;padding:0">
-          <div class="card-header" style="padding:1.25rem 1.5rem .25rem">
-            <h3>2. Prestations</h3>
-            <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-              <button class="btn btn-outline btn-sm" onclick="Quotes.openCat()"><i class="fas fa-box-open"></i> Catalogue TERA</button>
-              <button class="btn btn-primary btn-sm" onclick="Quotes.addLine()"><i class="fas fa-plus"></i> Ligne libre</button>
-            </div>
-          </div>
-          <div id="q-lines-wrap" style="padding:1.25rem">${this.renderLines()}</div>
-        </div>
-
-        <div class="card">
-          <div class="card-header"><h3>3. Conditions &amp; Notes</h3></div>
-          <div class="form-group"><label>Conditions (imprimées sur le devis)</label><textarea class="form-control" oninput="qEdit.conditions=this.value" style="min-height:110px">${escHTML(d.conditions)}</textarea></div>
-          <div class="form-group"><label>Notes internes (non imprimées)</label><textarea class="form-control" oninput="qEdit.notes=this.value">${escHTML(d.notes)}</textarea></div>
-        </div>
-      </div>
-
-      <div>
-        <div class="card" style="position:sticky;top:20px">
-          <div class="card-header" style="margin-bottom:1rem"><h3>Paramètres du devis</h3></div>
-          <div class="form-group"><label>Référence</label><input class="form-control" value="${escHTML(d.ref)}" oninput="qEdit.ref=this.value"></div>
-          <div class="form-group"><label>Statut</label>
-            <select class="form-control" onchange="Quotes.changeStatus(this.value)">
-              ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}"${d.status===k?' selected':''}>${v.label}</option>`).join('')}
-            </select>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Remise globale (%)</label><input type="number" class="form-control" value="${d.discount||''}" min="0" max="100" oninput="qEdit.discount=parseFloat(this.value)||0;Quotes.refreshTotals()"></div>
-            <div class="form-group"><label>TVA (%)</label><input type="number" class="form-control" value="${d.tva||''}" min="0" oninput="qEdit.tva=parseFloat(this.value)||0;Quotes.refreshTotals()"></div>
-          </div>
-          <div style="background:var(--bg);padding:1.2rem;border-radius:var(--radius);margin:1rem 0" id="q-totals-wrap">${this.renderTotals()}</div>
-          <div style="display:flex;flex-direction:column;gap:.5rem">
-            <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center" onclick="Quotes.save()"><i class="fas fa-save"></i> Enregistrer</button>
-            <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="Quotes.generatePDF(qEdit.id,true)"><i class="fas fa-file-pdf"></i> Aperçu PDF</button>
-            <button class="btn btn-success btn-sm" style="width:100%;justify-content:center" onclick="Quotes.sendWhatsApp(qEdit.id)"><i class="fab fa-whatsapp"></i> Envoyer WhatsApp</button>
-          </div>
-          <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border-light)">
-            <h4 style="font-size:.73rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.75rem">Historique statut</h4>
-            <ul class="timeline" id="q-timeline">
-              ${[...(d.statusHistory||[])].reverse().slice(0,5).map((h,i)=>`<li class="tl-item"><div class="tl-dot ${i===0?'active':''}"></div><div class="tl-content"><div class="tl-action">${STATUSES[h.status]?.label||h.status}</div><div class="tl-date">${new Date(h.date).toLocaleDateString()}</div></div></li>`).join('')}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>`;
-    $('devis-root').innerHTML=html;
-  },
-
-  changeStatus(newStatus){
-    if(qEdit.status===newStatus)return;
-    qEdit.status=newStatus;
-    if(!qEdit.statusHistory)qEdit.statusHistory=[];
-    qEdit.statusHistory.push({status:newStatus,date:new Date().toISOString(),note:'Modification manuelle'});
-    const tl=$('q-timeline');
-    if(tl) tl.innerHTML=[...(qEdit.statusHistory)].reverse().slice(0,5).map((h,i)=>`<li class="tl-item"><div class="tl-dot ${i===0?'active':''}"></div><div class="tl-content"><div class="tl-action">${STATUSES[h.status]?.label||h.status}</div><div class="tl-date">${new Date(h.date).toLocaleDateString()}</div></div></li>`).join('');
-  },
-
-  renderLines(){
-    const d=qEdit;
-    if(!d.lines.length) return `<div style="text-align:center;color:var(--text-muted);font-size:.85rem;padding:2.5rem 1rem;background:var(--bg);border-radius:var(--radius);border:2px dashed var(--border)"><i class="fas fa-box-open" style="font-size:2rem;opacity:.2;display:block;margin-bottom:.75rem"></i>Aucune prestation.<br>Utilisez le <strong>Catalogue TERA</strong> ou ajoutez une ligne libre.</div>`;
-    const grouped=this.groupLinesBySection(d.lines);
-    let rows='';
-    grouped.forEach(grp=>{
-      const secTotal=grp.lines.reduce((s,l)=>s+this.lineTotal(l),0);
-      rows+=`<tr><td colspan="6" style="background:var(--sidebar-bg);color:#fff;padding:8px 12px;font-size:.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase">${grp.label}<span style="float:right;color:#fbbf24;font-weight:800;font-size:.82rem;font-family:'JetBrains Mono',monospace">${fc(secTotal)}</span></td></tr>`;
-      grp.lines.forEach(l=>{
-        const i=d.lines.indexOf(l);
-        rows+=`<tr>
-          <td><input class="line-input" value="${escHTML(l.desc||'')}" placeholder="Description…" oninput="qEdit.lines[${i}].desc=this.value"></td>
-          <td><input class="line-input line-input-num" type="number" value="${l.qty||''}" onchange="qEdit.lines[${i}].qty=parseFloat(this.value)||0;Quotes.refreshTotals()" min="0"></td>
-          <td><input class="line-input line-input-num" type="number" value="${l.unitPrice||''}" onchange="qEdit.lines[${i}].unitPrice=parseFloat(this.value)||0;Quotes.refreshTotals()" min="0"></td>
-          <td><select class="line-input" style="font-size:.75rem;padding:6px 2px" onchange="qEdit.lines[${i}].section=this.value;Quotes.refreshTotals()">${SECTIONS.map(s=>`<option value="${s.id}"${(l.section||'autres')===s.id?' selected':''}>${s.label}</option>`).join('')}</select></td>
-          <td style="text-align:right;font-weight:700;font-size:.85rem;white-space:nowrap;font-family:'JetBrains Mono',monospace">${fmt(this.lineTotal(l))}</td>
-          <td><button class="line-del" onclick="Quotes.delLine(${i})">×</button></td>
-        </tr>`;
-      });
-    });
-    const {subtotal}=this.calcTotals(d);
-    return `<div style="overflow-x:auto"><table class="lines-table"><thead><tr><th style="width:38%">Désignation</th><th style="width:9%">Qté</th><th style="width:15%">Prix U.</th><th style="width:24%">Rubrique</th><th style="width:12%">Total</th><th style="width:3%"></th></tr></thead><tbody>${rows}</tbody></table></div><div class="lines-total"><span style="font-size:.75rem;text-transform:uppercase;font-weight:700;color:var(--text-secondary)">Sous-total HT</span><span style="font-size:1.15rem;font-weight:800;font-family:'JetBrains Mono',monospace">${fc(subtotal)}</span></div>`;
-  },
-
-  renderTotals(){
-    const t=this.calcTotals(qEdit);
-    return `<div class="stat-row"><span style="color:var(--text-secondary)">Sous-total HT</span><span style="font-weight:600;font-family:'JetBrains Mono',monospace">${fc(t.subtotal)}</span></div>
-    ${qEdit.discount>0?`<div class="stat-row"><span style="color:var(--success)">Remise (${qEdit.discount}%)</span><span style="color:var(--success);font-weight:600;font-family:'JetBrains Mono',monospace">− ${fc(t.discountAmt)}</span></div>`:''}
-    ${qEdit.tva>0?`<div class="stat-row"><span style="color:var(--text-secondary)">TVA (${qEdit.tva}%)</span><span style="font-family:'JetBrains Mono',monospace">${fc(t.tvaAmt)}</span></div>`:''}
-    <div style="border-top:2px solid var(--border);margin:8px 0;padding-top:8px;display:flex;justify-content:space-between;align-items:center">
-      <span style="font-size:.75rem;text-transform:uppercase;font-weight:700;color:var(--text-secondary)">TOTAL TTC</span>
-      <span style="font-size:1.3rem;font-weight:800;color:var(--primary);font-family:'JetBrains Mono',monospace">${fc(t.total)}</span>
-    </div>
-    ${qEdit.event.nbGuests>0?`<div style="text-align:right;font-size:.7rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace">≈ ${fmt(t.total/qEdit.event.nbGuests)} F / invité</div>`:''}`;
-  },
-
-  refreshTotals(){
-    $('q-lines-wrap').innerHTML=this.renderLines();
-    $('q-totals-wrap').innerHTML=this.renderTotals();
-  },
-
-  addLine(){qEdit.lines.push({id:UID(),desc:'',qty:1,unitPrice:0,section:'autres'});this.refreshTotals();},
-  delLine(i){qEdit.lines.splice(i,1);this.refreshTotals();},
-
-  openCat(){
-    qPicked={};
-    const c=document.createElement('div');
-    c.id='qCatModal';c.className='modal-overlay open';
-    let h=`<div class="modal-box" style="width:900px"><div class="modal-header"><h3>Catalogue TERA EVENTS</h3><button class="btn btn-ghost btn-icon" onclick="document.getElementById('qCatModal').remove()"><i class="fas fa-xmark"></i></button></div>
-    <div style="padding:.75rem 1.75rem;border-bottom:1px solid var(--border)">
-      <input class="form-control" placeholder="Filtrer le catalogue…" oninput="Quotes.filterCat(this.value)" id="cat-search" style="max-width:350px">
-    </div>
-    <div class="modal-body"><div class="catalog-grid" id="cat-grid">`;
-    CATALOG.forEach(g=>{
-      h+=`<div class="cat-group">${g.group}</div>`;
-      g.items.forEach(i=>{
-        h+=`<div class="cat-item" id="c_${i.id}" onclick="Quotes.pick('${i.id}','${i.name.replace(/'/g,"\\'").replace(/"/g,'&quot;')}',${i.basePrice},'${i.unit}')"><div class="cat-name">${i.name}</div><div class="cat-price">${fmt(i.basePrice)}</div><div class="cat-unit">${i.unit}</div></div>`;
-      });
-    });
-    h+=`</div></div><div class="modal-footer"><span id="cat-picked-count" style="margin-right:auto;font-size:.82rem;color:var(--text-muted)">0 sélectionné(s)</span><button class="btn btn-outline" onclick="document.getElementById('qCatModal').remove()">Annuler</button><button class="btn btn-primary" onclick="Quotes.addPicked()"><i class="fas fa-plus"></i> Ajouter la sélection</button></div></div>`;
-    c.innerHTML=h;document.body.appendChild(c);
-  },
-
-  filterCat(q){
-    const ql=q.toLowerCase();
-    document.querySelectorAll('#cat-grid .cat-item').forEach(el=>{
-      const txt=(el.textContent||'').toLowerCase();
-      el.style.display=!q||txt.includes(ql)?'':'none';
-    });
-  },
-
-  pick(id,n,p,u){
-    const el=$('c_'+id);
-    if(qPicked[id]){delete qPicked[id];el.classList.remove('picked');}
-    else{qPicked[id]={n:n+(u!=='forfait'&&u!=='à partir de'?' ('+u+')':''),p,s:SECTION_MAP[id]||'autres'};el.classList.add('picked');}
-    const cnt=$('cat-picked-count');
-    if(cnt)cnt.textContent=Object.keys(qPicked).length+' sélectionné(s)';
-  },
-
-  addPicked(){
-    const count=Object.keys(qPicked).length;
-    if(!count){Toast.s('Aucun article sélectionné','error');return}
-    Object.values(qPicked).forEach(i=>qEdit.lines.push({id:UID(),desc:i.n,qty:1,unitPrice:i.p,section:i.s}));
-    const modal=document.getElementById('qCatModal');if(modal)modal.remove();
-    this.refreshTotals();Toast.s(count+' prestation(s) ajoutée(s)');
-  },
-
-  save(){
-    if(!qEdit.client.nom.trim()){Toast.s('Le nom du client est obligatoire','error');return}
-    qEdit.updatedAt=new Date().toISOString();
-
-    // --- 1. GESTION DU CONTACT ---
-    let contactName = (qEdit.client.nom + ' ' + (qEdit.client.prenom || '')).trim();
-    let contact = S.contacts.find(c =>
-      (c.name || '').toLowerCase() === contactName.toLowerCase() ||
-      (c.email && c.email.toLowerCase() === (qEdit.client.email || '').toLowerCase())
-    );
-
-    if (!contact) {
-      contact = {
-        id: Date.now(),
-        name: contactName,
-        type: 'Prospect',
-        tel: qEdit.client.tel || '',
-        email: qEdit.client.email || '',
-        contact: qEdit.client.prenom || '',
-        city: qEdit.client.ville || '',
-        userId: CU?.id || 1,
-        notes: 'Contact généré automatiquement depuis le devis ' + qEdit.ref
-      };
-      S.contacts.push(contact);
-    } else {
-      if (qEdit.client.tel && !contact.tel) contact.tel = qEdit.client.tel;
-      if (qEdit.client.email && !contact.email) contact.email = qEdit.client.email;
-      if (qEdit.client.ville && !contact.city) contact.city = qEdit.client.ville;
-    }
-
-    // --- 2. GESTION DE L'AFFAIRE (PIPELINE) ---
-    const {total} = this.calcTotals(qEdit);
-    const dealName = (qEdit.event.type ? qEdit.event.type + ' - ' : 'Devis ') + contactName;
-
-    // Détermination de l'étape du pipeline en fonction du statut du devis
-    let dealStage = 3; // Proposition par défaut
-    if (qEdit.status === 'brouillon') dealStage = 2; // Qualification
-    else if (qEdit.status === 'envoye') dealStage = 3; // Proposition
-    else if (qEdit.status === 'accepte') dealStage = 5; // Gagné
-    else if (qEdit.status === 'refuse') dealStage = 6; // Perdu
-
-    if (!qEdit.dealId) {
-      // Nouveau devis : Création de la nouvelle affaire
-      const newDeal = {
-        id: Date.now() + 1,
-        ref: 'AF-' + qEdit.ref.replace('DEV-', ''),
-        name: dealName,
-        amount: total,
-        contactId: contact.id,
-        userId: CU?.id || 1,
-        stage: dealStage,
-        closeDate: qEdit.event.date || new Date().toISOString().split('T')[0],
-        notes: 'Créée automatiquement depuis le devis ' + qEdit.ref
-      };
-      S.deals.push(newDeal);
-      qEdit.dealId = newDeal.id; // Liaison
-    } else {
-      // Devis existant : Mise à jour de l'affaire liée
-      let existingDeal = S.deals.find(d => d.id === qEdit.dealId);
-      if (existingDeal) {
-        existingDeal.amount = total;
-        existingDeal.name = dealName;
-        existingDeal.stage = dealStage; // Mise à jour de l'étape (Pipeline Sync)
-        
-        if (qEdit.event.date) existingDeal.closeDate = qEdit.event.date;
-        
-        // Si accepté ou refusé, on date la clôture à aujourd'hui si la date de l'event n'est pas remplie
-        if (dealStage === 5 || dealStage === 6) {
-           existingDeal.closeDate = new Date().toISOString().split('T')[0];
-        }
-      }
-    }
-
-    // --- 3. SAUVEGARDE DU DEVIS ---
-    const idx=S.devis.findIndex(x=>x.id===qEdit.id);
-    if(idx>=0) S.devis[idx]=qEdit;
-    else S.devis.unshift(qEdit);
-
-    save();
-    Toast.s('Devis, Contact et Affaire enregistrés avec succès ✓');
-    this.renderList();
-    App.refreshAll(); // Rafraîchit les vues pour que le pipeline et les stats s'actualisent
-  },
-
-  generatePDF(id,temp=false){
-    let d=S.devis.find(x=>x.id===id);
-    if(temp&&qEdit)d=qEdit;
-    if(!d)return;
-    const{subtotal,discountAmt,tvaAmt,total}=this.calcTotals(d);
-    const hasDisc=d.discount>0, hasTva=d.tva>0;
-    const st=STATUSES[d.status]||STATUSES.brouillon;
-    const dateEvt=d.event.date?new Date(d.event.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'';
-    const dateCreated=d.createdAt?new Date(d.createdAt).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'';
-    const e=S.emitter;
-
-    const lignes=d.lines.length===0?`<tr><td colspan="4" style="text-align:center;padding:20px;color:#999;font-style:italic">Aucune prestation</td></tr>`:
-      this.groupLinesBySection(d.lines).map(grp=>{
-        const secTotal=grp.lines.reduce((s,l)=>s+this.lineTotal(l),0);
-        return `<tr><td colspan="3" style="background:#F0E9DC;padding:9px 10px;font-size:8.5pt;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;font-family:sans-serif;color:#1E1916;border-bottom:1px solid #D4C4AD">${grp.label}</td><td style="background:#F0E9DC;text-align:right;padding:9px 10px;font-size:10pt;font-weight:700;color:#B8892C;font-family:Georgia,serif;border-bottom:1px solid #D4C4AD">${Math.round(secTotal).toLocaleString('fr-FR')} F CFA</td></tr>`+
-        grp.lines.map(l=>`<tr><td style="padding:7px 10px 7px 20px;font-size:10pt;border-bottom:1px solid #EEE">${l.desc||''}</td><td style="padding:7px 10px;text-align:center;font-size:10pt;border-bottom:1px solid #EEE">${l.qty}</td><td style="padding:7px 10px;text-align:right;font-size:10pt;border-bottom:1px solid #EEE">${(+(l.unitPrice||0)).toLocaleString('fr-FR')} F CFA</td><td style="padding:7px 10px;text-align:right;font-size:10pt;font-weight:600;border-bottom:1px solid #EEE">${Math.round(this.lineTotal(l)).toLocaleString('fr-FR')} F CFA</td></tr>`).join('');
-      }).join('');
-
-    const totalsRows=[
-      `<tr><td colspan="3" style="text-align:right;padding:6px 10px;font-size:9.5pt;color:#666">Sous-total HT</td><td style="text-align:right;padding:6px 10px;font-size:10pt">${Math.round(subtotal).toLocaleString('fr-FR')} F CFA</td></tr>`,
-      hasDisc?`<tr><td colspan="3" style="text-align:right;padding:6px 10px;font-size:9.5pt;color:#276749">Remise (${d.discount}%)</td><td style="text-align:right;padding:6px 10px;font-size:10pt;color:#276749">− ${Math.round(discountAmt).toLocaleString('fr-FR')} F CFA</td></tr>`:'',
-      hasTva?`<tr><td colspan="3" style="text-align:right;padding:6px 10px;font-size:9.5pt;color:#666">TVA (${d.tva}%)</td><td style="text-align:right;padding:6px 10px;font-size:10pt">${Math.round(tvaAmt).toLocaleString('fr-FR')} F CFA</td></tr>`:'',
-      `<tr style="background:#1E1916"><td colspan="3" style="text-align:right;padding:10px;color:#D4A84B;font-weight:700;font-size:10pt;letter-spacing:1px">TOTAL TTC</td><td style="text-align:right;padding:10px;color:#D4A84B;font-weight:700;font-size:14pt">${Math.round(total).toLocaleString('fr-FR')} F CFA</td></tr>`
-    ].join('');
-
-    const eventBar=(d.event.type||d.event.date||d.event.nbGuests)?`
-    <table style="width:100%;background:#1E1916;border-radius:6px;margin-bottom:12px"><tr>
-      ${d.event.type?`<td style="padding:9px 14px"><div style="font-size:7pt;color:#B8892C;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">ÉVÉNEMENT</div><div style="color:white;font-size:10pt">${d.event.type}</div></td>`:''}
-      ${d.event.date?`<td style="padding:9px 14px"><div style="font-size:7pt;color:#B8892C;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">DATE</div><div style="color:white;font-size:10pt">${dateEvt}</div></td>`:''}
-      ${d.event.lieu?`<td style="padding:9px 14px"><div style="font-size:7pt;color:#B8892C;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">LIEU</div><div style="color:white;font-size:10pt">${d.event.lieu}</div></td>`:''}
-      ${d.event.nbGuests>0?`<td style="padding:9px 14px"><div style="font-size:7pt;color:#B8892C;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">INVITÉS</div><div style="color:white;font-size:10pt">${d.event.nbGuests} personnes</div></td>`:''}
-    </tr></table>`:'';
-
-    const conditions=d.conditions?`
-    <table style="width:100%;margin-top:24px;border-top:1px solid #E4D9C8"><tr>
-      <td style="width:58%;padding-top:16px;vertical-align:top">
-        <div style="font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#3D3530;margin-bottom:8px">Conditions</div>
-        <div style="font-size:8.5pt;color:#3D3530;line-height:1.8">${d.conditions.replace(/\n/g,'<br/>')}</div>
-      </td>
-      <td style="width:42%;padding-top:16px;vertical-align:top;text-align:right">
-        <div style="font-size:10pt;font-weight:700;color:#1E1916">Bon pour accord</div>
-        <div style="font-size:8.5pt;color:#8A7B6E;margin-top:6px">Lu et approuvé</div>
-        <div style="margin-top:60px;border-top:1px solid #CCC;padding-top:4px;font-size:8pt;color:#8A7B6E">Signature et cachet du client</div>
-      </td>
-    </tr></table>`:'';
-
-    const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Devis ${d.ref}</title>
-    <style>@page{margin:10mm 12mm;size:A4 portrait}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}body{font-family:Georgia,'Times New Roman',serif;font-size:10pt;color:#1E1916;margin:0;padding:0;background:white}table{border-collapse:collapse}.no-print{display:none}@media print{.no-print{display:none!important}}</style>
-    </head><body>
-    <table style="width:100%;border-bottom:2px solid #1E1916;margin-bottom:12px;padding-bottom:6px"><tr>
-      <td style="vertical-align:top;width:55%">
-        <span style="font-size:18pt;color:#1E1916;letter-spacing:2px;font-family:Georgia,serif">${e.emetteur_nom}</span>
-        <div style="margin-top:6px;font-size:7.5pt;color:#5A5048;line-height:1.6;font-family:sans-serif">${e.entete_adresse}<br>${e.entete_ville}<br>N° IDU : ${e.entete_idu} — N° RCCM : ${e.entete_rccm}<br>N° CC : ${e.entete_cc} — Capital : ${e.entete_capital}<br>${e.entete_tel} — ${e.entete_email}</div>
-      </td>
-      <td style="vertical-align:top;text-align:right;width:45%">
-        <div style="font-size:15pt;color:#1E1916;font-family:Georgia,serif">Devis Pro Forma</div>
-        <div style="font-size:10pt;color:#B8892C;font-weight:700;margin-top:2px;font-family:sans-serif">${d.ref}</div>
-        <table style="margin-top:6px;margin-left:auto;font-size:8pt;color:#5A5048">
-          <tr><td style="padding:1px 6px 1px 0;color:#8A7B6E">Date :</td><td style="font-weight:600">${dateCreated}</td></tr>
-          <tr><td style="padding:1px 6px 1px 0;color:#8A7B6E">Validité :</td><td>30 jours</td></tr>
-          <tr><td style="padding:1px 6px 1px 0;color:#8A7B6E">Statut :</td><td style="font-weight:600">${st.label}</td></tr>
-        </table>
-      </td>
-    </tr></table>
-    <table style="width:100%;background:#F9F5EF;border:1px solid #E4D9C8;border-radius:6px;margin-bottom:12px"><tr>
-      <td style="width:50%;padding:10px 14px;vertical-align:top;border-right:1px solid #E4D9C8">
-        <div style="font-size:7pt;letter-spacing:1.5px;text-transform:uppercase;color:#8A7B6E;margin-bottom:5px;font-family:sans-serif">ÉMETTEUR</div>
-        <div style="font-size:11pt;font-weight:700;color:#1E1916;margin-bottom:2px">${e.emetteur_nom}</div>
-        <div style="font-size:8pt;color:#5A5048;line-height:1.6">${e.entete_adresse}<br>${e.entete_tel} — ${e.entete_email}</div>
-      </td>
-      <td style="width:50%;padding:10px 14px;vertical-align:top">
-        <div style="font-size:7pt;letter-spacing:1.5px;text-transform:uppercase;color:#8A7B6E;margin-bottom:5px;font-family:sans-serif">DESTINATAIRE</div>
-        <div style="font-size:11pt;font-weight:700;color:#1E1916;margin-bottom:4px">${d.client.prenom} ${d.client.nom}</div>
-        <div style="font-size:8pt;color:#5A5048;line-height:1.6">${d.client.tel?'Tél : '+d.client.tel+'<br>':''}${d.client.email||''}</div>
-      </td>
-    </tr></table>
-    ${eventBar}
-    <table style="width:100%;border-collapse:collapse;margin-bottom:0">
-      <thead><tr style="background:#1E1916">
-        <th style="padding:9px 10px;text-align:left;color:rgba(255,255,255,.75);font-size:8pt;letter-spacing:1px;font-family:sans-serif;font-weight:600;width:52%">DÉSIGNATION</th>
-        <th style="padding:9px 10px;text-align:center;color:rgba(255,255,255,.75);font-size:8pt;letter-spacing:1px;font-family:sans-serif;font-weight:600;width:10%">QTÉ</th>
-        <th style="padding:9px 10px;text-align:right;color:rgba(255,255,255,.75);font-size:8pt;letter-spacing:1px;font-family:sans-serif;font-weight:600;width:20%">PRIX UNITAIRE</th>
-        <th style="padding:9px 10px;text-align:right;color:rgba(255,255,255,.75);font-size:8pt;letter-spacing:1px;font-family:sans-serif;font-weight:600;width:18%">TOTAL</th>
-      </tr></thead>
-      <tbody>${lignes}</tbody>
-    </table>
-    <table style="width:100%;border-collapse:collapse">${totalsRows}</table>
-    ${conditions}
-    <div style="margin-top:30px;padding-top:14px;border-top:1px solid #E4D9C8;text-align:center;font-size:7.5pt;color:#8A7B6E;font-family:sans-serif">
-      ${e.emetteur_nom} · ${e.entete_adresse}, ${e.entete_ville} · ${e.entete_tel} · ${e.entete_email}<br>
-      N° IDU : ${e.entete_idu} | N° RCCM : ${e.entete_rccm} | N° CC : ${e.entete_cc} | Capital : ${e.entete_capital}
-    </div>
-    <div class="no-print" style="text-align:center;margin-top:24px;padding:16px;background:#f9f9f9;border-radius:8px">
-      <p style="font-family:sans-serif;font-size:9pt;color:#666;margin-bottom:10px">Choisissez <strong>"Enregistrer au format PDF"</strong> dans la fenêtre d'impression.</p>
-      <button onclick="window.print()" style="background:#6366f1;color:white;border:none;padding:10px 28px;font-size:11pt;border-radius:8px;cursor:pointer;font-family:sans-serif">🖨️ Imprimer / PDF</button>
-    </div>
-    <script>setTimeout(function(){window.print();},600);<\/script>
-    </body></html>`;
-    const win=window.open('','_blank','width=900,height=800,scrollbars=yes');
-    if(!win){Toast.s('Pop-ups bloqués ! Autorisez-les pour ce site.','error');return}
-    win.document.write(html);win.document.close();
-  },
-
-  sendWhatsApp(id){
-    let d=S.devis.find(x=>x.id===id);
-    if(!d&&qEdit&&qEdit.id===id)d=qEdit;
-    if(!d)return;
-    const{total}=this.calcTotals(d);
-    let msg=`*${S.emitter.emetteur_nom}* 🌟\n*Devis Pro Forma — Réf. ${d.ref}*\n\n`;
-    msg+=`*Client :* ${d.client.prenom} ${d.client.nom}\n`;
-    if(d.event.type)msg+=`*Événement :* ${d.event.type}\n`;
-    if(d.event.date)msg+=`*Date :* ${new Date(d.event.date).toLocaleDateString()}\n`;
-    if(d.event.nbGuests>0)msg+=`*Invités :* ${d.event.nbGuests} personnes\n`;
-    msg+=`\n━━━━━━━━━━━━━━━━━━\n`;
-    const grouped=this.groupLinesBySection(d.lines);
-    grouped.forEach(grp=>{
-      const secTotal=grp.lines.reduce((s,l)=>s+this.lineTotal(l),0);
-      msg+=`\n*${grp.label}* — ${fc(secTotal)}\n`;
-      grp.lines.forEach(l=>{msg+=`  · ${l.desc} — ${fc(this.lineTotal(l))}\n`;});
-    });
-    msg+=`━━━━━━━━━━━━━━━━━━\n*TOTAL TTC : ${fc(total)}*\n\n_Devis valable 30 jours_\n\n📞 ${S.emitter.entete_tel}\n✉️ ${S.emitter.entete_email}`;
-    window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
-  }
-};
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
+document.getElementById('nav-toggle').addEventListener('click',()=>nav.classList.toggle('open'));
+const ro=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in')}),{threshold:0.08,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
 </script>
 </body>
 </html>
