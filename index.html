@@ -6,13 +6,15 @@
 <title>Tera events — Agence d'Event Planning à Abidjan | Corporate & Privé</title>
 <meta name="description" content="Tera events, agence d'event planning à Abidjan. Événements corporate et privés dans notre espace ou dans le lieu de votre choix.">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
-<style>
-  html, body {
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
+<script>
+  function sendHeight() {
+    const height = document.body.scrollHeight;
+    window.parent.postMessage({ height: height }, "*");
   }
-</style>
+
+  window.addEventListener("load", sendHeight);
+  window.addEventListener("resize", sendHeight);
+</script>
    <style>/* TERA EVENTS — Design System v2
    Palette extraite du logo :
    Bleu marine  #152060
