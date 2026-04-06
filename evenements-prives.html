@@ -194,89 +194,37 @@ footer{background:var(--b1);color:rgba(255,255,255,0.7);padding:4.5rem 0 2rem}
 @media(max-width:760px){.testi-g{grid-template-columns:1fr}}
 
 /* ══ HAMBURGER MOBILE ══════════════════════════════════════════ */
-@media(max-width:960px){
-  .nav-links{display:none !important}
-  .nav-toggle{display:none !important}
-}
-#hbg-btn{
-  display:none;
-  flex-direction:column;
-  gap:5px;
-  background:none;
-  border:none;
-  cursor:pointer;
-  padding:8px;
-  z-index:9999;
-  position:relative;
-}
-#hbg-btn span{
-  display:block;
-  width:25px;height:2px;
-  background:#fff;
-  border-radius:2px;
-  transition:all .3s ease;
-}
-@media(max-width:960px){
-  #hbg-btn{display:flex}
-}
-/* Menu ouvert — croix */
+@media(max-width:960px){.nav-links{display:none !important}.nav-toggle{display:none !important}}
+#hbg-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;z-index:9999;position:relative}
+#hbg-btn span{display:block;width:25px;height:2px;background:#fff;border-radius:2px;transition:all .3s ease}
+@media(max-width:960px){#hbg-btn{display:flex}}
 #hbg-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
 #hbg-btn.open span:nth-child(2){opacity:0;transform:scaleX(0)}
 #hbg-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-
-/* Overlay */
-#hbg-menu{
-  display:none;
-  position:fixed;
-  top:0;left:0;right:0;bottom:0;
-  background:#0E1847;
-  z-index:9998;
-  flex-direction:column;
-  padding-top:75px;
-  overflow-y:auto;
-}
+#hbg-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#0E1847;z-index:9998;flex-direction:column;padding-top:72px;overflow-y:auto}
 #hbg-menu.open{display:flex !important}
-#hbg-menu a{
-  display:block;
-  padding:1rem 2rem;
-  color:rgba(255,255,255,.8);
-  font-family:'DM Sans',sans-serif;
-  font-size:.8rem;
-  font-weight:500;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-  text-decoration:none;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  transition:background .2s,color .2s;
-}
+#hbg-menu a{display:block;padding:1rem 2rem;color:rgba(255,255,255,.8);font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.08);transition:background .2s,color .2s}
 #hbg-menu a:first-child{border-top:1px solid rgba(255,255,255,.08)}
 #hbg-menu a:hover{color:#C4916E;background:rgba(255,255,255,.04)}
-#hbg-menu .hbg-cta{
-  margin:1.5rem 2rem;
-  padding:.9rem;
-  background:#C4916E;
-  color:#fff !important;
-  text-align:center;
-  border-radius:2px;
-  border:none !important;
-}
+#hbg-menu .hbg-cta{margin:1.5rem 2rem;padding:.9rem;background:#C4916E;color:#fff !important;text-align:center;border-radius:2px;border:none !important}
 #hbg-menu .hbg-cta:hover{background:#D9AF93 !important}
-/* ═══════════════════════════════════════════════════════════════ */
+#hbg-close{position:absolute;top:1rem;right:1.5rem;background:none;border:none;color:rgba(255,255,255,.7);font-size:1.6rem;cursor:pointer;z-index:9999;line-height:1;padding:4px 8px}
+/* ══════════════════════════════════════════════════════════════ */
 </style>
 </head><body>
 <nav class="nav" id="nav"><a href="index.html" class="nav-logo">
     <img src="data:image/jpeg;base64,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" alt="Tera events" class="nav-logo-img">
   </a><ul class="nav-links" id="nav-links"><li><a href="corporate.html">Corporate</a></li><li><a href="evenements-prives.html" class=active>Privé</a></li><li><a href="event-planning.html">Event planning</a></li>
     <li><a href="traiteur.html">Traiteur</a></li><li><a href="nos-realisations.html">Réalisations</a></li><li><a href="equipe.html">L'équipe</a></li><li><a href="contact.html" class="btn btn-or" style="margin-left:.5rem;padding:.65rem 1.5rem">Devis gratuit</a></li></ul><button id="hbg-btn" onclick="hbgToggle()" aria-label="Menu"><span></span><span></span><span></span></button></nav>
-<div id="hbg-menu" onclick="hbgClose()" style="position:relative">
-  <button onclick="hbgClose()" style="position:absolute;top:1.2rem;right:1.5rem;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.7);font-size:1.8rem;line-height:1;padding:4px 8px;" aria-label="Fermer">&#x2715;</button>
+<div id="hbg-menu" onclick="hbgClose()">
+  <button id="hbg-close" onclick="event.stopPropagation();hbgClose()">&#x2715;</button>
   <a href="corporate.html" onclick="event.stopPropagation();hbgClose()">Corporate</a>
   <a href="evenements-prives.html" class="active" onclick="event.stopPropagation();hbgClose()">Privé</a>
   <a href="event-planning.html" onclick="event.stopPropagation();hbgClose()">Event planning</a>
   <a href="traiteur.html" onclick="event.stopPropagation();hbgClose()">Traiteur</a>
   <a href="nos-realisations.html" onclick="event.stopPropagation();hbgClose()">Réalisations</a>
   <a href="equipe.html" onclick="event.stopPropagation();hbgClose()">L'équipe</a>
-  <a href="contact.html" class="hbg-cta" onclick="event.stopPropagation();hbgClose()">Devis gratuit</a>
+  <a href="contact.html" class="hbg-cta" onclick="hbgClose()">Devis gratuit</a>
 </div>
 <div class="ph">
   <img src="https://static.wixstatic.com/media/d3492f_6e219147cad44c01944595739bd724cf~mv2.jpeg" alt="" class="ph-bg-img">
@@ -369,77 +317,28 @@ footer{background:var(--b1);color:rgba(255,255,255,0.7);padding:4.5rem 0 2rem}
   </div>
 </section>
 <footer><div class="container"><div class="footer-grid"><div><span class="footer-logo-name">Tera events</span><span class="footer-logo-tag">Event Planning · Abidjan</span><p class="footer-desc">Agence d'event planning à Abidjan. Corporate &amp; privé, dans notre espace ou dans le lieu de votre choix.</p><div class="footer-socials"><a href="https://www.instagram.com/tera.events.ci/" target="_blank"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></a><a href="https://www.facebook.com/tera.events.ci" target="_blank"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a><a href="https://www.linkedin.com/company/tera-events-ci" target="_blank"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></div></div><div><span class="footer-col-title">Expertises</span><ul class="footer-links"><li><a href="corporate.html">Événements corporate</a></li><li><a href="evenements-prives.html">Événements privés</a></li><li><a href="event-planning.html">Event planning</a></li>
-          <li><a href="traiteur.html">Traiteur</a></li><li><a href="nos-realisations.html">Nos réalisations</a></li></ul></div><div><span class="footer-col-title">Tera events</span><ul class="footer-links"><li><a href="equipe.html">L'équipe</a></li><li><a href="contact.html">Demander un devis</a></li><li><a href="cgl.html">CGV</a></li></ul></div><div><span class="footer-col-title">Contact</span><div class="footer-ci"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.5" style="flex-shrink:0;margin-top:3px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.7a16 16 0 0 0 6 6l.91-1.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 15z"/></svg><span class="footer-ci-text">+225 05 66 22 10 10<br>+225 07 06 83 99 57</span></div><div class="footer-ci"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.5" style="flex-shrink:0;margin-top:3px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span class="footer-ci-text"><a href="/cdn-cgi/l/email-protection#7301160016010512071a1c1d0033071601125d1605161d0700"><span class="__cf_email__" data-cfemail="5d2f382e382f2b3c293432332e1d29382f3c73382b3833292e"><span class="__cf_email__" data-cfemail="0755627462757166736e686974477362756629627162697374">[email&#160;protected]</span></span></a></span></div><div class="footer-ci"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.5" style="flex-shrink:0;margin-top:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="footer-ci-text">Cocody 2 Plateaux<br>Abidjan, Côte d'Ivoire</span></div></div></div><div class="footer-bottom"><p>© 2025 NATERALIA SARL — Tera events.</p><p><a href="cgl.html">Conditions générales</a> · <a href="contact.html">Contact</a></p></div></div></footer>
-
-var _nav = document.getElementById('nav');
-if(_nav){
-  window.addEventListener('scroll', function(){ _nav.classList.toggle('scrolled', window.scrollY > 60); });
-
-  var _tog = document.getElementById('nav-toggle');
-
-  // Ouvrir / fermer via le bouton hamburger
-  if(_tog) _tog.addEventListener('click', function(){
-    _nav.classList.toggle('open');
-  });
-
-  // Fermer en cliquant sur un lien du menu
-  var _links = _nav.querySelectorAll('.nav-links a');
-  _links.forEach(function(link){
-    link.addEventListener('click', function(){
-      _nav.classList.remove('open');
-    });
-  });
-
-  // Fermer en cliquant en dehors du menu
-  document.addEventListener('click', function(e){
-    if(_nav.classList.contains('open') && !_nav.contains(e.target)){
-      _nav.classList.remove('open');
-    }
-  });
-
-  // Fermer avec la touche Echap
-  document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape') _nav.classList.remove('open');
-  });
-}
-document.body.classList.add('js-ready');
-function activateReveals(){
-  var els = document.querySelectorAll('.reveal');
-  els.forEach(function(el){
-    var r = el.getBoundingClientRect();
-    if(r.top < window.innerHeight + 120) el.classList.add('in');
-  });
-  if(window.IntersectionObserver){
-    var ro = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('in'); });
-    }, {threshold:0, rootMargin:'80px'});
-    els.forEach(function(el){ ro.observe(el); });
-  }
-  setTimeout(function(){ els.forEach(function
+          <li><a href="traiteur.html">Traiteur</a></li><li><a href="nos-realisations.html">Nos réalisations</a></li></ul></div><div><span class="footer-col-title">Tera events</span><ul class="footer-links"><li><a href="equipe.html">L'équipe</a></li><li><a href="contact.html">Demander un devis</a></li><li><a href="cgl.html">CGV</a></li></ul></div><div><span class="footer-col-title">Contact</span><div class="footer-ci"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.5" style="flex-shrink:0;margin-top:3px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.7a16 16 0 0 0 6 6l.91-1.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 15z"/></svg><span class="footer-ci-text">+225 05 66 22 10 10<br>+225 07 06 83 99 57</span></div><div class="footer-ci"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.5" style="flex-shrink:0;margin-top:3px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span class="footer-ci-text"><a href="/cdn-cgi/l/email-protection#7301160016010512071a1c1d0033071601125d1605161d0700"><span class="__cf_email__" data-cfemail="5d2f382e382f2b3c293432332e1d29382f3c73382b3833292e"><span class="__cf_email__" data-cfemail="782a1d0b1d0a0e190c1117160b380c1d0a19561d0e1d160c0b">[email&#160;protected]</span></span></a></span></div><div class="footer-ci"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C4916E" stroke-width="1.5" style="flex-shrink:0;margin-top:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="footer-ci-text">Cocody 2 Plateaux<br>Abidjan, Côte d'Ivoire</span></div></div></div><div class="footer-bottom"><p>© 2025 NATERALIA SARL — Tera events.</p><p><a href="cgl.html">Conditions générales</a> · <a href="contact.html">Contact</a></p></div></div></footer>
 <script>
-// Nav scroll
-var _n = document.getElementById('nav');
+var _n=document.getElementById('nav');
 if(_n) window.addEventListener('scroll',function(){_n.classList.toggle('scrolled',window.scrollY>60);});
 
-// Hamburger
 function hbgToggle(){
-  var btn = document.getElementById('hbg-btn');
-  var menu = document.getElementById('hbg-menu');
+  var btn=document.getElementById('hbg-btn');
+  var menu=document.getElementById('hbg-menu');
   if(!btn||!menu) return;
-  var open = !menu.classList.contains('open');
-  if(open){ menu.classList.add('open'); btn.classList.add('open'); document.body.style.overflow='hidden'; }
-  else    { menu.classList.remove('open'); btn.classList.remove('open'); document.body.style.overflow=''; }
+  var isOpen=!menu.classList.contains('open');
+  if(isOpen){menu.classList.add('open');btn.classList.add('open');document.body.style.overflow='hidden';}
+  else{menu.classList.remove('open');btn.classList.remove('open');document.body.style.overflow='';}
 }
 function hbgClose(){
-  var btn = document.getElementById('hbg-btn');
-  var menu = document.getElementById('hbg-menu');
-  if(btn) btn.classList.remove('open');
-  if(menu) menu.classList.remove('open');
+  var btn=document.getElementById('hbg-btn');
+  var menu=document.getElementById('hbg-menu');
+  if(btn)btn.classList.remove('open');
+  if(menu)menu.classList.remove('open');
   document.body.style.overflow='';
 }
-document.addEventListener('keydown',function(e){if(e.key==='Escape') hbgClose();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')hbgClose();});
 
-// Reveals
 document.body.classList.add('js-ready');
 function activateReveals(){
   var els=document.querySelectorAll('.reveal');
