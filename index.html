@@ -248,6 +248,399 @@ footer{background:var(--b1);color:rgba(255,255,255,0.7);padding:4.5rem 0 2rem}
 #hbg-close{position:absolute;top:1rem;right:1.5rem;background:none;border:none;color:rgba(255,255,255,.7);font-size:1.6rem;cursor:pointer;z-index:9999;line-height:1;padding:4px 8px}
 /* ══════════════════════════════════════════════════════════════ */
 </style>
+   <style>
+  :root {
+    --b1: #0E1847;
+    --b2: #152060;
+    --or: #C4916E;
+    --or2: #D9AF93;
+    --or3: #EDD5C2;
+    --blanc: #FFFFFF;
+    --bor-b: rgba(255,255,255,0.12);
+    --bor-or: rgba(196,145,110,0.28);
+    --t: 0.32s cubic-bezier(.4,0,.2,1);
+  }
+ 
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0a0f2e;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
+  }
+ 
+  /* ══ OVERLAY ══ */
+  #tera-popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    background: rgba(10, 18, 60, 0.75);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    animation: overlayIn 0.5s 0.3s ease forwards;
+  }
+  @keyframes overlayIn { to { opacity: 1; } }
+ 
+  /* ══ POPUP ══ */
+  #tera-popup {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    background: var(--b1);
+    border: 1px solid var(--bor-or);
+    border-radius: 3px;
+    overflow: hidden;
+    transform: translateY(32px) scale(0.96);
+    opacity: 0;
+    animation: popupIn 0.6s 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    box-shadow:
+      0 50px 120px rgba(10, 18, 60, 0.7),
+      0 0 0 1px rgba(196,145,110,0.07),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+    max-height: 95vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  #tera-popup::-webkit-scrollbar { display: none; }
+ 
+  @keyframes popupIn {
+    to { transform: translateY(0) scale(1); opacity: 1; }
+  }
+ 
+  /* Trait or haut */
+  #tera-popup::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent 0%, var(--or) 30%, var(--or2) 70%, transparent 100%);
+    z-index: 5;
+  }
+ 
+  /* ── VISUEL ── */
+  .tp-visual {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+  .tp-visual img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+    transition: transform 7s ease;
+  }
+  #tera-popup:hover .tp-visual img { transform: scale(1.05); }
+ 
+  .tp-visual-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(14,24,71,0.15) 0%,
+      rgba(14,24,71,0.5) 60%,
+      var(--b1) 100%
+    );
+  }
+ 
+  /* Badge capacité */
+  .tp-badge {
+    position: absolute;
+    top: 1rem; left: 1.2rem;
+    z-index: 3;
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    background: rgba(14,24,71,0.80);
+    border: 1px solid var(--bor-or);
+    backdrop-filter: blur(10px);
+    padding: 0.28rem 0.8rem;
+    border-radius: 40px;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--or3);
+  }
+  .tp-badge-dot {
+    width: 5px; height: 5px;
+    background: var(--or);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.4; transform:scale(0.6); }
+  }
+ 
+  /* Titre sur l'image */
+  .tp-img-title {
+    position: absolute;
+    bottom: 1.4rem; left: 1.4rem; right: 1.4rem;
+    z-index: 3;
+  }
+  .tp-img-eyebrow {
+    font-size: 0.6rem;
+    font-weight: 400;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--or2);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .tp-img-h {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 5vw, 2.1rem);
+    font-weight: 400;
+    color: var(--blanc);
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+  .tp-img-h em {
+    font-style: italic;
+    color: var(--or3);
+  }
+ 
+  /* ── CORPS ── */
+  .tp-body {
+    padding: 1.6rem 1.8rem 1.8rem;
+  }
+ 
+  /* Sous-titre capacité */
+  .tp-capacity {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 1.4rem;
+    justify-content: center;
+  }
+  .tp-capacity strong { color: var(--or2); font-weight: 500; }
+  .tp-capacity-sep { width: 18px; height: 1px; background: var(--bor-or); }
+ 
+  /* ── CARTE OFFRE ── */
+  .tp-offer-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--bor-or);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+ 
+  .tp-offer-header {
+    background: linear-gradient(135deg, rgba(196,145,110,0.18) 0%, rgba(196,145,110,0.08) 100%);
+    border-bottom: 1px solid var(--bor-or);
+    padding: 0.85rem 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .tp-offer-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--blanc);
+    text-transform: uppercase;
+  }
+  .tp-offer-tag {
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--or);
+    background: rgba(196,145,110,0.12);
+    border: 1px solid rgba(196,145,110,0.25);
+    padding: 0.22rem 0.65rem;
+    border-radius: 40px;
+    white-space: nowrap;
+  }
+ 
+  /* Liste prestations */
+  .tp-services {
+    list-style: none;
+    padding: 1.1rem 1.4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem 1rem;
+    border-bottom: 1px solid var(--bor-or);
+  }
+  .tp-services li {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.72);
+    line-height: 1.4;
+  }
+  .tp-check {
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    border: 1px solid rgba(196,145,110,0.4);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+ 
+  /* Prix */
+  .tp-price-row {
+    padding: 1rem 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .tp-price-label {
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+  .tp-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--blanc);
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+  .tp-price span {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--or2);
+    margin-left: 0.3rem;
+  }
+ 
+  /* ── CONTACT ── */
+  .tp-contact {
+    background: rgba(196,145,110,0.07);
+    border: 1px solid rgba(196,145,110,0.18);
+    border-radius: 2px;
+    padding: 0.9rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 1.4rem;
+  }
+  .tp-contact-icon {
+    width: 32px; height: 32px;
+    background: rgba(196,145,110,0.15);
+    border: 1px solid var(--bor-or);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .tp-contact-label {
+    display: block;
+    font-size: 0.6rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--or);
+    margin-bottom: 0.2rem;
+  }
+  .tp-contact-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--blanc);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: color var(--t);
+    display: block;
+  }
+  .tp-contact-num:hover { color: var(--or2); }
+ 
+  /* ── CTA ── */
+  .tp-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    background: var(--or);
+    color: var(--blanc);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 2px;
+    width: 100%;
+    transition: background var(--t), transform var(--t), box-shadow var(--t);
+    border: none; cursor: pointer;
+    margin-bottom: 0.9rem;
+  }
+  .tp-cta:hover {
+    background: var(--or2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(196,145,110,0.4);
+  }
+  .tp-cta svg { transition: transform var(--t); }
+  .tp-cta:hover svg { transform: translateX(4px); }
+ 
+  .tp-skip {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    cursor: pointer;
+    background: none; border: none;
+    padding: 0;
+    transition: color var(--t);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .tp-skip:hover { color: rgba(255,255,255,0.5); }
+ 
+  /* ── BOUTON FERMER ── */
+  #tera-popup-close {
+    position: absolute;
+    top: 0.9rem; right: 0.9rem;
+    z-index: 10;
+    width: 30px; height: 30px;
+    background: rgba(14,24,71,0.80);
+    border: 1px solid var(--bor-b);
+    border-radius: 50%;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background var(--t), color var(--t), border-color var(--t);
+    backdrop-filter: blur(8px);
+  }
+  #tera-popup-close:hover {
+    background: rgba(196,145,110,0.2);
+    border-color: var(--bor-or);
+    color: var(--blanc);
+  }
+ 
+  /* ── FERMETURE ── */
+  #tera-popup-overlay.closing { animation: overlayOut 0.35s ease forwards; }
+  #tera-popup-overlay.closing #tera-popup { animation: popupOut 0.3s ease forwards; }
+  @keyframes overlayOut { to { opacity: 0; pointer-events: none; } }
+  @keyframes popupOut { to { transform: translateY(16px) scale(0.96); opacity: 0; } }
+ 
+  /* ── MOBILE ── */
+  @media (max-width: 480px) {
+    .tp-visual { height: 170px; }
+    .tp-body { padding: 1.3rem 1.3rem 1.6rem; }
+    .tp-services { grid-template-columns: 1fr; }
+    .tp-price { font-size: 1.35rem; }
+  }
+</style>
 </head>
 <body>
 <nav class="nav" id="nav">
