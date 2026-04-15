@@ -792,17 +792,17 @@ function StepRecap({eventType,nbGuests,salleChoice,traiteurChoice,formulaIdx,nbP
   const openPrintDevis = () => {
     const refNum = `EST-${String(today.getDate()).padStart(2,"0")}${String(today.getMonth()+1).padStart(2,"0")}-${String(Math.floor(Math.random()*900)+100)}`;
 
-    // Build table rows — subtotals only, no unit prices
+    // Build table rows
     const rows = [];
-    const sectionRow = (label,total) => `<tr class="section-row"><td><strong>${label}</strong></td><td class="amt"><strong>${fc(total)}</strong></td></tr>`;
-    const itemRow = (desc) => `<tr><td class="desc">${desc}</td><td></td></tr>`;
+    const sectionRow = (label,total) => `<tr class="section-row"><td colspan="4"><strong>${label}</strong></td><td class="amt"><strong>${fc(total)}</strong></td></tr>`;
+    const itemRow = (desc,qty,unit,remise,total) => `<tr><td class="desc">${desc}</td><td class="center">${qty}</td><td class="amt">${unit}</td><td class="center">${remise}</td><td class="amt">${fc(total)}</td></tr>`;
 
     if(salleChoice&&salleChoice!=="none"){
       rows.push(sectionRow("SALLE",salleCost));
       if(salleChoice==="logistique"){
-        rows.push(itemRow(`Salle + logistique complète + sonorisation<br><span class="sub">Tables, chaises, nappes, vaisselle, sono, ingé son, groupe électrogène · ${tables} tables</span>${salleDiscAmt>0?`<br><span class="sub green">Remise service additionnel appliquée</span>`:""}`));
+        rows.push(itemRow(`Salle + logistique complète + sonorisation<br><span class="sub">Tables, chaises, nappes, vaisselle, sono, ingé son, groupe électrogène · ${tables} tables</span>${salleDiscAmt>0?`<br><span class="sub green">Services inclus (−20% sur la salle)</span>`:""}`,1,`${fc(1000000)}`,salleDiscAmt>0?"20%":"—",salleCost));
       } else {
-        rows.push(itemRow(`Salle seule + sonorisation<br><span class="sub">Sono + ingénieur son + groupe électrogène</span>`));
+        rows.push(itemRow(`Salle seule + sonorisation<br><span class="sub">Sono + ingénieur son + groupe électrogène (sans tables ni mobilier)</span>`,1,`${fc(800000)}`,"—",800000));
       }
     }
 
@@ -811,13 +811,14 @@ function StepRecap({eventType,nbGuests,salleChoice,traiteurChoice,formulaIdx,nbP
       rows.push(sectionRow("SERVICE TRAITEUR",traiteurTotal));
       if(aperoCost>0&&formulaIdx!==null){
         const f=FORMULAS[formulaIdx];
-        rows.push(itemRow(`Formule ${f.label} — ${f.pieces} choix/personne<br><span class="sub">${f.categories}</span><br><span class="sub">${nbGuests} invités${discount>0?` · Remise ${discount*100}%`:""}</span>`));
+        rows.push(itemRow(`Formule ${f.label} — ${f.pieces} choix/personne<br><span class="sub">${f.categories}</span>`,nbGuests,`${fc(f.pvMin)}`,discount>0?`${discount*100}%`:"—",aperoCost));
       }
       if(repasCost>0){
-        rows.push(itemRow(`Repas assis — ${nbPlats} plat${nbPlats>1?"s":""}${nbEntrees>0?` + ${nbEntrees} entrée${nbEntrees>1?"s":""}`:""}<br><span class="sub">${nbGuests} invités · ${nbServeurs(nbGuests)} serveurs · Eau minérale + jus naturel inclus${discount>0?` · Remise ${discount*100}%`:""}</span>`));
+        const prixUnit = nbPlats*6000+nbEntrees*3500;
+        rows.push(itemRow(`Repas assis — ${nbPlats} plat${nbPlats>1?"s":""}${nbEntrees>0?` + ${nbEntrees} entrée${nbEntrees>1?"s":""}`:""}<br><span class="sub">Eau minérale + 2 bouteilles jus naturel/table · ${nbServeurs(nbGuests)} serveurs</span>`,nbGuests,`${fc(prixUnit)}`,discount>0?`${discount*100}%`:"—",repasCost));
       }
       if(barCost>0&&barData){
-        rows.push(itemRow(`Bar à cocktail — ${barData.label}<br><span class="sub">${nbGuests} invités · ${barData.details[0]}</span>`));
+        rows.push(itemRow(`Bar à cocktail — ${barData.label}<br><span class="sub">${barData.details[0]}</span>`,nbGuests,`${fc(barData.price)}`,"—",barCost));
       }
     }
 
@@ -825,15 +826,16 @@ function StepRecap({eventType,nbGuests,salleChoice,traiteurChoice,formulaIdx,nbP
       rows.push(sectionRow("DÉCORATION",decoCost));
       Object.keys(decoSelected).filter(k=>k!=="__perso").forEach(id=>{
         const item=allDecoItems.find(i=>i.id===id);if(!item)return;
-        const sub=item.unit==="table"?` (${tables} tables)`:item.unit==="personne"?` (${nbGuests} pers.)`:"";
-        rows.push(itemRow(`${item.label}${sub}`));
+        const qty=item.unit==="table"?tables:item.unit==="personne"?nbGuests:1;
+        const cost=item.price*qty;
+        rows.push(itemRow(`${item.label}${item.sub?`<br><span class="sub">${item.sub}</span>`:""}`,qty,`${fc(item.price)}`,"—",cost));
       });
-      rows.push(itemRow(`Honoraires décoration<br><span class="sub">Main d'œuvre, transport, pose & dépose</span>`));
+      rows.push(itemRow("Honoraires décoration<br><span class=\"sub\">Main d'œuvre, transport, pose & dépose</span>",1,`${fc(honoraires)}`,"—",honoraires));
     }
 
     if(plannerCost>0&&plannerData){
       rows.push(sectionRow("COORDINATION",plannerCost));
-      rows.push(itemRow(`${plannerData.label}`));
+      rows.push(itemRow(`${plannerData.label}`,1,`${fc(plannerData.price)}`,"—",plannerCost));
     }
 
     const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Devis Estimatif — TERA EVENTS</title>
@@ -914,21 +916,25 @@ td.amt{text-align:right;font-weight:600;white-space:nowrap}
   </div>
 </div>
 
-<div class="event-grid" style="grid-template-columns:repeat(3,1fr)">
+<div class="event-grid">
   <div class="event-cell"><div class="lbl">Événement</div><div class="val">${eInfo?.label||"—"}</div></div>
   <div class="event-cell"><div class="lbl">Invités</div><div class="val">${nbGuests} personnes</div></div>
   <div class="event-cell"><div class="lbl">Lieu</div><div class="val">${nbGuests>100?"Espace partenaire":"TERA EVENTS"}</div></div>
+  <div class="event-cell"><div class="lbl">Remise traiteur</div><div class="val">${discount>0?`−${discount*100}%`:"—"}</div></div>
 </div>
 
 <table>
 <thead><tr>
   <th>Désignation</th>
+  <th class="center">Qté</th>
+  <th class="amt">Prix unitaire</th>
+  <th class="center">Remise</th>
   <th class="amt">Total</th>
 </tr></thead>
 <tbody>
 ${rows.join("\n")}
 <tr class="total-row">
-  <td style="text-align:right">TOTAL ESTIMATIF TTC</td>
+  <td colspan="4" style="text-align:right">TOTAL ESTIMATIF TTC</td>
   <td class="amt">${fc(grandTotal)}</td>
 </tr>
 </tbody>
@@ -982,8 +988,8 @@ ${rows.join("\n")}
 
       {salleChoice&&salleChoice!=="none" && (
         <Section icon="🏛️" label="Espace & Salle">
-          <Row label={salleChoice==="seule"?"Salle seule":"Salle + Logistique"} sub={salleChoice==="seule"?"Salle + sono + ingénieur son + groupe électrogène":"Salle + tables, chaises, nappes, vaisselle + sono + ingé son + groupe électrogène"}/>
-          {salleDiscAmt>0 && <Row label="🏷️ Remise service additionnel appliquée"/>}
+          <Row label={salleChoice==="seule"?"Salle seule":"Salle + Logistique"} sub={salleChoice==="seule"?"Salle + sono + ingénieur son + groupe électrogène (sans tables ni mobilier)":`Salle + tables, chaises, nappes, vaisselle + sono + ingé son + groupe électrogène · ${tables} tables`} amount={fcfa(salleBase)}/>
+          {salleDiscAmt>0 && <Row label="🏷️ Remise service additionnel −20%" amount={`− ${fcfa(salleDiscAmt)}`}/>}
           <Row label="Sous-total Salle" amount={fcfa(salleCost)} accent isTotal/>
         </Section>
       )}
@@ -992,15 +998,18 @@ ${rows.join("\n")}
         <Section icon="🍽️" label="Service Traiteur">
           {aperoCost>0&&formulaIdx!==null && (
             <Row label={`Formule ${FORMULAS[formulaIdx].label}`}
-              sub={`${FORMULAS[formulaIdx].pieces} choix/personne · ${nbGuests} invités${discount>0?` · Remise ${discount*100}%`:""}`}/>
+              sub={`${fcfa(FORMULAS[formulaIdx].pvMin)}/pers${discount>0?` −${discount*100}%`:""}  × ${nbGuests} · ${FORMULAS[formulaIdx].pieces} choix/pers`}
+              amount={fcfa(aperoCost)}/>
           )}
           {repasCost>0 && (
             <Row label={`Repas assis — ${nbPlats} plat${nbPlats>1?"s":""}${nbEntrees>0?` + ${nbEntrees} entrée${nbEntrees>1?"s":""}`:""}`}
-              sub={`${nbGuests} invités · ${nbServeurs(nbGuests)} serveurs · Eau + jus inclus${discount>0?` · Remise ${discount*100}%`:""}`}/>
+              sub={`${fcfa(nbPlats*6000+nbEntrees*3500)}/pers${discount>0?` −${discount*100}%`:""} × ${nbGuests} · ${nbServeurs(nbGuests)} serveurs · Eau + jus inclus`}
+              amount={fcfa(repasCost)}/>
           )}
           {barCost>0&&barData && (
             <Row label={`Bar — ${barData.label}`}
-              sub={`${nbGuests} invités`}/>
+              sub={`${fcfa(barData.price)}/pers × ${nbGuests} invités`}
+              amount={fcfa(barCost)}/>
           )}
           <Row label="Sous-total Traiteur" amount={fcfa(aperoCost+repasCost+barCost)} accent isTotal/>
         </Section>
@@ -1010,18 +1019,19 @@ ${rows.join("\n")}
         <Section icon="🌸" label="Décoration">
           {Object.keys(decoSelected).filter(k=>k!=="__perso").map(id=>{
             const item=allDecoItems.find(i=>i.id===id); if(!item) return null;
-            const sub=item.unit==="table"?`${tables} tables`:item.unit==="personne"?`${nbGuests} personnes`:null;
-            return <Row key={id} label={item.label} sub={sub}/>;
+            const cost=item.unit==="table"?item.price*tables:item.unit==="personne"?item.price*nbGuests:item.price;
+            const sub=item.unit==="table"?`${fcfa(item.price)} × ${tables} tables`:item.unit==="personne"?`${fcfa(item.price)} × ${nbGuests} pers.`:null;
+            return <Row key={id} label={item.label} sub={sub} amount={fcfa(cost)}/>;
           })}
-          <Row label="Honoraires décoration" sub="Main d'œuvre, transport, pose & dépose"/>
-          {decoSelected.__perso && <Row label="🎨 Décoration personnalisée" sub="Notre équipe vous contactera pour un devis sur-mesure"/>}
+          <Row label="Honoraires décoration" sub="Main d'œuvre, transport, pose & dépose" amount={fcfa(honoraires)}/>
+          {decoSelected.__perso && <Row label="🎨 Décoration personnalisée" sub="Notre équipe vous contactera pour un devis sur-mesure" amount="—"/>}
           <Row label="Sous-total Décoration" amount={fcfa(decoCost)} accent isTotal/>
         </Section>
       )}
 
       {plannerCost>0&&plannerData && (
         <Section icon={plannerData.emoji} label="Event Planner">
-          <Row label={plannerData.label} sub={plannerData.unit}/>
+          <Row label={plannerData.label} sub={plannerData.unit} amount={fcfa(plannerData.price)}/>
           <Row label="Sous-total Coordination" amount={fcfa(plannerCost)} accent isTotal/>
         </Section>
       )}
