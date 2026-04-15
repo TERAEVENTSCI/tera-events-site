@@ -1307,12 +1307,6 @@ function DevisSimulator() {
 
       {/* CONTENT */}
       <div style={{padding:"24px 16px"}}>
-        {step>0&&step<5&&grandTotal>0 && (
-          <div className="no-print" style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 14px",marginBottom:20,background:`${C.rose}10`,border:`1px solid ${C.roseDark}`,borderRadius:8}}>
-            <span style={{fontSize:10,color:C.muted,fontFamily:"'Poppins',sans-serif"}}>Estimation en cours</span>
-            <span style={{fontSize:15,fontWeight:700,color:C.roseLight,fontFamily:"monospace"}}>{fcfa(grandTotal)}</span>
-          </div>
-        )}
         {step===0 && <StepEvent eventType={eventType} setEventType={setEventType} nbGuests={nbGuests} setNbGuests={setNbGuests}/>}
         {step===1 && <StepSalle salleChoice={salleChoice} setSalleChoice={setSalleChoice} nbGuests={nbGuests} hasService={hasService}/>}
         {step===2 && <StepTraiteur traiteurChoice={traiteurChoice} setTraiteurChoice={setTraiteurChoice} formulaIdx={formulaIdx} setFormulaIdx={setFormulaIdx} nbPlats={nbPlats} setNbPlats={setNbPlats} nbEntrees={nbEntrees} setNbEntrees={setNbEntrees} barChoice={barChoice} setBarChoice={setBarChoice} nbGuests={nbGuests} salleChoice={salleChoice}/>}
